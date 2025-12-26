@@ -9,5 +9,21 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.26.2"
+  "packageManager": "pnpm@10.26.2",
+  "bin": {
+    "tsoapi": "./bin/run.js"
+  },
+  "oclif": {
+    "bin": "tsoapi",
+    "commands": "./dist/commands",
+    "dirname": "tsoapi",
+    "topicSeparator": " "
+  },
+  "dependencies": {
+    "@oclif/core": "^4.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.130",
+    "ts-node": "^10.9.2"
+  }
 }
