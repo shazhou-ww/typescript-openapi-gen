@@ -23,8 +23,16 @@ export default class GenController extends Command {
   static override flags = {
     output: Flags.string({
       char: 'o',
-      description: 'Output directory for generated controllers',
+      description: 'Output directory for generated files',
       required: true,
+    }),
+    'controller-folder': Flags.string({
+      description: 'Subfolder name for controllers (default: controller)',
+      required: false,
+    }),
+    'shared-types-folder': Flags.string({
+      description: 'Subfolder name for shared types (default: shared-types)',
+      required: false,
     }),
     prettier: Flags.string({
       description: 'Path to prettier config file for formatting output',
@@ -60,6 +68,8 @@ export default class GenController extends Command {
       // Generate controllers
       const generator = new ControllerGenerator(openApiDoc, outputDir, {
         prettierConfig,
+        controllerFolder: flags['controller-folder'],
+        sharedTypesFolder: flags['shared-types-folder'],
       })
       const result = await generator.generate()
 

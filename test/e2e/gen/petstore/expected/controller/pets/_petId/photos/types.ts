@@ -1,7 +1,7 @@
 // Auto-generated types from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-import type { Photo, UploadPhotoRequest } from '../../../types'
+import type { Photo, UploadPhotoRequest } from '../../../../shared-types'
 
 export interface GetInput {
   params: {

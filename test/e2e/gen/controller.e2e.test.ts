@@ -80,9 +80,6 @@ function generateDiff(expected: string, actual: string): string {
 
 const e2eDir = path.dirname(fileURLToPath(import.meta.url))
 
-// Files to exclude from controller comparison (route files are tested separately)
-const EXCLUDE_PATHS = ['elysia-routes.ts']
-
 describe('Controller Generator E2E Tests', () => {
   const testCases = getTestCases(e2eDir)
 
@@ -90,7 +87,7 @@ describe('Controller Generator E2E Tests', () => {
     describe(`Test case: ${testCase}`, () => {
       const testCaseDir = path.join(e2eDir, testCase)
       const inputDir = path.join(testCaseDir, 'input')
-      const expectedDir = path.join(testCaseDir, 'expected', 'controller')
+      const expectedBaseDir = path.join(testCaseDir, 'expected')
       let tempOutputDir: string
 
       beforeAll(async () => {
@@ -123,65 +120,72 @@ describe('Controller Generator E2E Tests', () => {
         }
       })
 
-      it('should generate the expected files', () => {
-        const expectedFiles = getAllFiles(
-          expectedDir,
-          expectedDir,
-          EXCLUDE_PATHS,
-        )
-        const actualFiles = getAllFiles(tempOutputDir)
+      // Test both controller and shared-types directories
+      const subfolders = ['controller', 'shared-types']
 
-        const missingFiles = expectedFiles.filter(
-          (f) => !actualFiles.includes(f),
-        )
-        const extraFiles = actualFiles.filter((f) => !expectedFiles.includes(f))
+      for (const subfolder of subfolders) {
+        it(`should generate the expected ${subfolder} files`, () => {
+          const expectedDir = path.join(expectedBaseDir, subfolder)
+          const actualDir = path.join(tempOutputDir, subfolder)
 
-        if (missingFiles.length > 0 || extraFiles.length > 0) {
-          const errorParts: string[] = []
-          if (missingFiles.length > 0) {
-            errorParts.push(
-              `Missing files:\n${missingFiles.map((f) => `  - ${f}`).join('\n')}`,
-            )
+          const expectedFiles = getAllFiles(expectedDir, expectedDir)
+          const actualFiles = fs.existsSync(actualDir)
+            ? getAllFiles(actualDir, actualDir)
+            : []
+
+          const missingFiles = expectedFiles.filter(
+            (f) => !actualFiles.includes(f),
+          )
+          const extraFiles = actualFiles.filter(
+            (f) => !expectedFiles.includes(f),
+          )
+
+          if (missingFiles.length > 0 || extraFiles.length > 0) {
+            const errorParts: string[] = []
+            if (missingFiles.length > 0) {
+              errorParts.push(
+                `Missing files:\n${missingFiles.map((f) => `  - ${f}`).join('\n')}`,
+              )
+            }
+            if (extraFiles.length > 0) {
+              errorParts.push(
+                `Extra files:\n${extraFiles.map((f) => `  + ${f}`).join('\n')}`,
+              )
+            }
+            expect.fail(errorParts.join('\n\n'))
           }
-          if (extraFiles.length > 0) {
-            errorParts.push(
-              `Extra files:\n${extraFiles.map((f) => `  + ${f}`).join('\n')}`,
-            )
+        })
+
+        it(`should generate ${subfolder} files with expected content`, () => {
+          const expectedDir = path.join(expectedBaseDir, subfolder)
+          const actualDir = path.join(tempOutputDir, subfolder)
+
+          const expectedFiles = getAllFiles(expectedDir, expectedDir)
+          const differences: string[] = []
+
+          for (const file of expectedFiles) {
+            const expectedPath = path.join(expectedDir, file)
+            const actualPath = path.join(actualDir, file)
+
+            if (!fs.existsSync(actualPath)) {
+              differences.push(`File missing: ${file}`)
+              continue
+            }
+
+            const expectedContent = readFileNormalized(expectedPath)
+            const actualContent = readFileNormalized(actualPath)
+
+            if (expectedContent !== actualContent) {
+              const diff = generateDiff(expectedContent, actualContent)
+              differences.push(`\n--- ${file} ---\n${diff}`)
+            }
           }
-          expect.fail(errorParts.join('\n\n'))
-        }
-      })
 
-      it('should generate files with expected content', () => {
-        const expectedFiles = getAllFiles(
-          expectedDir,
-          expectedDir,
-          EXCLUDE_PATHS,
-        )
-        const differences: string[] = []
-
-        for (const file of expectedFiles) {
-          const expectedPath = path.join(expectedDir, file)
-          const actualPath = path.join(tempOutputDir, file)
-
-          if (!fs.existsSync(actualPath)) {
-            differences.push(`File missing: ${file}`)
-            continue
+          if (differences.length > 0) {
+            expect.fail(`Content differences found:\n${differences.join('\n')}`)
           }
-
-          const expectedContent = readFileNormalized(expectedPath)
-          const actualContent = readFileNormalized(actualPath)
-
-          if (expectedContent !== actualContent) {
-            const diff = generateDiff(expectedContent, actualContent)
-            differences.push(`\n--- ${file} ---\n${diff}`)
-          }
-        }
-
-        if (differences.length > 0) {
-          expect.fail(`Content differences found:\n${differences.join('\n')}`)
-        }
-      })
+        })
+      }
     })
   }
 })

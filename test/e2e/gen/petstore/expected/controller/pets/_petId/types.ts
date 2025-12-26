@@ -1,7 +1,7 @@
 // Auto-generated types from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-import type { Pet, UpdatePetRequest } from '../../types'
+import type { Pet, UpdatePetRequest } from '../../../shared-types'
 
 export interface GetInput {
   params: {

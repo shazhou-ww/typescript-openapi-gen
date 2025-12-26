@@ -13,7 +13,7 @@ import { collectReferencedTypes } from './refs-collector.js'
 export function generateTypesFile(
   controllerDir: string,
   info: RouteInfo,
-  outputDir: string,
+  sharedTypesDir: string,
   result: GenerationResult,
 ): void {
   const lines = buildFileHeader('types from OpenAPI specification')
@@ -23,7 +23,7 @@ export function generateTypesFile(
     addMethodTypes(lines, method, operation, info.path, referencedTypes)
   }
 
-  addImportIfNeeded(lines, referencedTypes, controllerDir, outputDir)
+  addImportIfNeeded(lines, referencedTypes, controllerDir, sharedTypesDir)
   writeGeneratedFile(controllerDir, 'types.ts', lines, result)
 }
 
@@ -54,10 +54,10 @@ function addImportIfNeeded(
   lines: string[],
   referencedTypes: Set<string>,
   controllerDir: string,
-  outputDir: string,
+  sharedTypesDir: string,
 ): void {
   if (referencedTypes.size > 0) {
-    const relativePath = getRelativePathToTypes(controllerDir, outputDir)
+    const relativePath = getRelativePathToTypes(controllerDir, sharedTypesDir)
     const imports = Array.from(referencedTypes).join(', ')
     lines.splice(3, 0, `import type { ${imports} } from '${relativePath}'`, '')
   }

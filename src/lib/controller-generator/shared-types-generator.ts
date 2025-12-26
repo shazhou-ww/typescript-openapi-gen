@@ -8,14 +8,13 @@ import type { GenerationResult } from './types.js'
  * Generate the shared types folder
  */
 export function generateSharedTypesFolder(
-  outputDir: string,
+  sharedTypesDir: string,
   schemas: Record<string, SchemaObject | ReferenceObject> | undefined,
   result: GenerationResult,
 ): void {
-  const typesDir = path.join(outputDir, 'types')
-  fs.mkdirSync(typesDir, { recursive: true })
+  fs.mkdirSync(sharedTypesDir, { recursive: true })
 
   const content = generateSharedTypes(schemas)
-  fs.writeFileSync(path.join(typesDir, 'index.ts'), content)
+  fs.writeFileSync(path.join(sharedTypesDir, 'index.ts'), content)
   result.filesCreated++
 }

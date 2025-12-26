@@ -3,16 +3,13 @@ import { capitalize } from '../shared/codegen-utils.js'
 import type { RouteInfo } from './types.js'
 
 /**
- * Get relative path from controller directory to types folder
+ * Get relative path from controller directory to shared types folder
  */
 export function getRelativePathToTypes(
   controllerDir: string,
-  outputDir: string,
+  sharedTypesDir: string,
 ): string {
-  const relativePath = path.relative(
-    controllerDir,
-    path.join(outputDir, 'types'),
-  )
+  const relativePath = path.relative(controllerDir, sharedTypesDir)
   return relativePath.split(path.sep).join('/')
 }
 

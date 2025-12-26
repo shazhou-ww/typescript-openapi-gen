@@ -17,6 +17,10 @@ import {
 
 export interface ControllerGeneratorOptions {
   prettierConfig?: string
+  /** Subfolder name for controllers, defaults to 'controller' */
+  controllerFolder?: string
+  /** Subfolder name for shared types, defaults to 'shared-types' */
+  sharedTypesFolder?: string
 }
 
 export class ControllerGenerator {
@@ -38,17 +42,27 @@ export class ControllerGenerator {
   async generate(): Promise<GenerationResult> {
     const routeTree = buildRouteTree(this.doc)
 
-    fs.mkdirSync(this.outputDir, { recursive: true })
+    const controllerFolder = this.options.controllerFolder ?? 'controller'
+    const sharedTypesFolder = this.options.sharedTypesFolder ?? 'shared-types'
+
+    const controllerDir = path.join(this.outputDir, controllerFolder)
+    const sharedTypesDir = path.join(this.outputDir, sharedTypesFolder)
+
+    fs.mkdirSync(controllerDir, { recursive: true })
 
     const schemas = this.doc.components?.schemas as
       | Record<string, SchemaObject | ReferenceObject>
       | undefined
-    generateSharedTypesFolder(this.outputDir, schemas, this.result)
+    generateSharedTypesFolder(sharedTypesDir, schemas, this.result)
 
-    await this.generateControllersRecursive(routeTree, this.outputDir)
+    await this.generateControllersRecursive(
+      routeTree,
+      controllerDir,
+      sharedTypesDir,
+    )
 
     // Generate root index.ts that exports all top-level route modules
-    generateRootIndexFile(this.outputDir, routeTree, this.result)
+    generateRootIndexFile(controllerDir, routeTree, this.result)
 
     // Format generated files with prettier (auto-detect or use provided config)
     this.result.filesFormatted = formatFilesWithPrettier(
@@ -62,6 +76,7 @@ export class ControllerGenerator {
   private async generateControllersRecursive(
     nodes: Map<string, RouteInfo>,
     currentDir: string,
+    sharedTypesDir: string,
   ): Promise<void> {
     for (const [segment, info] of nodes) {
       const fsSegment = segmentToFsName(segment)
@@ -69,11 +84,15 @@ export class ControllerGenerator {
 
       this.checkConflicts(info)
       this.createDirectoryIfNeeded(controllerDir, info)
-      await this.generateControllerIfNeeded(controllerDir, info)
+      await this.generateControllerIfNeeded(controllerDir, info, sharedTypesDir)
 
       generateIndexFile(controllerDir, info, this.result)
 
-      await this.generateControllersRecursive(info.children, controllerDir)
+      await this.generateControllersRecursive(
+        info.children,
+        controllerDir,
+        sharedTypesDir,
+      )
     }
   }
 
@@ -97,11 +116,12 @@ export class ControllerGenerator {
   private async generateControllerIfNeeded(
     controllerDir: string,
     info: RouteInfo,
+    sharedTypesDir: string,
   ): Promise<void> {
     if (info.methods.size === 0) return
 
     this.result.controllersGenerated++
-    generateTypesFile(controllerDir, info, this.outputDir, this.result)
+    generateTypesFile(controllerDir, info, sharedTypesDir, this.result)
 
     for (const [method, operation] of info.methods) {
       generateMethodFileIfNotExists(
