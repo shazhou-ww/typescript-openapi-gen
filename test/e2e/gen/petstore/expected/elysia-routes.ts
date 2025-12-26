@@ -1,8 +1,6 @@
 // Auto-generated Elysia routes from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-// @ts-nocheck
-
 import { Elysia } from 'elysia'
 import { events, pets, users } from './controller'
 

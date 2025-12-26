@@ -1,8 +1,6 @@
 // Auto-generated Fastify routes from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-// @ts-nocheck
-
 import type { FastifyInstance } from 'fastify'
 import { events, pets, users } from './controller'
 

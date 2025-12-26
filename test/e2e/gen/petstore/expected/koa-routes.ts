@@ -1,8 +1,6 @@
 // Auto-generated Koa routes from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-// @ts-nocheck
-
 import Router from '@koa/router'
 import { events, pets, users } from './controller'
 

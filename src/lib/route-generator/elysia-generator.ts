@@ -49,7 +49,6 @@ export class ElysiaRouteGenerator {
 
     // Add file header
     lines.push(...buildFileHeader('Elysia routes from OpenAPI specification'))
-    lines.push('// @ts-nocheck')
     lines.push('')
 
     // Add imports

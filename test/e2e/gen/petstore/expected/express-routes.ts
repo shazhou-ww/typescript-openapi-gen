@@ -1,8 +1,6 @@
 // Auto-generated Express routes from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-// @ts-nocheck
-
 import { Router } from 'express'
 import { events, pets, users } from './controller'
 

@@ -1,8 +1,6 @@
 // Auto-generated Hono routes from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-// @ts-nocheck
-
 import { Hono } from 'hono'
 import { events, pets, users } from './controller'
 

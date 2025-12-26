@@ -49,7 +49,6 @@ export abstract class BaseRouteGenerator {
 
     // Add file header
     lines.push(...buildFileHeader(this.getFrameworkName() + ' routes from OpenAPI specification'))
-    lines.push('// @ts-nocheck')
     lines.push('')
 
     // Add imports
