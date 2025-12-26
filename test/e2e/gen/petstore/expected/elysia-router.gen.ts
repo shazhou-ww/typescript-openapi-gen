@@ -4,27 +4,23 @@
 import { Elysia } from 'elysia'
 import { events, pets, users } from './controller'
 
-export function createRouter<T extends Elysia>(app: T) {
-  return app
-    .get('/events/stream', () => events.stream.handleGet({}))
-    .get('/pets', ({ query }) => pets.handleGet({ query }))
-    .post('/pets', ({ body }) => pets.handlePost({ body }))
-    .get('/pets/:petId', ({ params }) => pets._petId.handleGet({ params }))
-    .put('/pets/:petId', ({ params, body }) =>
-      pets._petId.handlePut({ params, body }),
-    )
-    .delete('/pets/:petId', ({ params }) =>
-      pets._petId.handleDelete({ params }),
-    )
-    .get('/pets/:petId/photos', ({ params }) =>
-      pets._petId.photos.handleGet({ params }),
-    )
-    .post('/pets/:petId/photos', ({ params, body }) =>
-      pets._petId.photos.handlePost({ params, body }),
-    )
-    .get('/users/:userId/profile', ({ params }) =>
-      users._userId.profile.handleGet({ params }),
-    )
-}
+export const router = new Elysia()
+  .get('/events/stream', () => events.stream.handleGet({}))
+  .get('/pets', ({ query }) => pets.handleGet({ query }))
+  .post('/pets', ({ body }) => pets.handlePost({ body }))
+  .get('/pets/:petId', ({ params }) => pets._petId.handleGet({ params }))
+  .put('/pets/:petId', ({ params, body }) =>
+    pets._petId.handlePut({ params, body }),
+  )
+  .delete('/pets/:petId', ({ params }) => pets._petId.handleDelete({ params }))
+  .get('/pets/:petId/photos', ({ params }) =>
+    pets._petId.photos.handleGet({ params }),
+  )
+  .post('/pets/:petId/photos', ({ params, body }) =>
+    pets._petId.photos.handlePost({ params, body }),
+  )
+  .get('/users/:userId/profile', ({ params }) =>
+    users._userId.profile.handleGet({ params }),
+  )
 
-export default createRouter
+export default router

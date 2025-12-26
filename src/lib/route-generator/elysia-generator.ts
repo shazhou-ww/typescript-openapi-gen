@@ -116,18 +116,16 @@ export class ElysiaRouteGenerator {
   private generateRouteDefinitions(routes: FlatRoute[]): string[] {
     const lines: string[] = []
 
-    // Generate router decorator function
-    lines.push('export function createRouter<T extends Elysia>(app: T) {')
-    lines.push('  return app')
+    // Generate Elysia router instance
+    lines.push('export const router = new Elysia()')
 
     for (const route of routes) {
       lines.push(this.generateRoute(route))
       this.result.routesGenerated++
     }
 
-    lines.push('}')
     lines.push('')
-    lines.push('export default createRouter')
+    lines.push('export default router')
 
     return lines
   }
@@ -141,7 +139,7 @@ export class ElysiaRouteGenerator {
       inputParts.length > 0 ? `{ ${inputParts.join(', ')} }` : ''
     const inputObject = this.buildInputObject(route)
 
-    return `    .${route.method}('${route.elysiaPath}', (${destructure}) => ${handlerCall}(${inputObject}))`
+    return `  .${route.method}('${route.elysiaPath}', (${destructure}) => ${handlerCall}(${inputObject}))`
   }
 
   private buildControllerPath(importPath: string[]): string {

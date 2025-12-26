@@ -82,6 +82,32 @@ src/
 └── ...
 ```
 
+### Usage Example
+
+#### Elysia
+
+```typescript
+import { Elysia } from 'elysia'
+import { router } from './elysia-router.gen'
+
+const app = new Elysia()
+  .use(router) // Use the generated router as a plugin
+  .listen(3000)
+
+console.log('Server running on http://localhost:3000')
+```
+
+#### Express
+
+```typescript
+import express from 'express'
+import { createRouter } from './express-router.gen'
+
+const app = express()
+createRouter(app) // Apply routes to express app
+app.listen(3000)
+```
+
 ## Framework-Specific Features
 
 ### Elysia
