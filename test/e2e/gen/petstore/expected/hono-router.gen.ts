@@ -7,7 +7,11 @@ import { events, pets, users } from './controller'
 
 export const app = new Hono()
 
-export function createRouter<T extends Hono>(app: T): T {
+/**
+ * Decorates a Hono app with generated routes.
+ * Usage: const app = new Hono(); decorateRouter(app);
+ */
+export function decorateRouter<T extends Hono>(app: T): T {
   app.get('/events/stream', (c) =>
     streamSSE(c, async (stream) => {
       try {
@@ -73,4 +77,4 @@ export function createRouter<T extends Hono>(app: T): T {
   return app
 }
 
-export default createRouter
+export default decorateRouter

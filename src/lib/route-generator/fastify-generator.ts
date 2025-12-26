@@ -35,7 +35,11 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
     const lines: string[] = []
 
     // Generate router decorator function
-    lines.push('export async function createRouter(fastify: FastifyInstance): Promise<void> {')
+    lines.push('/**')
+    lines.push(' * Decorates a Fastify instance with generated routes.')
+    lines.push(' * Usage: await decorateRouter(fastify)')
+    lines.push(' */')
+    lines.push('export async function decorateRouter(fastify: FastifyInstance): Promise<void> {')
     lines.push('  fastify.register(ssePlugin)')
     lines.push('  fastify.withTypeProvider<TypeBoxTypeProvider>()')
 
@@ -46,7 +50,7 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
 
     lines.push('}')
     lines.push('')
-    lines.push('export default createRouter')
+    lines.push('export default decorateRouter')
 
     return lines
   }

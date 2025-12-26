@@ -4,7 +4,11 @@
 import { Elysia } from 'elysia'
 import { events, pets, users } from './controller'
 
-export const router = new Elysia()
+/**
+ * Elysia plugin containing all generated routes.
+ * Usage: app.use(createPlugin)
+ */
+export const createPlugin = new Elysia()
   .get('/events/stream', () => events.stream.handleGet({}))
   .get('/pets', ({ query }) => pets.handleGet({ query }))
   .post('/pets', ({ body }) => pets.handlePost({ body }))
@@ -23,4 +27,4 @@ export const router = new Elysia()
     users._userId.profile.handleGet({ params }),
   )
 
-export default router
+export default createPlugin

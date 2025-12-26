@@ -6,7 +6,11 @@ import { events, pets, users } from './controller'
 
 export const router = Router()
 
-export function createRouter(router: Router): Router {
+/**
+ * Decorates an Express router with generated routes.
+ * Usage: const router = express.Router(); decorateRouter(router);
+ */
+export function decorateRouter(router: Router): Router {
   router.get('/events/stream', async (req, res, next) => {
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
@@ -71,4 +75,4 @@ export function createRouter(router: Router): Router {
   return router
 }
 
-export default createRouter
+export default decorateRouter
