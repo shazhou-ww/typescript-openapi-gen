@@ -7,9 +7,16 @@ import { events, pets, users } from './controller'
 export const app = new Hono()
 
 export function createRouter<T extends Hono>(app: T): T {
-  app.get('/events/stream', async (c) => {
-    const result = await events.stream.handleGet({})
-    return c.json(result)
+  app.get('/events/stream', async function* (c) {
+    c.header('Content-Type', 'text/event-stream')
+    c.header('Cache-Control', 'no-cache')
+    c.header('Connection', 'keep-alive')
+
+    try {
+      yield* events.stream.handleGet({})
+    } catch (error) {
+      yield { event: 'error', data: { error: error.message } }
+    }
   })
   app.get('/pets', async (c) => {
     const query = c.req.query() as unknown

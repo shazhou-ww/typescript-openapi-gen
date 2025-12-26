@@ -8,8 +8,22 @@ export const router = Router()
 
 export function createRouter(router: Router): Router {
   router.get('/events/stream', async (req, res, next) => {
-    const result = await events.stream.handleGet({})
-    res.json(result)
+    res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
+    res.flushHeaders()
+
+    try {
+      for await (const event of events.stream.handleGet({})) {
+        res.write(`data: ${JSON.stringify(event)}\n\n`)
+      }
+    } catch (error) {
+      res.write(
+        `event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`,
+      )
+    } finally {
+      res.end()
+    }
   })
   router.get('/pets', async (req, res, next) => {
     const query = req.query as unknown

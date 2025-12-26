@@ -1,3 +1,4 @@
+import { isSSEOperation } from '../openapi-parser.js'
 import type { OpenAPIDocument } from '../openapi-parser.js'
 import type { FlatRoute } from './types.js'
 import { BaseRouteGenerator, type RouteGeneratorOptions } from './base-generator.js'
@@ -74,7 +75,22 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
     handlerCall: string,
     inputObject: string,
   ): string {
+    const isSSE = isSSEOperation(route.operation)
+
     if (inputParts.length === 0) {
+      if (isSSE) {
+        return `async function* (c) {
+    c.header('Content-Type', 'text/event-stream')
+    c.header('Cache-Control', 'no-cache')
+    c.header('Connection', 'keep-alive')
+
+    try {
+      yield* ${handlerCall}(${inputObject})
+    } catch (error) {
+      yield { event: 'error', data: { error: error.message } }
+    }
+  }`
+      }
       if (route.returnType === 'void') {
         return `async (c) => {\n    await ${handlerCall}(${inputObject})\n    return new Response(null, { status: 204 })\n  }`
       }
@@ -93,6 +109,21 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
     }
     if (inputParts.includes('body')) {
       extractions.push('const body = await c.req.json() as unknown')
+    }
+
+    if (isSSE) {
+      return `async function* (c) {
+    ${extractions.join('\n    ')}
+    c.header('Content-Type', 'text/event-stream')
+    c.header('Cache-Control', 'no-cache')
+    c.header('Connection', 'keep-alive')
+
+    try {
+      yield* ${handlerCall}(${inputObject})
+    } catch (error) {
+      yield { event: 'error', data: { error: error.message } }
+    }
+  }`
     }
 
     if (route.returnType === 'void') {

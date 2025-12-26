@@ -1,3 +1,4 @@
+import { isSSEOperation } from '../openapi-parser.js'
 import type { OpenAPIDocument } from '../openapi-parser.js'
 import type { FlatRoute } from './types.js'
 import { BaseRouteGenerator, type RouteGeneratorOptions } from './base-generator.js'
@@ -57,6 +58,7 @@ export class ExpressRouteGenerator extends BaseRouteGenerator {
 
     const expressPath = this.convertPath(route.path)
     const inputObject = this.buildInputObject(route)
+    const isSSE = isSSEOperation(route.operation)
 
     // Express handlers: (req, res, next) => {}
     // We need to extract params, query, headers, body from req
@@ -76,9 +78,36 @@ export class ExpressRouteGenerator extends BaseRouteGenerator {
       reqExtractions.push('const body = req.body as unknown')
     }
 
-    const handlerBody = reqExtractions.length > 0
-      ? `async (req, res, next) => {\n    ${reqExtractions.join('\n    ')}\n    const result = await ${handlerCall}(${inputObject})\n    res.json(result)\n  }`
-      : `async (req, res, next) => {\n    const result = await ${handlerCall}(${inputObject})\n    res.json(result)\n  }`
+    let handlerBody: string
+
+    if (isSSE) {
+      // SSE handler: set headers and stream events
+      const setupCode = reqExtractions.length > 0
+        ? `${reqExtractions.join('\n    ')}\n    `
+        : ''
+
+      handlerBody = `async (req, res, next) => {
+    ${setupCode}res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
+    res.flushHeaders()
+
+    try {
+      for await (const event of ${handlerCall}(${inputObject})) {
+        res.write(\`data: \${JSON.stringify(event)}\\n\\n\`)
+      }
+    } catch (error) {
+      res.write(\`event: error\\ndata: \${JSON.stringify({ error: error.message })}\\n\\n\`)
+    } finally {
+      res.end()
+    }
+  }`
+    } else {
+      // Regular JSON handler
+      handlerBody = reqExtractions.length > 0
+        ? `async (req, res, next) => {\n    ${reqExtractions.join('\n    ')}\n    const result = await ${handlerCall}(${inputObject})\n    res.json(result)\n  }`
+        : `async (req, res, next) => {\n    const result = await ${handlerCall}(${inputObject})\n    res.json(result)\n  }`
+    }
 
     return `router.${route.method}('${expressPath}', ${handlerBody})`
   }

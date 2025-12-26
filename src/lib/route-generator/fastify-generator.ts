@@ -1,3 +1,4 @@
+import { isSSEOperation } from '../openapi-parser.js'
 import type { OpenAPIDocument } from '../openapi-parser.js'
 import type { FlatRoute } from './types.js'
 import { BaseRouteGenerator, type RouteGeneratorOptions } from './base-generator.js'
@@ -54,6 +55,7 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
 
     const fastifyPath = this.convertPath(route.path)
     const inputObject = this.buildInputObject(route)
+    const isSSE = isSSEOperation(route.operation)
 
     // Fastify handlers: async (request, reply) => {}
     // Extract from request.params, request.query, request.body, request.headers
@@ -73,9 +75,31 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
       requestExtractions.push('const body = request.body as unknown')
     }
 
-    const handlerBody = requestExtractions.length > 0
-      ? `async (request, reply) => {\n    ${requestExtractions.join('\n    ')}\n    const result = await ${handlerCall}(${inputObject})\n    return result\n  }`
-      : `async (request, reply) => {\n    const result = await ${handlerCall}(${inputObject})\n    return result\n  }`
+    let handlerBody: string
+
+    if (isSSE) {
+      // SSE handler: set headers and return async generator
+      const setupCode = requestExtractions.length > 0
+        ? `${requestExtractions.join('\n    ')}\n    `
+        : ''
+
+      handlerBody = `async function* (request, reply) {
+    ${setupCode}reply.header('Content-Type', 'text/event-stream')
+    reply.header('Cache-Control', 'no-cache')
+    reply.header('Connection', 'keep-alive')
+
+    try {
+      yield* ${handlerCall}(${inputObject})
+    } catch (error) {
+      yield { event: 'error', data: { error: error.message } }
+    }
+  }`
+    } else {
+      // Regular handler
+      handlerBody = requestExtractions.length > 0
+        ? `async (request, reply) => {\n    ${requestExtractions.join('\n    ')}\n    const result = await ${handlerCall}(${inputObject})\n    return result\n  }`
+        : `async (request, reply) => {\n    const result = await ${handlerCall}(${inputObject})\n    return result\n  }`
+    }
 
     return `  fastify.${route.method}('${fastifyPath}', ${handlerBody})`
   }
