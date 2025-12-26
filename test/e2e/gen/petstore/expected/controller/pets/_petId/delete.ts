@@ -1,4 +1,4 @@
-import type { DeleteInput, DeleteOutput } from './types'
+import type { DeleteInput, DeleteOutput } from './types.gen'
 
 export async function handleDelete(input: DeleteInput): Promise<DeleteOutput> {
   // @ts-ignore - Implementation required

@@ -24,7 +24,7 @@ export function generateMethodFile(
   const functionKeyword = isSSE ? 'async function*' : 'async function'
 
   const lines: string[] = [
-    `import type { ${methodName}Input, ${outputTypeName} } from './types'`,
+    `import type { ${methodName}Input, ${outputTypeName} } from './types.gen'`,
     '',
     `export ${functionKeyword} handle${methodName}(input: ${methodName}Input): ${returnType} {`,
     '  // @ts-ignore - Implementation required',

@@ -1,4 +1,4 @@
-import type { GetInput, GetEventOutput } from './types'
+import type { GetInput, GetEventOutput } from './types.gen'
 
 export async function* handleGet(
   input: GetInput,

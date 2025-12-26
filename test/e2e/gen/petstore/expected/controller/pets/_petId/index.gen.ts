@@ -8,7 +8,7 @@ export type {
   PutOutput,
   DeleteInput,
   DeleteOutput,
-} from './types'
+} from './types.gen'
 
 export { handleGet } from './get'
 export { handlePut } from './put'

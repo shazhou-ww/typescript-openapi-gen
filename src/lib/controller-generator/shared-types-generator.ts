@@ -5,7 +5,7 @@ import { generateSharedTypes } from '../type-generator/index.js'
 import type { GenerationResult } from './types.js'
 
 /**
- * Generate the shared types folder
+ * Generate the shared types folder with separate files per type
  */
 export function generateSharedTypesFolder(
   sharedTypesDir: string,
@@ -14,7 +14,19 @@ export function generateSharedTypesFolder(
 ): void {
   fs.mkdirSync(sharedTypesDir, { recursive: true })
 
-  const content = generateSharedTypes(schemas)
-  fs.writeFileSync(path.join(sharedTypesDir, 'index.ts'), content)
+  const { files, indexContent } = generateSharedTypes(schemas)
+
+  // Write individual type files
+  for (const file of files) {
+    const filePath = path.join(sharedTypesDir, `${file.name}.gen.ts`)
+    fs.writeFileSync(filePath, file.content)
+    result.filesCreated++
+    result.generatedFiles.push(filePath)
+  }
+
+  // Write index file
+  const indexPath = path.join(sharedTypesDir, 'index.gen.ts')
+  fs.writeFileSync(indexPath, indexContent)
   result.filesCreated++
+  result.generatedFiles.push(indexPath)
 }

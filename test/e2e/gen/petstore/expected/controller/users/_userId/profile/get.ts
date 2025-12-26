@@ -1,4 +1,4 @@
-import type { GetInput, GetOutput } from './types'
+import type { GetInput, GetOutput } from './types.gen'
 
 export async function handleGet(input: GetInput): Promise<GetOutput> {
   // @ts-ignore - Implementation required

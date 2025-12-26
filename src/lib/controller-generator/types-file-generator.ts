@@ -24,7 +24,7 @@ export function generateTypesFile(
   }
 
   addImportIfNeeded(lines, referencedTypes, controllerDir, sharedTypesDir)
-  writeGeneratedFile(controllerDir, 'types.ts', lines, result)
+  writeGeneratedFile(controllerDir, 'types.gen.ts', lines, result)
 }
 
 function addMethodTypes(
