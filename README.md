@@ -1,10 +1,12 @@
 # TypeScript OpenAPI Generator
 
-Generate TypeScript controllers and routes from OpenAPI specifications with full type safety and framework support.
+Generate TypeScript controllers and routes from OpenAPI specifications
+with full type safety and framework support.
 
 ## Features
 
-- 🚀 **Multi-Framework Support**: Generate routes for Elysia, Express, Fastify, and Hono
+- 🚀 **Multi-Framework Support**: Generate routes for Elysia, Express,
+  Fastify, and Hono
 - 📝 **Type-Safe Controllers**: Auto-generated TypeScript interfaces and Zod validation
 - 🔄 **Server-Sent Events**: Built-in support for SSE endpoints
 - 🎯 **Framework-Specific Optimization**: Tailored code generation for each framework
@@ -58,7 +60,7 @@ tsoapi gen elysia openapi.yaml -o ./src
 
 For an OpenAPI spec with `/pets` and `/pets/{petId}` endpoints:
 
-```
+```text
 src/
 ├── controllers/           # Generated controllers
 │   ├── index.ts          # Main exports
@@ -76,25 +78,29 @@ src/
 │           ├── get.ts    # GET /pets/{petId}
 │           ├── put.ts    # PUT /pets/{petId}
 │           └── delete.ts # DELETE /pets/{petId}
-├── elysia-router.ts      # Generated routes
+├── elysia-router.gen.ts  # Generated routes
 └── ...
 ```
 
 ## Framework-Specific Features
 
 ### Elysia
+
 - Native type inference with chained route definitions
 - Built-in SSE support with `yield*`
 
 ### Express
+
 - Traditional middleware pattern
 - SSE with proper headers and streaming
 
 ### Fastify
+
 - `@fastify/type-provider-typebox` integration
 - Native SSE plugin support
 
 ### Hono
+
 - `hono/streaming` integration
 - Optimized for edge environments
 
@@ -117,7 +123,8 @@ tsoapi gen router elysia openapi.yaml \
 
 ### Prettier Integration
 
-The generator automatically detects and uses your project's Prettier configuration, or you can specify a custom config:
+The generator automatically detects and uses your project's Prettier
+configuration, or you can specify a custom config:
 
 ```bash
 tsoapi gen controller openapi.yaml -o ./src --prettier ./prettier.config.js
@@ -171,4 +178,3 @@ See the `test/e2e/gen/petstore/` directory for complete generated examples.
 ## License
 
 ISC
-

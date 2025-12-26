@@ -92,7 +92,7 @@ describe('Route Generator E2E Tests', () => {
 
         // Parse and generate routes
         const openapiPath = path.join(inputDir, openapiFile)
-        outputFilePath = path.join(tempOutputDir, 'elysia-routes.ts')
+        outputFilePath = path.join(tempOutputDir, 'elysia-router.gen.ts')
 
         const openApiDoc = await parseOpenAPIFile(openapiPath)
         const generator = new ElysiaRouteGenerator(
@@ -115,7 +115,7 @@ describe('Route Generator E2E Tests', () => {
       })
 
       it('should generate file with expected content', () => {
-        const expectedPath = path.join(expectedDir, 'elysia-routes.ts')
+        const expectedPath = path.join(expectedDir, 'elysia-router.gen.ts')
 
         if (!fs.existsSync(expectedPath)) {
           // Skip if no expected route file exists for this test case

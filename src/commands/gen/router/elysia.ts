@@ -46,7 +46,7 @@ export default class GenRouterElysia extends Command {
     const inputFile = path.resolve(args.file)
     const outputDir = path.resolve(flags['output-dir'])
     const controllerFolder = flags['controller-folder'] ?? 'controller'
-    const routerFile = flags['router-file'] ?? 'elysia-router.ts'
+    const routerFile = flags['router-file'] ?? 'elysia-router.gen.ts'
     const prettierConfig = flags.prettier
       ? path.resolve(flags.prettier)
       : undefined

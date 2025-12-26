@@ -64,22 +64,22 @@ const frameworks = [
   {
     name: 'elysia',
     generator: ElysiaRouteGenerator,
-    routeFile: 'elysia-router.ts',
+    routeFile: 'elysia-router.gen.ts',
   },
   {
     name: 'express',
     generator: ExpressRouteGenerator,
-    routeFile: 'express-router.ts',
+    routeFile: 'express-router.gen.ts',
   },
   {
     name: 'fastify',
     generator: FastifyRouteGenerator,
-    routeFile: 'fastify-router.ts',
+    routeFile: 'fastify-router.gen.ts',
   },
   {
     name: 'hono',
     generator: HonoRouteGenerator,
-    routeFile: 'hono-router.ts',
+    routeFile: 'hono-router.gen.ts',
   },
 ] as const
 
