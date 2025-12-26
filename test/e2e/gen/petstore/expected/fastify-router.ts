@@ -4,6 +4,8 @@
 import type { FastifyInstance } from 'fastify'
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { events, pets, users } from './controller'
+import ssePlugin from '@fastify/sse'
+
 
 export async function createRouter(fastify: FastifyInstance): Promise<void> {
   fastify.withTypeProvider<TypeBoxTypeProvider>()

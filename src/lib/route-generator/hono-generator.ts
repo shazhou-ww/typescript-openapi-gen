@@ -15,6 +15,7 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
 
     // Import Hono
     lines.push("import { Hono } from 'hono'")
+    lines.push("import { streamSSE } from 'hono/streaming'")
 
     // Import controllers
     const topLevelModules = this.getTopLevelModules(routes)
@@ -79,17 +80,24 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
 
     if (inputParts.length === 0) {
       if (isSSE) {
-        return `async function* (c) {
-    c.header('Content-Type', 'text/event-stream')
-    c.header('Cache-Control', 'no-cache')
-    c.header('Connection', 'keep-alive')
-
-    try {
-      yield* ${handlerCall}(${inputObject})
-    } catch (error) {
-      yield { event: 'error', data: { error: error.message } }
-    }
-  }`
+        return `(c) =>
+    streamSSE(c, async (stream) => {
+      try {
+        for await (const event of ${handlerCall}(${inputObject})) {
+          await stream.write({
+            id: String(Date.now()),
+            event: 'message',
+            data: JSON.stringify(event)
+          })
+        }
+      } catch (error) {
+        await stream.write({
+          id: String(Date.now()),
+          event: 'error',
+          data: JSON.stringify({ error: error.message })
+        })
+      }
+    })`
       }
       if (route.returnType === 'void') {
         return `async (c) => {\n    await ${handlerCall}(${inputObject})\n    return new Response(null, { status: 204 })\n  }`
@@ -112,18 +120,25 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
     }
 
     if (isSSE) {
-      return `async function* (c) {
-    ${extractions.join('\n    ')}
-    c.header('Content-Type', 'text/event-stream')
-    c.header('Cache-Control', 'no-cache')
-    c.header('Connection', 'keep-alive')
-
-    try {
-      yield* ${handlerCall}(${inputObject})
-    } catch (error) {
-      yield { event: 'error', data: { error: error.message } }
-    }
-  }`
+      return `(c) =>
+    streamSSE(c, async (stream) => {
+      ${extractions.join('\n      ')}
+      try {
+        for await (const event of ${handlerCall}(${inputObject})) {
+          await stream.write({
+            id: String(Date.now()),
+            event: 'message',
+            data: JSON.stringify(event)
+          })
+        }
+      } catch (error) {
+        await stream.write({
+          id: String(Date.now()),
+          event: 'error',
+          data: JSON.stringify({ error: error.message })
+        })
+      }
+    })`
     }
 
     if (route.returnType === 'void') {

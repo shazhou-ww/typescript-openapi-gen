@@ -2,22 +2,31 @@
 // DO NOT EDIT - This file is regenerated on each run
 
 import { Hono } from 'hono'
+import { streamSSE } from 'hono/streaming'
 import { events, pets, users } from './controller'
 
 export const app = new Hono()
 
 export function createRouter<T extends Hono>(app: T): T {
-  app.get('/events/stream', async function* (c) {
-    c.header('Content-Type', 'text/event-stream')
-    c.header('Cache-Control', 'no-cache')
-    c.header('Connection', 'keep-alive')
-
-    try {
-      yield* events.stream.handleGet({})
-    } catch (error) {
-      yield { event: 'error', data: { error: error.message } }
-    }
-  })
+  app.get('/events/stream', (c) =>
+    streamSSE(c, async (stream) => {
+      try {
+        for await (const event of events.stream.handleGet({})) {
+          await stream.write({
+            id: String(Date.now()),
+            event: 'message',
+            data: JSON.stringify(event),
+          })
+        }
+      } catch (error) {
+        await stream.write({
+          id: String(Date.now()),
+          event: 'error',
+          data: JSON.stringify({ error: error.message }),
+        })
+      }
+    }),
+  )
   app.get('/pets', async (c) => {
     const query = c.req.query() as unknown
     const result = await pets.handleGet({ query })
