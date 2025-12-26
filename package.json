@@ -1,6 +1,6 @@
 {
   "name": "typescript-openapi-gen",
-  "version": "0.2.3",
+  "version": "0.2.2",
   "description": "Generate TypeScript controllers and routes from OpenAPI specifications with multi-framework support",
   "type": "module",
   "main": "dist/index.js",
