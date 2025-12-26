@@ -88,10 +88,10 @@ src/
 
 ```typescript
 import { Elysia } from 'elysia'
-import { createPlugin } from './elysia-router.gen'
+import { routerPlugin } from './elysia-router.gen'
 
 const app = new Elysia()
-  .use(createPlugin) // Use the generated plugin
+  .use(routerPlugin) // Use the generated plugin
   .listen(3000)
 
 console.log('Server running on http://localhost:3000')
@@ -101,12 +101,10 @@ console.log('Server running on http://localhost:3000')
 
 ```typescript
 import express from 'express'
-import { decorate } from './express-router.gen'
+import { router } from './express-router.gen'
 
 const app = express()
-const router = express.Router()
-decorate(router) // Decorate the router with routes
-app.use(router)
+app.use('/api', router) // Use the generated router
 app.listen(3000)
 ```
 

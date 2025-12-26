@@ -35,23 +35,14 @@ export class ExpressRouteGenerator extends BaseRouteGenerator {
   protected generateRouteDefinitions(routes: FlatRoute[]): string[] {
     const lines: string[] = []
 
-    // Generate router decorator function
-    lines.push('/**')
-    lines.push(' * Decorates an Express router with generated routes.')
-    lines.push(' * Usage: const router = express.Router(); decorate(router);')
-    lines.push(' */')
-    lines.push('export function decorate(router: Router): Router {')
-
+    // Generate routes directly on the router instance
     for (const route of routes) {
       lines.push(this.generateRoute(route))
       this.result.routesGenerated++
     }
 
     lines.push('')
-    lines.push('  return router')
-    lines.push('}')
-    lines.push('')
-    lines.push('export default decorate')
+    lines.push('export default router')
 
     return lines
   }

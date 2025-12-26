@@ -119,9 +119,9 @@ export class ElysiaRouteGenerator {
     // Generate Elysia plugin instance
     lines.push('/**')
     lines.push(' * Elysia plugin containing all generated routes.')
-    lines.push(' * Usage: app.use(createPlugin)')
+    lines.push(' * Usage: app.use(routerPlugin)')
     lines.push(' */')
-    lines.push('export const createPlugin = new Elysia()')
+    lines.push('export const routerPlugin = new Elysia()')
 
     for (const route of routes) {
       lines.push(this.generateRoute(route))
@@ -129,7 +129,7 @@ export class ElysiaRouteGenerator {
     }
 
     lines.push('')
-    lines.push('export default createPlugin')
+    lines.push('export default routerPlugin')
 
     return lines
   }
