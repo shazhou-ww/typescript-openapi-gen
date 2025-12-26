@@ -32,7 +32,8 @@ export class KoaRouteGenerator extends BaseRouteGenerator {
     }
 
     lines.push('')
-    lines.push('export const router = new Router()')
+    lines.push('// Type for router with body parsing middleware')
+    lines.push('type RouterWithBody<StateT = any, ContextT = any> = Router<StateT, ContextT & { request: { body: unknown } }>')
 
     return lines
   }
@@ -40,13 +41,19 @@ export class KoaRouteGenerator extends BaseRouteGenerator {
   protected generateRouteDefinitions(routes: FlatRoute[]): string[] {
     const lines: string[] = []
 
+    // Generate router decorator function
+    lines.push('export function createRouter<StateT = any, ContextT = any>(router: Router<StateT, ContextT & { request: { body: unknown } }>): Router<StateT, ContextT & { request: { body: unknown } }> {')
+
     for (const route of routes) {
       lines.push(this.generateRoute(route))
       this.result.routesGenerated++
     }
 
     lines.push('')
-    lines.push('export default router')
+    lines.push('  return router')
+    lines.push('}')
+    lines.push('')
+    lines.push('export default createRouter')
 
     return lines
   }

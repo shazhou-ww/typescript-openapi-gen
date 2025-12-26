@@ -5,7 +5,7 @@ import type { FastifyInstance } from 'fastify'
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 import { events, pets, users } from './controller'
 
-export async function routes(fastify: FastifyInstance) {
+export async function createRouter(fastify: FastifyInstance): Promise<void> {
   fastify.withTypeProvider<TypeBoxTypeProvider>()
   fastify.get('/events/stream', async (request, reply) => {
     const result = await events.stream.handleGet({})
@@ -54,3 +54,5 @@ export async function routes(fastify: FastifyInstance) {
     return result
   })
 }
+
+export default createRouter

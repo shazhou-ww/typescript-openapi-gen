@@ -32,7 +32,8 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
   protected generateRouteDefinitions(routes: FlatRoute[]): string[] {
     const lines: string[] = []
 
-    lines.push('export async function routes(fastify: FastifyInstance) {')
+    // Generate router decorator function
+    lines.push('export async function createRouter(fastify: FastifyInstance): Promise<void> {')
     lines.push('  fastify.withTypeProvider<TypeBoxTypeProvider>()')
 
     for (const route of routes) {
@@ -41,6 +42,8 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
     }
 
     lines.push('}')
+    lines.push('')
+    lines.push('export default createRouter')
 
     return lines
   }

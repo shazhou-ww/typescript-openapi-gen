@@ -34,13 +34,19 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
   protected generateRouteDefinitions(routes: FlatRoute[]): string[] {
     const lines: string[] = []
 
+    // Generate router decorator function
+    lines.push('export function createRouter<T extends Hono>(app: T): T {')
+
     for (const route of routes) {
       lines.push(this.generateRoute(route))
       this.result.routesGenerated++
     }
 
     lines.push('')
-    lines.push('export default app')
+    lines.push('  return app')
+    lines.push('}')
+    lines.push('')
+    lines.push('export default createRouter')
 
     return lines
   }

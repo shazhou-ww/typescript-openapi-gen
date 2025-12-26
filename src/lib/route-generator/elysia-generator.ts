@@ -113,7 +113,8 @@ export class ElysiaRouteGenerator {
   private generateRouteDefinitions(routes: FlatRoute[]): string[] {
     const lines: string[] = []
 
-    lines.push('export const routes = new Elysia()')
+    // Generate router decorator function
+    lines.push('export function createRouter<T extends Elysia>(app: T): T {')
 
     for (const route of routes) {
       lines.push(this.generateRoute(route))
@@ -121,6 +122,10 @@ export class ElysiaRouteGenerator {
     }
 
     lines.push('')
+    lines.push('  return app')
+    lines.push('}')
+    lines.push('')
+    lines.push('export default createRouter')
 
     return lines
   }

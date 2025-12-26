@@ -34,13 +34,19 @@ export class ExpressRouteGenerator extends BaseRouteGenerator {
   protected generateRouteDefinitions(routes: FlatRoute[]): string[] {
     const lines: string[] = []
 
+    // Generate router decorator function
+    lines.push('export function createRouter(router: Router): Router {')
+
     for (const route of routes) {
       lines.push(this.generateRoute(route))
       this.result.routesGenerated++
     }
 
     lines.push('')
-    lines.push('export default router')
+    lines.push('  return router')
+    lines.push('}')
+    lines.push('')
+    lines.push('export default createRouter')
 
     return lines
   }

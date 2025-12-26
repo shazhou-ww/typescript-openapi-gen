@@ -2,9 +2,9 @@ import { Args, Command, Flags } from '@oclif/core'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { parseOpenAPIFile } from '../../../lib/openapi-parser.js'
-import { ExpressRouteGenerator } from '../../../lib/route-generator/index.js'
+import { ElysiaRouteGenerator } from '../../../lib/route-generator/index.js'
 
-export default class GenRouteExpress extends Command {
+export default class GenRouterElysia extends Command {
   static override args = {
     file: Args.string({
       description: 'OpenAPI specification file (YAML or JSON)',
@@ -13,11 +13,11 @@ export default class GenRouteExpress extends Command {
   }
 
   static override description =
-    'Generate Express routes from OpenAPI specification'
+    'Generate Elysia router decorator from OpenAPI specification'
 
   static override examples = [
     '<%= config.bin %> <%= command.id %> --output-dir ./src openapi.yaml',
-    '<%= config.bin %> <%= command.id %> -o ./src --route-file routes.ts --controller-folder handlers api.json',
+    '<%= config.bin %> <%= command.id %> -o ./src --router-file router.ts --controller-folder handlers api.json',
   ]
 
   static override flags = {
@@ -26,8 +26,8 @@ export default class GenRouteExpress extends Command {
       description: 'Output directory (same as controller generation)',
       required: true,
     }),
-    'route-file': Flags.string({
-      description: 'Route file name (default: express-routes.ts)',
+    'router-file': Flags.string({
+      description: 'Router file name (default: elysia-router.ts)',
       required: false,
     }),
     'controller-folder': Flags.string({
@@ -41,18 +41,18 @@ export default class GenRouteExpress extends Command {
   }
 
   public async run(): Promise<void> {
-    const { args, flags } = await this.parse(GenRouteExpress)
+    const { args, flags } = await this.parse(GenRouterElysia)
 
     const inputFile = path.resolve(args.file)
     const outputDir = path.resolve(flags['output-dir'])
     const controllerFolder = flags['controller-folder'] ?? 'controller'
-    const routeFile = flags['route-file'] ?? 'express-routes.ts'
+    const routerFile = flags['router-file'] ?? 'elysia-router.ts'
     const prettierConfig = flags.prettier
       ? path.resolve(flags.prettier)
       : undefined
 
     const controllerPath = path.join(outputDir, controllerFolder)
-    const outputPath = path.join(outputDir, routeFile)
+    const outputPath = path.join(outputDir, routerFile)
 
     // Check if input file exists
     if (!fs.existsSync(inputFile)) {
@@ -76,7 +76,7 @@ export default class GenRouteExpress extends Command {
       const openApiDoc = await parseOpenAPIFile(inputFile)
 
       // Generate routes
-      const generator = new ExpressRouteGenerator(
+      const generator = new ElysiaRouteGenerator(
         openApiDoc,
         controllerPath,
         outputPath,
@@ -105,4 +105,3 @@ export default class GenRouteExpress extends Command {
     }
   }
 }
-

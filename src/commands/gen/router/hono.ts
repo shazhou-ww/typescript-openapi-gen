@@ -2,9 +2,9 @@ import { Args, Command, Flags } from '@oclif/core'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { parseOpenAPIFile } from '../../../lib/openapi-parser.js'
-import { KoaRouteGenerator } from '../../../lib/route-generator/index.js'
+import { HonoRouteGenerator } from '../../../lib/route-generator/index.js'
 
-export default class GenRouteKoa extends Command {
+export default class GenRouterHono extends Command {
   static override args = {
     file: Args.string({
       description: 'OpenAPI specification file (YAML or JSON)',
@@ -12,11 +12,11 @@ export default class GenRouteKoa extends Command {
     }),
   }
 
-  static override description = 'Generate Koa routes from OpenAPI specification'
+  static override description = 'Generate Hono router decorator from OpenAPI specification'
 
   static override examples = [
     '<%= config.bin %> <%= command.id %> --output-dir ./src openapi.yaml',
-    '<%= config.bin %> <%= command.id %> -o ./src --route-file routes.ts --controller-folder handlers api.json',
+    '<%= config.bin %> <%= command.id %> -o ./src --router-file router.ts --controller-folder handlers api.json',
   ]
 
   static override flags = {
@@ -25,8 +25,8 @@ export default class GenRouteKoa extends Command {
       description: 'Output directory (same as controller generation)',
       required: true,
     }),
-    'route-file': Flags.string({
-      description: 'Route file name (default: koa-routes.ts)',
+    'router-file': Flags.string({
+      description: 'Router file name (default: hono-router.ts)',
       required: false,
     }),
     'controller-folder': Flags.string({
@@ -40,18 +40,18 @@ export default class GenRouteKoa extends Command {
   }
 
   public async run(): Promise<void> {
-    const { args, flags } = await this.parse(GenRouteKoa)
+    const { args, flags } = await this.parse(GenRouterHono)
 
     const inputFile = path.resolve(args.file)
     const outputDir = path.resolve(flags['output-dir'])
     const controllerFolder = flags['controller-folder'] ?? 'controller'
-    const routeFile = flags['route-file'] ?? 'koa-routes.ts'
+    const routerFile = flags['router-file'] ?? 'hono-router.ts'
     const prettierConfig = flags.prettier
       ? path.resolve(flags.prettier)
       : undefined
 
     const controllerPath = path.join(outputDir, controllerFolder)
-    const outputPath = path.join(outputDir, routeFile)
+    const outputPath = path.join(outputDir, routerFile)
 
     // Check if input file exists
     if (!fs.existsSync(inputFile)) {
@@ -75,7 +75,7 @@ export default class GenRouteKoa extends Command {
       const openApiDoc = await parseOpenAPIFile(inputFile)
 
       // Generate routes
-      const generator = new KoaRouteGenerator(
+      const generator = new HonoRouteGenerator(
         openApiDoc,
         controllerPath,
         outputPath,
