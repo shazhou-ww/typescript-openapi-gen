@@ -13,9 +13,10 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
   protected generateImports(routes: FlatRoute[]): string[] {
     const lines: string[] = []
 
-    // Import Fastify with TypeBox
+    // Import Fastify with TypeBox and SSE
     lines.push("import type { FastifyInstance } from 'fastify'")
     lines.push("import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'")
+    lines.push("import ssePlugin from '@fastify/sse'")
 
     // Import controllers
     const topLevelModules = this.getTopLevelModules(routes)
@@ -35,6 +36,7 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
 
     // Generate router decorator function
     lines.push('export async function createRouter(fastify: FastifyInstance): Promise<void> {')
+    lines.push('  fastify.register(ssePlugin)')
     lines.push('  fastify.withTypeProvider<TypeBoxTypeProvider>()')
 
     for (const route of routes) {
