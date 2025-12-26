@@ -25,7 +25,7 @@ export function generateSharedTypesFolder(
   }
 
   // Write index file
-  const indexPath = path.join(sharedTypesDir, 'index.gen.ts')
+  const indexPath = path.join(sharedTypesDir, 'index.ts')
   fs.writeFileSync(indexPath, indexContent)
   result.filesCreated++
   result.generatedFiles.push(indexPath)

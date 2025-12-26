@@ -19,7 +19,7 @@ export function generateIndexFile(
   addChildRouteExports(lines, info)
   lines.push('')
 
-  writeGeneratedFile(controllerDir, 'index.gen.ts', lines, result)
+  writeGeneratedFile(controllerDir, 'index.ts', lines, result)
 }
 
 /**
@@ -41,7 +41,7 @@ export function generateRootIndexFile(
 
   lines.push('')
 
-  writeGeneratedFile(outputDir, 'index.gen.ts', lines, result)
+  writeGeneratedFile(outputDir, 'index.ts', lines, result)
 }
 
 function addTypeExports(lines: string[], info: RouteInfo): void {
