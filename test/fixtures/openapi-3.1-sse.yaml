@@ -1,0 +1,317 @@
+openapi: 3.1.0
+info:
+  title: SSE Chat API (OpenAPI 3.1)
+  version: 1.0.0
+  description: A sample API demonstrating SSE with OpenAPI 3.1
+
+paths:
+  /chat/completions:
+    post:
+      summary: Create a chat completion (streaming)
+      operationId: createChatCompletion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCompletionRequest'
+      responses:
+        '200':
+          description: Streaming chat completion response
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/ChatCompletionChunk'
+
+  /chat/messages:
+    get:
+      summary: List chat messages
+      operationId: listMessages
+      parameters:
+        - name: conversationId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+
+  /events/subscribe:
+    get:
+      summary: Subscribe to real-time events (SSE)
+      operationId: subscribeToEvents
+      parameters:
+        - name: topics
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: X-Auth-Token
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Server-Sent Events stream
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/RealtimeEvent'
+
+  /agents/{agentId}/run:
+    post:
+      summary: Run an agent with streaming output
+      operationId: runAgent
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentRunRequest'
+      responses:
+        '200':
+          description: Agent execution stream
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/AgentEvent'
+
+  /agents/{agentId}/status:
+    get:
+      summary: Get agent status
+      operationId: getAgentStatus
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Agent status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentStatus'
+
+components:
+  schemas:
+    ChatCompletionRequest:
+      type: object
+      required:
+        - messages
+        - model
+      properties:
+        model:
+          type: string
+          examples:
+            - gpt-4
+            - claude-3
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        temperature:
+          type:
+            - number
+            - 'null'
+          minimum: 0
+          maximum: 2
+        max_tokens:
+          type: integer
+          minimum: 1
+
+    ChatCompletionChunk:
+      type: object
+      required:
+        - id
+        - object
+        - created
+        - model
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+          const: chat.completion.chunk
+        created:
+          type: integer
+        model:
+          type: string
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              index:
+                type: integer
+              delta:
+                type: object
+                properties:
+                  role:
+                    type: string
+                  content:
+                    type:
+                      - string
+                      - 'null'
+              finish_reason:
+                type:
+                  - string
+                  - 'null'
+                enum:
+                  - stop
+                  - length
+                  - null
+
+    Message:
+      type: object
+      required:
+        - role
+        - content
+      properties:
+        id:
+          type: string
+        role:
+          type: string
+          enum:
+            - system
+            - user
+            - assistant
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    RealtimeEvent:
+      type: object
+      required:
+        - type
+        - timestamp
+      properties:
+        type:
+          type: string
+          enum:
+            - message
+            - notification
+            - presence
+            - error
+        timestamp:
+          type: string
+          format: date-time
+        payload:
+          type: object
+        metadata:
+          type:
+            - object
+            - 'null'
+
+    AgentRunRequest:
+      type: object
+      required:
+        - input
+      properties:
+        input:
+          type: string
+        context:
+          type: object
+        stream:
+          type: boolean
+          default: true
+
+    AgentEvent:
+      type: object
+      required:
+        - event
+      properties:
+        event:
+          type: string
+          enum:
+            - thinking
+            - tool_call
+            - tool_result
+            - output
+            - error
+            - done
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/ThinkingEvent'
+            - $ref: '#/components/schemas/ToolCallEvent'
+            - $ref: '#/components/schemas/OutputEvent'
+
+    ThinkingEvent:
+      type: object
+      properties:
+        thought:
+          type: string
+
+    ToolCallEvent:
+      type: object
+      required:
+        - tool_name
+        - arguments
+      properties:
+        tool_name:
+          type: string
+        arguments:
+          type: object
+        result:
+          type:
+            - string
+            - 'null'
+
+    OutputEvent:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+        final:
+          type: boolean
+
+    AgentStatus:
+      type: object
+      required:
+        - id
+        - name
+        - status
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+            - idle
+            - running
+            - error
+        last_run_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+
