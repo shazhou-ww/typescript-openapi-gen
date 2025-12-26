@@ -16,20 +16,23 @@ export default class GenRouteElysia extends Command {
     'Generate Elysia routes from OpenAPI specification'
 
   static override examples = [
-    '<%= config.bin %> <%= command.id %> --controller ./controller --output ./routes.ts openapi.yaml',
-    '<%= config.bin %> <%= command.id %> -c ./src/controllers -o ./src/routes/elysia.ts --prettier .prettierrc api.json',
+    '<%= config.bin %> <%= command.id %> --output-dir ./src openapi.yaml',
+    '<%= config.bin %> <%= command.id %> -o ./src --route-file routes.ts --controller-folder handlers api.json',
   ]
 
   static override flags = {
-    controller: Flags.string({
-      char: 'c',
-      description: 'Path to the generated controller directory',
+    'output-dir': Flags.string({
+      char: 'o',
+      description: 'Output directory (same as controller generation)',
       required: true,
     }),
-    output: Flags.string({
-      char: 'o',
-      description: 'Output file path for generated routes',
-      required: true,
+    'route-file': Flags.string({
+      description: 'Route file name (default: elysia-routes.ts)',
+      required: false,
+    }),
+    'controller-folder': Flags.string({
+      description: 'Controller subfolder name (default: controller)',
+      required: false,
     }),
     prettier: Flags.string({
       description: 'Path to prettier config file for formatting output',
@@ -41,11 +44,15 @@ export default class GenRouteElysia extends Command {
     const { args, flags } = await this.parse(GenRouteElysia)
 
     const inputFile = path.resolve(args.file)
-    const controllerPath = path.resolve(flags.controller)
-    const outputPath = path.resolve(flags.output)
+    const outputDir = path.resolve(flags['output-dir'])
+    const controllerFolder = flags['controller-folder'] ?? 'controller'
+    const routeFile = flags['route-file'] ?? 'elysia-routes.ts'
     const prettierConfig = flags.prettier
       ? path.resolve(flags.prettier)
       : undefined
+
+    const controllerPath = path.join(outputDir, controllerFolder)
+    const outputPath = path.join(outputDir, routeFile)
 
     // Check if input file exists
     if (!fs.existsSync(inputFile)) {

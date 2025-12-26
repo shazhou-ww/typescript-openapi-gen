@@ -16,12 +16,12 @@ export default class GenController extends Command {
     'Generate controller skeleton code from OpenAPI specification'
 
   static override examples = [
-    '<%= config.bin %> <%= command.id %> --output ./controllers openapi.yaml',
-    '<%= config.bin %> <%= command.id %> -o ./src/controllers --prettier .prettierrc api.json',
+    '<%= config.bin %> <%= command.id %> --output-dir ./src openapi.yaml',
+    '<%= config.bin %> <%= command.id %> -o ./src --controller-folder handlers --prettier .prettierrc api.json',
   ]
 
   static override flags = {
-    output: Flags.string({
+    'output-dir': Flags.string({
       char: 'o',
       description: 'Output directory for generated files',
       required: true,
@@ -44,7 +44,7 @@ export default class GenController extends Command {
     const { args, flags } = await this.parse(GenController)
 
     const inputFile = path.resolve(args.file)
-    const outputDir = path.resolve(flags.output)
+    const outputDir = path.resolve(flags['output-dir'])
     const prettierConfig = flags.prettier
       ? path.resolve(flags.prettier)
       : undefined
