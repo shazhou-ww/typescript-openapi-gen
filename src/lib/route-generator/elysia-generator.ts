@@ -136,9 +136,9 @@ export class ElysiaRouteGenerator {
 
     const routeLine = `  .${route.method}('${route.elysiaPath}', (${destructure}) => ${handlerCall}(${inputObject}))`
 
-    // Add @ts-ignore for Elysia destructuring params - Elysia handles type validation at runtime
+    // Add @ts-ignore for Elysia destructuring - validation handled at controller layer
     if (inputParts.length > 0) {
-      return `  /* @ts-ignore - Elysia handles type validation at runtime */\n${routeLine}`
+      return `  // @ts-ignore\n${routeLine}`
     }
 
     return routeLine

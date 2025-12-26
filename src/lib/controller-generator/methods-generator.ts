@@ -25,7 +25,7 @@ export function generateMethodsFile(
   }
   lines.push('')
 
-  // Import schemas
+  // Import types and schemas
   lines.push("import type {")
   const typeImports: string[] = []
   const schemaImports: string[] = []
@@ -33,7 +33,7 @@ export function generateMethodsFile(
     const methodName = capitalize(method)
     const isSSE = isSSEOperation(operation)
     const outputTypeName = getOutputTypeName(methodName, isSSE)
-    typeImports.push(`  ${methodName}Input, ${outputTypeName}`)
+    typeImports.push(`  ${outputTypeName}`)
     schemaImports.push(`  ${methodName}InputSchema`)
     const bodySchema = getBodySchema(operation)
     if (bodySchema) {
@@ -59,16 +59,17 @@ export function generateMethodsFile(
     const functionKeyword = isSSE ? 'async function*' : 'async function'
     const bodySchema = getBodySchema(operation)
 
-    lines.push(`export ${functionKeyword} handle${methodName}(input: ${methodName}Input): ${returnType} {`)
-    
+    lines.push(`export ${functionKeyword} handle${methodName}(input: unknown): ${returnType} {`)
+
     // Validate input (params, query, headers)
     lines.push(`  const validatedInput = ${methodName}InputSchema.parse(input)`)
-    
+
     // Validate body separately if exists
     if (bodySchema) {
-      lines.push(`  const validatedBody = ${methodName}BodySchema.parse(input.body)`)
+      lines.push(`  const inputObj = input as any`)
+      lines.push(`  const validatedBody = ${methodName}BodySchema.parse(inputObj.body)`)
       lines.push(`  const validated = { ...validatedInput, body: validatedBody }`)
-      lines.push(`  return _handle${methodName}(validated as ${methodName}Input)`)
+      lines.push(`  return _handle${methodName}(validated)`)
     } else {
       lines.push(`  return _handle${methodName}(validatedInput)`)
     }

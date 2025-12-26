@@ -6,34 +6,52 @@ import { PhotoSchema, UploadPhotoRequestSchema } from '../../../../shared-types'
 
 import { z } from 'zod'
 
-export interface GetInput {
+export interface GetParams {
   params: {
     petId: string
   }
 }
 
-export const GetInputSchema = z.object({
+export const GetParamsSchema = z.object({
   params: z.object({
     petId: z.string(),
   }),
+})
+
+export interface GetInput {
+  params: GetParams
+}
+
+export const GetInputSchema = z.object({
+  params: GetParamsSchema,
 })
 
 export type GetOutput = Array<Photo>
 
-export interface PostInput {
+export interface PostParams {
   params: {
     petId: string
   }
-  body: unknown
 }
 
-export const PostInputSchema = z.object({
+export type PostBody = unknown
+
+export const PostParamsSchema = z.object({
   params: z.object({
     petId: z.string(),
   }),
-  body: z.unknown(),
 })
 
 export const PostBodySchema = UploadPhotoRequestSchema
+
+export interface PostInput {
+  params: PostParams
+  body: PostBody
+}
+
+export const PostInputSchema = z.object({
+  params: PostParamsSchema,
+  body: z.unknown(),
+})
 
 export type PostOutput = Photo

@@ -133,58 +133,58 @@ describe('Controller Generator E2E Tests', () => {
             ? getAllFiles(actualDir, actualDir)
             : []
 
-          const missingFiles = expectedFiles.filter(
+        const missingFiles = expectedFiles.filter(
             (f) => !actualFiles.includes(f),
-          )
-          const extraFiles = actualFiles.filter(
+        )
+        const extraFiles = actualFiles.filter(
             (f) => !expectedFiles.includes(f),
-          )
+        )
 
-          if (missingFiles.length > 0 || extraFiles.length > 0) {
-            const errorParts: string[] = []
-            if (missingFiles.length > 0) {
+        if (missingFiles.length > 0 || extraFiles.length > 0) {
+          const errorParts: string[] = []
+          if (missingFiles.length > 0) {
               errorParts.push(
                 `Missing files:\n${missingFiles.map((f) => `  - ${f}`).join('\n')}`,
               )
-            }
-            if (extraFiles.length > 0) {
+          }
+          if (extraFiles.length > 0) {
               errorParts.push(
                 `Extra files:\n${extraFiles.map((f) => `  + ${f}`).join('\n')}`,
               )
-            }
-            expect.fail(errorParts.join('\n\n'))
           }
-        })
+          expect.fail(errorParts.join('\n\n'))
+        }
+      })
 
         it(`should generate ${subfolder} files with expected content`, () => {
           const expectedDir = path.join(expectedBaseDir, subfolder)
           const actualDir = path.join(tempOutputDir, subfolder)
 
           const expectedFiles = getAllFiles(expectedDir, expectedDir)
-          const differences: string[] = []
+        const differences: string[] = []
 
-          for (const file of expectedFiles) {
-            const expectedPath = path.join(expectedDir, file)
+        for (const file of expectedFiles) {
+          const expectedPath = path.join(expectedDir, file)
             const actualPath = path.join(actualDir, file)
 
-            if (!fs.existsSync(actualPath)) {
-              differences.push(`File missing: ${file}`)
-              continue
-            }
-
-            const expectedContent = readFileNormalized(expectedPath)
-            const actualContent = readFileNormalized(actualPath)
-
-            if (expectedContent !== actualContent) {
-              const diff = generateDiff(expectedContent, actualContent)
-              differences.push(`\n--- ${file} ---\n${diff}`)
-            }
+          if (!fs.existsSync(actualPath)) {
+            differences.push(`File missing: ${file}`)
+            continue
           }
 
-          if (differences.length > 0) {
+          const expectedContent = readFileNormalized(expectedPath)
+          const actualContent = readFileNormalized(actualPath)
+
+          if (expectedContent !== actualContent) {
+            const diff = generateDiff(expectedContent, actualContent)
+            differences.push(`\n--- ${file} ---\n${diff}`)
+          }
+        }
+
+        if (differences.length > 0) {
             expect.fail(`Content differences found:\n${differences.join('\n')}`)
-          }
-        })
+        }
+      })
       }
     })
   }

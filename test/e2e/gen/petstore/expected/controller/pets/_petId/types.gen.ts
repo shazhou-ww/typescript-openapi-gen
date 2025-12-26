@@ -6,48 +6,74 @@ import { PetSchema, UpdatePetRequestSchema } from '../../../shared-types'
 
 import { z } from 'zod'
 
-export interface GetInput {
+export interface GetParams {
   params: {
     petId: string
   }
 }
 
-export const GetInputSchema = z.object({
+export const GetParamsSchema = z.object({
   params: z.object({
     petId: z.string(),
   }),
+})
+
+export interface GetInput {
+  params: GetParams
+}
+
+export const GetInputSchema = z.object({
+  params: GetParamsSchema,
 })
 
 export type GetOutput = Pet
 
-export interface PutInput {
+export interface PutParams {
   params: {
     petId: string
   }
-  body: unknown
 }
 
-export const PutInputSchema = z.object({
+export type PutBody = unknown
+
+export const PutParamsSchema = z.object({
   params: z.object({
     petId: z.string(),
   }),
-  body: z.unknown(),
 })
 
 export const PutBodySchema = UpdatePetRequestSchema
 
+export interface PutInput {
+  params: PutParams
+  body: PutBody
+}
+
+export const PutInputSchema = z.object({
+  params: PutParamsSchema,
+  body: z.unknown(),
+})
+
 export type PutOutput = Pet
 
-export interface DeleteInput {
+export interface DeleteParams {
   params: {
     petId: string
   }
 }
 
-export const DeleteInputSchema = z.object({
+export const DeleteParamsSchema = z.object({
   params: z.object({
     petId: z.string(),
   }),
+})
+
+export interface DeleteInput {
+  params: DeleteParams
+}
+
+export const DeleteInputSchema = z.object({
+  params: DeleteParamsSchema,
 })
 
 export type DeleteOutput = void

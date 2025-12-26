@@ -12,7 +12,7 @@ export async function routes(fastify: FastifyInstance) {
     return result
   })
   fastify.get('/pets', async (request, reply) => {
-    const query = request.query as any
+    const query = request.query as unknown
     const result = await pets.handleGet({ query })
     return result
   })
@@ -22,34 +22,34 @@ export async function routes(fastify: FastifyInstance) {
     return result
   })
   fastify.get('/pets/:petId', async (request, reply) => {
-    const params = request.params as any
+    const params = request.params as unknown
     const result = await pets._petId.handleGet({ params })
     return result
   })
   fastify.put('/pets/:petId', async (request, reply) => {
-    const params = request.params as any
+    const params = request.params as unknown
     const body = request.body as unknown
     const result = await pets._petId.handlePut({ params, body })
     return result
   })
   fastify.delete('/pets/:petId', async (request, reply) => {
-    const params = request.params as any
+    const params = request.params as unknown
     const result = await pets._petId.handleDelete({ params })
     return result
   })
   fastify.get('/pets/:petId/photos', async (request, reply) => {
-    const params = request.params as any
+    const params = request.params as unknown
     const result = await pets._petId.photos.handleGet({ params })
     return result
   })
   fastify.post('/pets/:petId/photos', async (request, reply) => {
-    const params = request.params as any
+    const params = request.params as unknown
     const body = request.body as unknown
     const result = await pets._petId.photos.handlePost({ params, body })
     return result
   })
   fastify.get('/users/:userId/profile', async (request, reply) => {
-    const params = request.params as any
+    const params = request.params as unknown
     const result = await users._userId.profile.handleGet({ params })
     return result
   })

@@ -5,12 +5,12 @@ import { z } from 'zod'
 
 import { handleGet as _handleGet } from './get'
 
-import type { GetInput, GetEventOutput } from './types.gen'
+import type { GetEventOutput } from './types.gen'
 
 import { GetInputSchema } from './types.gen'
 
 export async function* handleGet(
-  input: GetInput,
+  input: unknown,
 ): AsyncGenerator<GetEventOutput> {
   const validatedInput = GetInputSchema.parse(input)
   return _handleGet(validatedInput)

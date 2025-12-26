@@ -5,11 +5,11 @@ import { z } from 'zod'
 
 import { handleGet as _handleGet } from './get'
 
-import type { GetInput, GetOutput } from './types.gen'
+import type { GetOutput } from './types.gen'
 
 import { GetInputSchema } from './types.gen'
 
-export async function handleGet(input: GetInput): Promise<GetOutput> {
+export async function handleGet(input: unknown): Promise<GetOutput> {
   const validatedInput = GetInputSchema.parse(input)
   return _handleGet(validatedInput)
 }

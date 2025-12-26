@@ -58,13 +58,13 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
     const requestExtractions: string[] = []
 
     if (inputParts.includes('params')) {
-      requestExtractions.push('const params = request.params as any')
+      requestExtractions.push('const params = request.params as unknown')
     }
     if (inputParts.includes('query')) {
-      requestExtractions.push('const query = request.query as any')
+      requestExtractions.push('const query = request.query as unknown')
     }
     if (inputParts.includes('headers')) {
-      requestExtractions.push('const headers = request.headers as any')
+      requestExtractions.push('const headers = request.headers as unknown')
     }
     if (inputParts.includes('body')) {
       requestExtractions.push('const body = request.body as unknown')

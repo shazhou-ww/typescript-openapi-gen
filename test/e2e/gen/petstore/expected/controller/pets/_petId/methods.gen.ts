@@ -7,14 +7,7 @@ import { handleGet as _handleGet } from './get'
 import { handlePut as _handlePut } from './put'
 import { handleDelete as _handleDelete } from './delete'
 
-import type {
-  GetInput,
-  GetOutput,
-  PutInput,
-  PutOutput,
-  DeleteInput,
-  DeleteOutput,
-} from './types.gen'
+import type { GetOutput, PutOutput, DeleteOutput } from './types.gen'
 
 import {
   GetInputSchema,
@@ -23,19 +16,20 @@ import {
   DeleteInputSchema,
 } from './types.gen'
 
-export async function handleGet(input: GetInput): Promise<GetOutput> {
+export async function handleGet(input: unknown): Promise<GetOutput> {
   const validatedInput = GetInputSchema.parse(input)
   return _handleGet(validatedInput)
 }
 
-export async function handlePut(input: PutInput): Promise<PutOutput> {
+export async function handlePut(input: unknown): Promise<PutOutput> {
   const validatedInput = PutInputSchema.parse(input)
-  const validatedBody = PutBodySchema.parse(input.body)
+  const inputObj = input as any
+  const validatedBody = PutBodySchema.parse(inputObj.body)
   const validated = { ...validatedInput, body: validatedBody }
-  return _handlePut(validated as PutInput)
+  return _handlePut(validated)
 }
 
-export async function handleDelete(input: DeleteInput): Promise<DeleteOutput> {
+export async function handleDelete(input: unknown): Promise<DeleteOutput> {
   const validatedInput = DeleteInputSchema.parse(input)
   return _handleDelete(validatedInput)
 }

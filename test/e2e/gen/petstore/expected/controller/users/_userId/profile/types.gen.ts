@@ -6,16 +6,24 @@ import { UserProfileSchema } from '../../../../shared-types'
 
 import { z } from 'zod'
 
-export interface GetInput {
+export interface GetParams {
   params: {
     userId: string
   }
 }
 
-export const GetInputSchema = z.object({
+export const GetParamsSchema = z.object({
   params: z.object({
     userId: z.string(),
   }),
+})
+
+export interface GetInput {
+  params: GetParams
+}
+
+export const GetInputSchema = z.object({
+  params: GetParamsSchema,
 })
 
 export type GetOutput = UserProfile

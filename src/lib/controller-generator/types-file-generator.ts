@@ -4,8 +4,7 @@ import type { RouteInfo, GenerationResult } from './types.js'
 import { getRelativePathToTypes } from './utils.js'
 import { writeGeneratedFile, getOutputTypeName } from './file-utils.js'
 import {
-  generateInputType,
-  generateInputZodSchema,
+  generateSeparateInputTypes,
   getBodySchema,
 } from './zod-input-generator.js'
 import { generateOutputType } from './output-type-generator.js'
@@ -45,21 +44,55 @@ function addMethodTypes(
   const outputTypeName = getOutputTypeName(methodName, isSSE)
   const op = operation as import('../shared/openapi-types.js').OperationObject
 
-  // Generate input type (body is unknown)
-  lines.push(
-    `export interface ${methodName}Input ${generateInputType(op, routePath)}`,
-  )
-  lines.push('')
+  // Generate separate input types and schemas
+  const { types, schemas, inputType } = generateSeparateInputTypes(op, routePath, methodName)
 
-  // Generate input Zod schema
-  const inputSchema = generateInputZodSchema(op, routePath)
-  lines.push(`export const ${methodName}InputSchema = ${inputSchema}`)
-  lines.push('')
+  // Add separate type definitions
+  types.forEach(typeDef => {
+    lines.push(typeDef)
+    lines.push('')
+  })
 
-  // Generate body schema if exists (for separate validation)
-  const bodySchema = getBodySchema(op)
-  if (bodySchema) {
-    lines.push(`export const ${methodName}BodySchema = ${bodySchema}`)
+  // Add schema definitions
+  schemas.forEach(schemaDef => {
+    lines.push(schemaDef)
+    lines.push('')
+  })
+
+  // Generate input type inferred from schemas
+  const schemaRefs: string[] = []
+  if (types.some(t => t.includes('Params'))) schemaRefs.push('params')
+  if (types.some(t => t.includes('Query'))) schemaRefs.push('query')
+  if (types.some(t => t.includes('Headers'))) schemaRefs.push('headers')
+  if (types.some(t => t.includes('Body'))) schemaRefs.push('body')
+
+  if (schemaRefs.length > 0) {
+    // Create input type based on available schemas
+    const inputProps = schemaRefs.map(ref => {
+      const typeName = `${methodName}${ref.charAt(0).toUpperCase() + ref.slice(1)}`
+      return `  ${ref}: ${typeName}`
+    }).join('\n')
+    lines.push(`export interface ${methodName}Input {`)
+    lines.push(inputProps)
+    lines.push('}')
+    lines.push('')
+
+    // Generate combined input schema for validation
+    const schemaProps = schemaRefs.map(ref => {
+      const schemaName = `${methodName}${ref.charAt(0).toUpperCase() + ref.slice(1)}Schema`
+      if (ref === 'body') {
+        // Body schema is validated separately
+        return `  ${ref}: z.unknown()`
+      }
+      return `  ${ref}: ${schemaName}`
+    }).join(',\n')
+    lines.push(`export const ${methodName}InputSchema = z.object({`)
+    lines.push(schemaProps)
+    lines.push('})')
+    lines.push('')
+  } else {
+    lines.push(`export type ${methodName}Input = {}`)
+    lines.push(`export const ${methodName}InputSchema = z.object({})`)
     lines.push('')
   }
 

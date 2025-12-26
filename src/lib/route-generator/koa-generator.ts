@@ -14,6 +14,12 @@ export class KoaRouteGenerator extends BaseRouteGenerator {
 
     // Import Koa Router
     lines.push("import Router from '@koa/router'")
+    lines.push('')
+
+    // Note about koa-body middleware requirement
+    lines.push('// NOTE: Make sure to install and configure koa-body middleware for request body parsing')
+    lines.push('// Example: app.use(koaBody({ multipart: true, urlencoded: true, json: true }))')
+    lines.push('')
 
     // Import controllers
     const topLevelModules = this.getTopLevelModules(routes)
@@ -58,16 +64,16 @@ export class KoaRouteGenerator extends BaseRouteGenerator {
     const ctxExtractions: string[] = []
 
     if (inputParts.includes('params')) {
-      ctxExtractions.push('const params = ctx.params as unknown as any')
+      ctxExtractions.push('const params = ctx.params as unknown')
     }
     if (inputParts.includes('query')) {
-      ctxExtractions.push('const query = ctx.query as unknown as any')
+      ctxExtractions.push('const query = ctx.query as unknown')
     }
     if (inputParts.includes('headers')) {
-      ctxExtractions.push('const headers = ctx.headers as unknown as any')
+      ctxExtractions.push('const headers = ctx.headers as unknown')
     }
     if (inputParts.includes('body')) {
-      ctxExtractions.push('const body = (ctx.request as any).body as unknown')
+      ctxExtractions.push('const body = ctx.request.body as unknown')
     }
 
     const handlerBody = ctxExtractions.length > 0

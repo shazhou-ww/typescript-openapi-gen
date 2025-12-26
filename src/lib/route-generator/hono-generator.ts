@@ -77,13 +77,13 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
 
     const extractions: string[] = []
     if (inputParts.includes('params')) {
-      extractions.push('const params = c.req.param() as unknown as any')
+      extractions.push('const params = c.req.param() as unknown')
     }
     if (inputParts.includes('query')) {
-      extractions.push('const query = c.req.query() as unknown as any')
+      extractions.push('const query = c.req.query() as unknown')
     }
     if (inputParts.includes('headers')) {
-      extractions.push('const headers = Object.fromEntries(c.req.header()) as unknown as any')
+      extractions.push('const headers = Object.fromEntries(c.req.header()) as unknown')
     }
     if (inputParts.includes('body')) {
       extractions.push('const body = await c.req.json() as unknown')

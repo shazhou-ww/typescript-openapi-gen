@@ -6,27 +6,27 @@ import { events, pets, users } from './controller'
 
 export const routes = new Elysia()
   .get('/events/stream', () => events.stream.handleGet({}))
-  /* @ts-ignore - Elysia handles type validation at runtime */
+  // @ts-ignore
   .get('/pets', ({ query }) => pets.handleGet({ query }))
-  /* @ts-ignore - Elysia handles type validation at runtime */
+  // @ts-ignore
   .post('/pets', ({ body }) => pets.handlePost({ body }))
-  /* @ts-ignore - Elysia handles type validation at runtime */
+  // @ts-ignore
   .get('/pets/:petId', ({ params }) => pets._petId.handleGet({ params }))
-  /* @ts-ignore - Elysia handles type validation at runtime */
+  // @ts-ignore
   .put('/pets/:petId', ({ params, body }) =>
     pets._petId.handlePut({ params, body }),
   )
-  /* @ts-ignore - Elysia handles type validation at runtime */
+  // @ts-ignore
   .delete('/pets/:petId', ({ params }) => pets._petId.handleDelete({ params }))
-  /* @ts-ignore - Elysia handles type validation at runtime */
+  // @ts-ignore
   .get('/pets/:petId/photos', ({ params }) =>
     pets._petId.photos.handleGet({ params }),
   )
-  /* @ts-ignore - Elysia handles type validation at runtime */
+  // @ts-ignore
   .post('/pets/:petId/photos', ({ params, body }) =>
     pets._petId.photos.handlePost({ params, body }),
   )
-  /* @ts-ignore - Elysia handles type validation at runtime */
+  // @ts-ignore
   .get('/users/:userId/profile', ({ params }) =>
     users._userId.profile.handleGet({ params }),
   )

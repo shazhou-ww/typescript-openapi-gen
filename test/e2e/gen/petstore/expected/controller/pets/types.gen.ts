@@ -6,30 +6,36 @@ import { PetSchema, CreatePetRequestSchema } from '../../shared-types'
 
 import { z } from 'zod'
 
+export interface GetQuery {
+  limit?: number
+  offset?: number
+}
+
+export const GetQuerySchema = z.object({
+  limit: z.number().int().max(100).optional(),
+  offset: z.number().int().optional(),
+})
+
 export interface GetInput {
-  query: {
-    limit?: number
-    offset?: number
-  }
+  query: GetQuery
 }
 
 export const GetInputSchema = z.object({
-  query: z.object({
-    limit: z.number().int().max(100).optional(),
-    offset: z.number().int().optional(),
-  }),
+  query: GetQuerySchema,
 })
 
 export type GetOutput = Array<Pet>
 
+export type PostBody = unknown
+
+export const PostBodySchema = CreatePetRequestSchema
+
 export interface PostInput {
-  body: unknown
+  body: PostBody
 }
 
 export const PostInputSchema = z.object({
   body: z.unknown(),
 })
-
-export const PostBodySchema = CreatePetRequestSchema
 
 export type PostOutput = Pet
