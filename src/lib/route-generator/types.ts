@@ -14,6 +14,7 @@ export interface FlatRoute {
   operation: OperationObject
   controllerImportPath: string[] // Path segments for controller import, e.g., ["pets", "_petId"]
   handlerName: string // Handler function name, e.g., "handleGet"
+  returnType: string // Return type, e.g., "Pet", "void"
 }
 
 export function createEmptyResult(): RouteGenerationResult {

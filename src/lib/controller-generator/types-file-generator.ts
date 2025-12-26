@@ -3,7 +3,11 @@ import { buildFileHeader, capitalize } from '../shared/codegen-utils.js'
 import type { RouteInfo, GenerationResult } from './types.js'
 import { getRelativePathToTypes } from './utils.js'
 import { writeGeneratedFile, getOutputTypeName } from './file-utils.js'
-import { generateInputType } from './input-type-generator.js'
+import {
+  generateInputType,
+  generateInputZodSchema,
+  getBodySchema,
+} from './zod-input-generator.js'
 import { generateOutputType } from './output-type-generator.js'
 import { collectReferencedTypes } from './refs-collector.js'
 
@@ -17,6 +21,8 @@ export function generateTypesFile(
   result: GenerationResult,
 ): void {
   const lines = buildFileHeader('types from OpenAPI specification')
+  lines.push("import { z } from 'zod'")
+  lines.push('')
   const referencedTypes = new Set<string>()
 
   for (const [method, operation] of info.methods) {
@@ -37,13 +43,29 @@ function addMethodTypes(
   const methodName = capitalize(method)
   const isSSE = isSSEOperation(operation)
   const outputTypeName = getOutputTypeName(methodName, isSSE)
+  const op = operation as import('../shared/openapi-types.js').OperationObject
 
+  // Generate input type (body is unknown)
   lines.push(
-    `export interface ${methodName}Input ${generateInputType(operation, routePath)}`,
+    `export interface ${methodName}Input ${generateInputType(op, routePath)}`,
   )
   lines.push('')
+
+  // Generate input Zod schema
+  const inputSchema = generateInputZodSchema(op, routePath)
+  lines.push(`export const ${methodName}InputSchema = ${inputSchema}`)
+  lines.push('')
+
+  // Generate body schema if exists (for separate validation)
+  const bodySchema = getBodySchema(op)
+  if (bodySchema) {
+    lines.push(`export const ${methodName}BodySchema = ${bodySchema}`)
+    lines.push('')
+  }
+
+  // Generate output type
   lines.push(
-    `export type ${outputTypeName} = ${generateOutputType(operation, isSSE)}`,
+    `export type ${outputTypeName} = ${generateOutputType(op, isSSE)}`,
   )
   lines.push('')
 
@@ -58,7 +80,11 @@ function addImportIfNeeded(
 ): void {
   if (referencedTypes.size > 0) {
     const relativePath = getRelativePathToTypes(controllerDir, sharedTypesDir)
-    const imports = Array.from(referencedTypes).join(', ')
-    lines.splice(3, 0, `import type { ${imports} } from '${relativePath}'`, '')
+    const typeImports = Array.from(referencedTypes).join(', ')
+    const schemaImports = Array.from(referencedTypes)
+      .map((t) => `${t}Schema`)
+      .join(', ')
+    lines.splice(3, 0, `import type { ${typeImports} } from '${relativePath}'`, '')
+    lines.splice(4, 0, `import { ${schemaImports} } from '${relativePath}'`, '')
   }
 }

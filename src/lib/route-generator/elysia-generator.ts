@@ -134,7 +134,14 @@ export class ElysiaRouteGenerator {
       inputParts.length > 0 ? `{ ${inputParts.join(', ')} }` : ''
     const inputObject = this.buildInputObject(route)
 
-    return `  .${route.method}('${route.elysiaPath}', (${destructure}) => ${handlerCall}(${inputObject}))`
+    const routeLine = `  .${route.method}('${route.elysiaPath}', (${destructure}) => ${handlerCall}(${inputObject}))`
+
+    // Add @ts-ignore for Elysia destructuring params - Elysia handles type validation at runtime
+    if (inputParts.length > 0) {
+      return `  /* @ts-ignore - Elysia handles type validation at runtime */\n${routeLine}`
+    }
+
+    return routeLine
   }
 
   private buildInputParts(route: FlatRoute): string[] {

@@ -3,5 +3,5 @@
 
 export type { GetInput, GetOutput, PostInput, PostOutput } from './types.gen'
 
-export { handleGet } from './get'
-export { handlePost } from './post'
+export { handleGet } from './methods.gen'
+export { handlePost } from './methods.gen'

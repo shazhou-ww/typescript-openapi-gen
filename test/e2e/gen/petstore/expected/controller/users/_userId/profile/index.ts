@@ -3,4 +3,4 @@
 
 export type { GetInput, GetOutput } from './types.gen'
 
-export { handleGet } from './get'
+export { handleGet } from './methods.gen'

@@ -10,8 +10,8 @@ export type {
   DeleteOutput,
 } from './types.gen'
 
-export { handleGet } from './get'
-export { handlePut } from './put'
-export { handleDelete } from './delete'
+export { handleGet } from './methods.gen'
+export { handlePut } from './methods.gen'
+export { handleDelete } from './methods.gen'
 
 export * as photos from './photos'

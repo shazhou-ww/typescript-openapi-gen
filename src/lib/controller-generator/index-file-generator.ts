@@ -59,8 +59,9 @@ function addTypeExports(lines: string[], info: RouteInfo): void {
 }
 
 function addMethodExports(lines: string[], info: RouteInfo): void {
+  // Export from methods.gen.ts (with validation) instead of direct handlers
   for (const method of info.methods.keys()) {
-    lines.push(`export { handle${capitalize(method)} } from './${method}'`)
+    lines.push(`export { handle${capitalize(method)} } from './methods.gen'`)
   }
 
   if (info.methods.size > 0 && info.children.size > 0) {

@@ -35,11 +35,37 @@ export function collectRoutes(doc: OpenAPIDocument): FlatRoute[] {
   })
 }
 
+function getReturnType(operation: OperationObject): string {
+  const responses = operation.responses
+  if (!responses) return 'void'
+
+  // Check for 204 No Content response
+  if ('204' in responses) return 'void'
+
+  // Check for default response
+  if ('default' in responses) {
+    const response = responses.default as any
+    if (response.content) return 'unknown' // Has content but unknown type
+    return 'void'
+  }
+
+  // Check for 200 response
+  if ('200' in responses) {
+    const response = responses['200'] as any
+    if (response.content) return 'unknown' // Has content but unknown type
+    return 'void'
+  }
+
+  return 'void'
+}
+
 function createFlatRoute(
   routePath: string,
   method: string,
   operation: OperationObject,
 ): FlatRoute {
+  const returnType = getReturnType(operation)
+
   return {
     path: routePath,
     elysiaPath: convertToElysiaPath(routePath),
@@ -47,6 +73,7 @@ function createFlatRoute(
     operation,
     controllerImportPath: getControllerImportPath(routePath),
     handlerName: `handle${capitalize(method)}`,
+    returnType,
   }
 }
 

@@ -69,21 +69,28 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
     inputObject: string,
   ): string {
     if (inputParts.length === 0) {
+      if (route.returnType === 'void') {
+        return `async (c) => {\n    await ${handlerCall}(${inputObject})\n    return new Response(null, { status: 204 })\n  }`
+      }
       return `async (c) => {\n    const result = await ${handlerCall}(${inputObject})\n    return c.json(result)\n  }`
     }
 
     const extractions: string[] = []
     if (inputParts.includes('params')) {
-      extractions.push('const params = c.req.param()')
+      extractions.push('const params = c.req.param() as unknown as any')
     }
     if (inputParts.includes('query')) {
-      extractions.push('const query = Object.fromEntries(c.req.query())')
+      extractions.push('const query = c.req.query() as unknown as any')
     }
     if (inputParts.includes('headers')) {
-      extractions.push('const headers = Object.fromEntries(c.req.header())')
+      extractions.push('const headers = Object.fromEntries(c.req.header()) as unknown as any')
     }
     if (inputParts.includes('body')) {
-      extractions.push('const body = await c.req.json()')
+      extractions.push('const body = await c.req.json() as unknown')
+    }
+
+    if (route.returnType === 'void') {
+      return `async (c) => {\n    ${extractions.join('\n    ')}\n    await ${handlerCall}(${inputObject})\n    return new Response(null, { status: 204 })\n  }`
     }
 
     return `async (c) => {\n    ${extractions.join('\n    ')}\n    const result = await ${handlerCall}(${inputObject})\n    return c.json(result)\n  }`

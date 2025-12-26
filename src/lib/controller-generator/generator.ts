@@ -10,6 +10,7 @@ import { buildRouteTree } from './route-tree.js'
 import { generateSharedTypesFolder } from './shared-types-generator.js'
 import { generateTypesFile } from './types-file-generator.js'
 import { generateMethodFileIfNotExists } from './method-file-generator.js'
+import { generateMethodsFile } from './methods-generator.js'
 import {
   generateIndexFile,
   generateRootIndexFile,
@@ -85,6 +86,9 @@ export class ControllerGenerator {
       this.checkConflicts(info)
       this.createDirectoryIfNeeded(controllerDir, info)
       await this.generateControllerIfNeeded(controllerDir, info, sharedTypesDir)
+
+      // Generate methods.gen.ts with validation wrappers
+      generateMethodsFile(controllerDir, info, this.result)
 
       generateIndexFile(controllerDir, info, this.result)
 

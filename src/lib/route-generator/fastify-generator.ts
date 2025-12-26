@@ -12,8 +12,9 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
   protected generateImports(routes: FlatRoute[]): string[] {
     const lines: string[] = []
 
-    // Import Fastify
+    // Import Fastify with TypeBox
     lines.push("import type { FastifyInstance } from 'fastify'")
+    lines.push("import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'")
 
     // Import controllers
     const topLevelModules = this.getTopLevelModules(routes)
@@ -32,6 +33,7 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
     const lines: string[] = []
 
     lines.push('export async function routes(fastify: FastifyInstance) {')
+    lines.push('  fastify.withTypeProvider<TypeBoxTypeProvider>()')
 
     for (const route of routes) {
       lines.push(this.generateRoute(route))
@@ -56,16 +58,16 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
     const requestExtractions: string[] = []
 
     if (inputParts.includes('params')) {
-      requestExtractions.push('const params = request.params')
+      requestExtractions.push('const params = request.params as any')
     }
     if (inputParts.includes('query')) {
-      requestExtractions.push('const query = request.query')
+      requestExtractions.push('const query = request.query as any')
     }
     if (inputParts.includes('headers')) {
-      requestExtractions.push('const headers = request.headers')
+      requestExtractions.push('const headers = request.headers as any')
     }
     if (inputParts.includes('body')) {
-      requestExtractions.push('const body = request.body')
+      requestExtractions.push('const body = request.body as unknown')
     }
 
     const handlerBody = requestExtractions.length > 0

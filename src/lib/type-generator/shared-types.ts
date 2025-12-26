@@ -1,7 +1,7 @@
 import { isReferenceObject, getRefName } from '../openapi-parser.js'
 import { buildFileHeader } from '../shared/codegen-utils.js'
 import type { SchemaObject, ReferenceObject } from '../shared/openapi-types.js'
-import { schemaToTypeScript } from './schema-converter.js'
+import { schemaToZod } from './zod-schema-converter.js'
 
 export interface SharedTypeFile {
   name: string
@@ -36,7 +36,7 @@ export function generateSharedTypes(
     const schema = schemas[name]
     const fileContent = generateSchemaFile(name, schema, schemas)
     files.push({ name, content: fileContent })
-    exportLines.push(`export { ${name} } from './${name}.gen'`)
+    exportLines.push(`export { ${name}Schema, ${name} } from './${name}.gen'`)
   }
 
   const indexLines = buildFileHeader('shared types index')
@@ -57,18 +57,21 @@ function generateSchemaFile(
   const lines = buildFileHeader(`${name} type from OpenAPI specification`)
 
   // Collect referenced types for imports
-  const referencedTypes = collectSchemaRefs(schema, allSchemas)
-  referencedTypes.delete(name) // Don't import self
+  const referencedTypes = collectSchemaRefs(schema, allSchemas, new Set([name]))
+
+  // Import zod
+  lines.push("import { z } from 'zod'")
+  lines.push('')
 
   if (referencedTypes.size > 0) {
     const imports = Array.from(referencedTypes).sort()
     for (const refType of imports) {
-      lines.push(`import type { ${refType} } from './${refType}.gen'`)
+      lines.push(`import { ${refType}Schema } from './${refType}.gen'`)
     }
     lines.push('')
   }
 
-  lines.push(generateSchemaType(name, schema))
+  lines.push(generateZodSchema(name, schema))
   lines.push('')
 
   return lines.join('\n')
@@ -83,8 +86,16 @@ function collectSchemaRefs(
 
   if (isReferenceObject(schema)) {
     const refName = getRefName(schema.$ref)
-    if (!visited.has(refName)) {
+    if (!visited.has(refName) && allSchemas[refName]) {
+      visited.add(refName)
       refs.add(refName)
+      // Also collect nested refs
+      const nestedRefs = collectSchemaRefs(
+        allSchemas[refName],
+        allSchemas,
+        visited,
+      )
+      nestedRefs.forEach((r) => refs.add(r))
     }
     return refs
   }
@@ -142,17 +153,10 @@ function collectSchemaRefs(
   return refs
 }
 
-function generateSchemaType(
+function generateZodSchema(
   name: string,
   schema: SchemaObject | ReferenceObject,
 ): string {
-  if (isReferenceObject(schema)) {
-    return `export type ${name} = ${getRefName(schema.$ref)}`
-  }
-
-  const typeStr = schemaToTypeScript(schema, '')
-  if (typeStr.startsWith('{')) {
-    return `export interface ${name} ${typeStr}`
-  }
-  return `export type ${name} = ${typeStr}`
+  const zodSchema = schemaToZod(schema, '')
+  return `export const ${name}Schema = ${zodSchema}\n\nexport type ${name} = z.infer<typeof ${name}Schema>`
 }

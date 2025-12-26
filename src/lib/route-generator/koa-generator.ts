@@ -58,16 +58,16 @@ export class KoaRouteGenerator extends BaseRouteGenerator {
     const ctxExtractions: string[] = []
 
     if (inputParts.includes('params')) {
-      ctxExtractions.push('const params = ctx.params')
+      ctxExtractions.push('const params = ctx.params as unknown as any')
     }
     if (inputParts.includes('query')) {
-      ctxExtractions.push('const query = ctx.query')
+      ctxExtractions.push('const query = ctx.query as unknown as any')
     }
     if (inputParts.includes('headers')) {
-      ctxExtractions.push('const headers = ctx.headers')
+      ctxExtractions.push('const headers = ctx.headers as unknown as any')
     }
     if (inputParts.includes('body')) {
-      ctxExtractions.push('const body = ctx.request.body')
+      ctxExtractions.push('const body = (ctx.request as any).body as unknown')
     }
 
     const handlerBody = ctxExtractions.length > 0
