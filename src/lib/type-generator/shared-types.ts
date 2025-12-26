@@ -36,7 +36,7 @@ export function generateSharedTypes(
     const schema = schemas[name]
     const fileContent = generateSchemaFile(name, schema, schemas)
     files.push({ name, content: fileContent })
-    exportLines.push(`export * from './${name}.gen'`)
+    exportLines.push(`export { ${name} } from './${name}.gen'`)
   }
 
   const indexLines = buildFileHeader('shared types index')

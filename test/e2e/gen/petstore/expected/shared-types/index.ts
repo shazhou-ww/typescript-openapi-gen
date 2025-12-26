@@ -1,10 +1,10 @@
 // Auto-generated shared types index
 // DO NOT EDIT - This file is regenerated on each run
 
-export * from './CreatePetRequest.gen'
-export * from './Event.gen'
-export * from './Pet.gen'
-export * from './Photo.gen'
-export * from './UpdatePetRequest.gen'
-export * from './UploadPhotoRequest.gen'
-export * from './UserProfile.gen'
+export { CreatePetRequest } from './CreatePetRequest.gen'
+export { Event } from './Event.gen'
+export { Pet } from './Pet.gen'
+export { Photo } from './Photo.gen'
+export { UpdatePetRequest } from './UpdatePetRequest.gen'
+export { UploadPhotoRequest } from './UploadPhotoRequest.gen'
+export { UserProfile } from './UserProfile.gen'
