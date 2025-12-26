@@ -12,7 +12,7 @@ export function generateMethodFile(
   controllerDir: string,
   method: string,
   operation: object,
-  result: GenerationResult
+  result: GenerationResult,
 ): void {
   const methodName = capitalize(method)
   const isSSE = isSSEOperation(operation)
@@ -24,11 +24,11 @@ export function generateMethodFile(
   const functionKeyword = isSSE ? 'async function*' : 'async function'
 
   const lines: string[] = [
-    `import type { ${methodName}Input, ${outputTypeName} } from './types.js'`,
+    `import type { ${methodName}Input, ${outputTypeName} } from './types'`,
     '',
     `export ${functionKeyword} handle${methodName}(input: ${methodName}Input): ${returnType} {`,
     '  // @ts-ignore - Implementation required',
-    '  throw new Error(\'Not implemented\')',
+    "  throw new Error('Not implemented')",
     '}',
     '',
   ]
@@ -43,7 +43,7 @@ export function generateMethodFileIfNotExists(
   controllerDir: string,
   method: string,
   operation: object,
-  result: GenerationResult
+  result: GenerationResult,
 ): void {
   const methodPath = path.join(controllerDir, `${method}.ts`)
   if (fs.existsSync(methodPath)) {

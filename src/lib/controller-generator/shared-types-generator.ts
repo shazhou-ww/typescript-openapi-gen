@@ -10,7 +10,7 @@ import type { GenerationResult } from './types.js'
 export function generateSharedTypesFolder(
   outputDir: string,
   schemas: Record<string, SchemaObject | ReferenceObject> | undefined,
-  result: GenerationResult
+  result: GenerationResult,
 ): void {
   const typesDir = path.join(outputDir, 'types')
   fs.mkdirSync(typesDir, { recursive: true })

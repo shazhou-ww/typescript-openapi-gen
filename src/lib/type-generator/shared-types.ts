@@ -7,7 +7,7 @@ import { schemaToTypeScript } from './schema-converter.js'
  * Generate shared types file content from OpenAPI components/schemas
  */
 export function generateSharedTypes(
-  schemas: Record<string, SchemaObject | ReferenceObject> | undefined
+  schemas: Record<string, SchemaObject | ReferenceObject> | undefined,
 ): string {
   if (!schemas) {
     return '// No shared schemas defined in OpenAPI spec\n'
@@ -23,7 +23,10 @@ export function generateSharedTypes(
   return lines.join('\n')
 }
 
-function generateSchemaType(name: string, schema: SchemaObject | ReferenceObject): string {
+function generateSchemaType(
+  name: string,
+  schema: SchemaObject | ReferenceObject,
+): string {
   if (isReferenceObject(schema)) {
     return `export type ${name} = ${getRefName(schema.$ref)}`
   }

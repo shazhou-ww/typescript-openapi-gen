@@ -4,7 +4,9 @@ export interface GenerationResult {
   controllersGenerated: number
   filesCreated: number
   filesSkipped: number
+  filesFormatted: number
   errors: string[]
+  generatedFiles: string[]
 }
 
 export interface RouteInfo {
@@ -19,6 +21,8 @@ export function createEmptyResult(): GenerationResult {
     controllersGenerated: 0,
     filesCreated: 0,
     filesSkipped: 0,
+    filesFormatted: 0,
     errors: [],
+    generatedFiles: [],
   }
 }

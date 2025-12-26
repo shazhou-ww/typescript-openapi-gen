@@ -1,30 +1,46 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import * as os from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { parseOpenAPIFile } from '../../../src/lib/openapi-parser.js'
 import { ControllerGenerator } from '../../../src/lib/controller-generator/index.js'
 
-// Get all test case directories
+// Get all test case directories (directories with input/expected subdirs)
 function getTestCases(e2eDir: string): string[] {
   const entries = fs.readdirSync(e2eDir, { withFileTypes: true })
   return entries
-    .filter((entry) => entry.isDirectory() && entry.name !== 'node_modules')
+    .filter((entry) => {
+      if (!entry.isDirectory()) return false
+      // Check if it has input and expected subdirectories
+      const hasInput = fs.existsSync(path.join(e2eDir, entry.name, 'input'))
+      const hasExpected = fs.existsSync(
+        path.join(e2eDir, entry.name, 'expected'),
+      )
+      return hasInput && hasExpected
+    })
     .map((entry) => entry.name)
 }
 
-// Recursively get all files in a directory
-function getAllFiles(dir: string, baseDir: string = dir): string[] {
+// Recursively get all files in a directory, excluding specified relative paths
+function getAllFiles(
+  dir: string,
+  baseDir: string = dir,
+  excludePaths: string[] = [],
+): string[] {
   const files: string[] = []
   const entries = fs.readdirSync(dir, { withFileTypes: true })
 
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name)
     if (entry.isDirectory()) {
-      files.push(...getAllFiles(fullPath, baseDir))
+      files.push(...getAllFiles(fullPath, baseDir, excludePaths))
     } else {
-      files.push(path.relative(baseDir, fullPath))
+      const relativePath = path.relative(baseDir, fullPath)
+      // Normalize path separators for comparison
+      const normalizedPath = relativePath.split(path.sep).join('/')
+      if (!excludePaths.includes(normalizedPath)) {
+        files.push(relativePath)
+      }
     }
   }
 
@@ -62,7 +78,10 @@ function generateDiff(expected: string, actual: string): string {
   return lines.join('\n')
 }
 
-const e2eDir = path.join(path.dirname(fileURLToPath(import.meta.url)), 'controller')
+const e2eDir = path.dirname(fileURLToPath(import.meta.url))
+
+// Files to exclude from controller comparison (route files are tested separately)
+const EXCLUDE_PATHS = ['elysia-routes.ts']
 
 describe('Controller Generator E2E Tests', () => {
   const testCases = getTestCases(e2eDir)
@@ -71,22 +90,19 @@ describe('Controller Generator E2E Tests', () => {
     describe(`Test case: ${testCase}`, () => {
       const testCaseDir = path.join(e2eDir, testCase)
       const inputDir = path.join(testCaseDir, 'input')
-      const expectedDir = path.join(testCaseDir, 'expected')
+      const expectedDir = path.join(testCaseDir, 'expected', 'controller')
       let tempOutputDir: string
 
       beforeAll(async () => {
-        // Create temp directory for output
-        tempOutputDir = fs.mkdtempSync(
-          path.join(os.tmpdir(), `e2e-${testCase}-`)
-        )
+        // Create temp directory for output in project directory
+        // This ensures prettier can find the config
+        tempOutputDir = fs.mkdtempSync(path.join(testCaseDir, `temp-`))
 
         // Find OpenAPI file in input directory
         const inputFiles = fs.readdirSync(inputDir)
         const openapiFile = inputFiles.find(
           (f) =>
-            f.endsWith('.yaml') ||
-            f.endsWith('.yml') ||
-            f.endsWith('.json')
+            f.endsWith('.yaml') || f.endsWith('.yml') || f.endsWith('.json'),
         )
 
         if (!openapiFile) {
@@ -108,30 +124,40 @@ describe('Controller Generator E2E Tests', () => {
       })
 
       it('should generate the expected files', () => {
-        const expectedFiles = getAllFiles(expectedDir)
+        const expectedFiles = getAllFiles(
+          expectedDir,
+          expectedDir,
+          EXCLUDE_PATHS,
+        )
         const actualFiles = getAllFiles(tempOutputDir)
 
         const missingFiles = expectedFiles.filter(
-          (f) => !actualFiles.includes(f)
+          (f) => !actualFiles.includes(f),
         )
-        const extraFiles = actualFiles.filter(
-          (f) => !expectedFiles.includes(f)
-        )
+        const extraFiles = actualFiles.filter((f) => !expectedFiles.includes(f))
 
         if (missingFiles.length > 0 || extraFiles.length > 0) {
           const errorParts: string[] = []
           if (missingFiles.length > 0) {
-            errorParts.push(`Missing files:\n${missingFiles.map((f) => `  - ${f}`).join('\n')}`)
+            errorParts.push(
+              `Missing files:\n${missingFiles.map((f) => `  - ${f}`).join('\n')}`,
+            )
           }
           if (extraFiles.length > 0) {
-            errorParts.push(`Extra files:\n${extraFiles.map((f) => `  + ${f}`).join('\n')}`)
+            errorParts.push(
+              `Extra files:\n${extraFiles.map((f) => `  + ${f}`).join('\n')}`,
+            )
           }
           expect.fail(errorParts.join('\n\n'))
         }
       })
 
       it('should generate files with expected content', () => {
-        const expectedFiles = getAllFiles(expectedDir)
+        const expectedFiles = getAllFiles(
+          expectedDir,
+          expectedDir,
+          EXCLUDE_PATHS,
+        )
         const differences: string[] = []
 
         for (const file of expectedFiles) {
@@ -153,12 +179,9 @@ describe('Controller Generator E2E Tests', () => {
         }
 
         if (differences.length > 0) {
-          expect.fail(
-            `Content differences found:\n${differences.join('\n')}`
-          )
+          expect.fail(`Content differences found:\n${differences.join('\n')}`)
         }
       })
     })
   }
 })
-

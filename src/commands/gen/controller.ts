@@ -12,11 +12,12 @@ export default class GenController extends Command {
     }),
   }
 
-  static override description = 'Generate controller skeleton code from OpenAPI specification'
+  static override description =
+    'Generate controller skeleton code from OpenAPI specification'
 
   static override examples = [
     '<%= config.bin %> <%= command.id %> --output ./controllers openapi.yaml',
-    '<%= config.bin %> <%= command.id %> -o ./src/controllers api.json',
+    '<%= config.bin %> <%= command.id %> -o ./src/controllers --prettier .prettierrc api.json',
   ]
 
   static override flags = {
@@ -25,6 +26,10 @@ export default class GenController extends Command {
       description: 'Output directory for generated controllers',
       required: true,
     }),
+    prettier: Flags.string({
+      description: 'Path to prettier config file for formatting output',
+      required: false,
+    }),
   }
 
   public async run(): Promise<void> {
@@ -32,10 +37,18 @@ export default class GenController extends Command {
 
     const inputFile = path.resolve(args.file)
     const outputDir = path.resolve(flags.output)
+    const prettierConfig = flags.prettier
+      ? path.resolve(flags.prettier)
+      : undefined
 
     // Check if input file exists
     if (!fs.existsSync(inputFile)) {
       this.error(`Input file not found: ${inputFile}`)
+    }
+
+    // Check if prettier config exists (if provided)
+    if (prettierConfig && !fs.existsSync(prettierConfig)) {
+      this.error(`Prettier config file not found: ${prettierConfig}`)
     }
 
     this.log(`Parsing OpenAPI file: ${inputFile}`)
@@ -45,13 +58,18 @@ export default class GenController extends Command {
       const openApiDoc = await parseOpenAPIFile(inputFile)
 
       // Generate controllers
-      const generator = new ControllerGenerator(openApiDoc, outputDir)
+      const generator = new ControllerGenerator(openApiDoc, outputDir, {
+        prettierConfig,
+      })
       const result = await generator.generate()
 
       this.log(`\n✅ Generation complete!`)
       this.log(`   Controllers generated: ${result.controllersGenerated}`)
       this.log(`   Files created: ${result.filesCreated}`)
       this.log(`   Files skipped (already exist): ${result.filesSkipped}`)
+      if (result.filesFormatted > 0) {
+        this.log(`   Files formatted with prettier: ${result.filesFormatted}`)
+      }
       this.log(`   Output directory: ${outputDir}`)
 
       if (result.errors.length > 0) {
@@ -68,4 +86,3 @@ export default class GenController extends Command {
     }
   }
 }
-

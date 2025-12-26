@@ -7,7 +7,7 @@ import { formatPropertyName } from '../shared/codegen-utils.js'
  */
 export function schemaToTypeScript(
   schema: SchemaObject | ReferenceObject | undefined,
-  indent: string = ''
+  indent: string = '',
 ): string {
   if (!schema) return 'unknown'
   if (isReferenceObject(schema)) return getRefName(schema.$ref)
@@ -22,7 +22,10 @@ export function schemaToTypeScript(
 /**
  * Parse nullable info from schema (supports both 3.0 and 3.1)
  */
-function parseNullableType(schema: SchemaObject): { nullable: boolean; primaryType: string | undefined } {
+function parseNullableType(schema: SchemaObject): {
+  nullable: boolean
+  primaryType: string | undefined
+} {
   const nullable30 = 'nullable' in schema && schema.nullable
   const typeValue = schema.type
   let nullable31 = false
@@ -45,7 +48,7 @@ function parseNullableType(schema: SchemaObject): { nullable: boolean; primaryTy
 function convertType(
   schema: SchemaObject,
   primaryType: string | undefined,
-  indent: string
+  indent: string,
 ): string {
   switch (primaryType) {
     case 'string':
@@ -73,9 +76,13 @@ function convertStringType(schema: SchemaObject): string {
 }
 
 function convertArrayType(schema: SchemaObject, indent: string): string {
-  const itemsType = 'items' in schema
-    ? schemaToTypeScript(schema.items as SchemaObject | ReferenceObject, indent)
-    : 'unknown'
+  const itemsType =
+    'items' in schema
+      ? schemaToTypeScript(
+          schema.items as SchemaObject | ReferenceObject,
+          indent,
+        )
+      : 'unknown'
   return `Array<${itemsType}>`
 }
 
@@ -104,7 +111,10 @@ function convertComplexType(schema: SchemaObject, indent: string): string {
 /**
  * Generate TypeScript object type from OpenAPI object schema
  */
-function objectSchemaToTypeScript(schema: SchemaObject, indent: string): string {
+function objectSchemaToTypeScript(
+  schema: SchemaObject,
+  indent: string,
+): string {
   if (!schema.properties) {
     return convertAdditionalProperties(schema, indent)
   }
@@ -122,7 +132,10 @@ function objectSchemaToTypeScript(schema: SchemaObject, indent: string): string 
   return `{\n${props}\n${indent}}`
 }
 
-function convertAdditionalProperties(schema: SchemaObject, indent: string): string {
+function convertAdditionalProperties(
+  schema: SchemaObject,
+  indent: string,
+): string {
   if (schema.additionalProperties) {
     if (typeof schema.additionalProperties === 'boolean') {
       return 'Record<string, unknown>'
@@ -132,4 +145,3 @@ function convertAdditionalProperties(schema: SchemaObject, indent: string): stri
   }
   return 'Record<string, unknown>'
 }
-

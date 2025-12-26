@@ -5,9 +5,15 @@ import type { RouteInfo } from './types.js'
 /**
  * Get relative path from controller directory to types folder
  */
-export function getRelativePathToTypes(controllerDir: string, outputDir: string): string {
-  const relativePath = path.relative(controllerDir, path.join(outputDir, 'types'))
-  return relativePath.split(path.sep).join('/') + '/index.js'
+export function getRelativePathToTypes(
+  controllerDir: string,
+  outputDir: string,
+): string {
+  const relativePath = path.relative(
+    controllerDir,
+    path.join(outputDir, 'types'),
+  )
+  return relativePath.split(path.sep).join('/')
 }
 
 /**

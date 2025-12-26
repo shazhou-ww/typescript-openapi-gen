@@ -14,7 +14,7 @@ export function generateTypesFile(
   controllerDir: string,
   info: RouteInfo,
   outputDir: string,
-  result: GenerationResult
+  result: GenerationResult,
 ): void {
   const lines = buildFileHeader('types from OpenAPI specification')
   const referencedTypes = new Set<string>()
@@ -32,15 +32,19 @@ function addMethodTypes(
   method: string,
   operation: object,
   routePath: string,
-  referencedTypes: Set<string>
+  referencedTypes: Set<string>,
 ): void {
   const methodName = capitalize(method)
   const isSSE = isSSEOperation(operation)
   const outputTypeName = getOutputTypeName(methodName, isSSE)
 
-  lines.push(`export interface ${methodName}Input ${generateInputType(operation, routePath)}`)
+  lines.push(
+    `export interface ${methodName}Input ${generateInputType(operation, routePath)}`,
+  )
   lines.push('')
-  lines.push(`export type ${outputTypeName} = ${generateOutputType(operation, isSSE)}`)
+  lines.push(
+    `export type ${outputTypeName} = ${generateOutputType(operation, isSSE)}`,
+  )
   lines.push('')
 
   collectReferencedTypes(operation, referencedTypes)
@@ -50,7 +54,7 @@ function addImportIfNeeded(
   lines: string[],
   referencedTypes: Set<string>,
   controllerDir: string,
-  outputDir: string
+  outputDir: string,
 ): void {
   if (referencedTypes.size > 0) {
     const relativePath = getRelativePathToTypes(controllerDir, outputDir)

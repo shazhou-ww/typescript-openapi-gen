@@ -21,7 +21,7 @@ export function buildRouteTree(doc: OpenAPIDocument): Map<string, RouteInfo> {
 function addRouteToTree(
   tree: Map<string, RouteInfo>,
   routePath: string,
-  pathItem: object
+  pathItem: object,
 ): void {
   const segments = routePath.split('/').filter(Boolean)
   let current = tree
@@ -55,10 +55,11 @@ function createRouteInfo(partialPath: string): RouteInfo {
 
 function addMethodsToNode(node: RouteInfo, pathItem: object): void {
   for (const method of getPathMethods(pathItem)) {
-    const operation = (pathItem as Record<string, unknown>)[method] as OperationObject
+    const operation = (pathItem as Record<string, unknown>)[
+      method
+    ] as OperationObject
     if (operation) {
       node.methods.set(method, operation)
     }
   }
 }
-

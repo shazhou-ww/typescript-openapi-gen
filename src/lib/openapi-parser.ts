@@ -8,7 +8,9 @@ export type OpenAPIDocument = OpenAPIV3.Document | OpenAPIV3_1.Document
 /**
  * Parse an OpenAPI specification file (YAML or JSON)
  */
-export async function parseOpenAPIFile(filePath: string): Promise<OpenAPIDocument> {
+export async function parseOpenAPIFile(
+  filePath: string,
+): Promise<OpenAPIDocument> {
   const absolutePath = path.resolve(filePath)
   const content = fs.readFileSync(absolutePath, 'utf-8')
   const ext = path.extname(filePath).toLowerCase()
@@ -36,7 +38,9 @@ export async function parseOpenAPIFile(filePath: string): Promise<OpenAPIDocumen
   const docObj = doc as Record<string, unknown>
 
   if (!docObj['openapi'] && !docObj['swagger']) {
-    throw new Error('Invalid OpenAPI document: missing openapi or swagger version field')
+    throw new Error(
+      'Invalid OpenAPI document: missing openapi or swagger version field',
+    )
   }
 
   if (!docObj['paths']) {
@@ -70,7 +74,7 @@ export function routePathToFsPath(routePath: string): string {
   return routePath
     .split('/')
     .filter(Boolean)
-    .map(segment => {
+    .map((segment) => {
       // Convert {paramName} to _paramName
       const paramMatch = segment.match(/^\{(.+)\}$/)
       if (paramMatch) {
@@ -84,15 +88,28 @@ export function routePathToFsPath(routePath: string): string {
 /**
  * Get the HTTP methods defined for a path item
  */
-export function getPathMethods(pathItem: OpenAPIV3.PathItemObject | OpenAPIV3_1.PathItemObject): string[] {
-  const httpMethods = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head', 'trace']
-  return httpMethods.filter(method => method in pathItem)
+export function getPathMethods(
+  pathItem: OpenAPIV3.PathItemObject | OpenAPIV3_1.PathItemObject,
+): string[] {
+  const httpMethods = [
+    'get',
+    'post',
+    'put',
+    'delete',
+    'patch',
+    'options',
+    'head',
+    'trace',
+  ]
+  return httpMethods.filter((method) => method in pathItem)
 }
 
 /**
  * Check if an operation supports SSE (Server-Sent Events)
  */
-export function isSSEOperation(operation: OpenAPIV3.OperationObject | OpenAPIV3_1.OperationObject): boolean {
+export function isSSEOperation(
+  operation: OpenAPIV3.OperationObject | OpenAPIV3_1.OperationObject,
+): boolean {
   const responses = operation.responses
   if (!responses) return false
 
@@ -120,7 +137,8 @@ export function getRefName(ref: string): string {
 /**
  * Check if a value is a reference object
  */
-export function isReferenceObject(obj: unknown): obj is OpenAPIV3.ReferenceObject {
+export function isReferenceObject(
+  obj: unknown,
+): obj is OpenAPIV3.ReferenceObject {
   return typeof obj === 'object' && obj !== null && '$ref' in obj
 }
-

@@ -1,17 +1,28 @@
 import { isReferenceObject } from '../openapi-parser.js'
-import type { OperationObject, ParameterObject, RequestBodyObject, ResponseObject } from '../shared/openapi-types.js'
+import type {
+  OperationObject,
+  ParameterObject,
+  RequestBodyObject,
+  ResponseObject,
+} from '../shared/openapi-types.js'
 import { extractSchemaRefs } from '../type-generator/index.js'
 
 /**
  * Collect all referenced type names from an operation
  */
-export function collectReferencedTypes(operation: OperationObject, refs: Set<string>): void {
+export function collectReferencedTypes(
+  operation: OperationObject,
+  refs: Set<string>,
+): void {
   collectFromParameters(operation, refs)
   collectFromRequestBody(operation, refs)
   collectFromResponses(operation, refs)
 }
 
-function collectFromParameters(operation: OperationObject, refs: Set<string>): void {
+function collectFromParameters(
+  operation: OperationObject,
+  refs: Set<string>,
+): void {
   for (const param of operation.parameters || []) {
     if (!isReferenceObject(param) && (param as ParameterObject).schema) {
       extractSchemaRefs((param as ParameterObject).schema, refs)
@@ -19,7 +30,10 @@ function collectFromParameters(operation: OperationObject, refs: Set<string>): v
   }
 }
 
-function collectFromRequestBody(operation: OperationObject, refs: Set<string>): void {
+function collectFromRequestBody(
+  operation: OperationObject,
+  refs: Set<string>,
+): void {
   if (!operation.requestBody || isReferenceObject(operation.requestBody)) return
 
   const content = (operation.requestBody as RequestBodyObject).content
@@ -29,7 +43,10 @@ function collectFromRequestBody(operation: OperationObject, refs: Set<string>): 
   }
 }
 
-function collectFromResponses(operation: OperationObject, refs: Set<string>): void {
+function collectFromResponses(
+  operation: OperationObject,
+  refs: Set<string>,
+): void {
   for (const response of Object.values(operation.responses || {})) {
     if (isReferenceObject(response)) continue
 
@@ -42,4 +59,3 @@ function collectFromResponses(operation: OperationObject, refs: Set<string>): vo
     }
   }
 }
-

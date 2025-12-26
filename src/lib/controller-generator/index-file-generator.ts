@@ -10,7 +10,7 @@ import { writeGeneratedFile, getOutputTypeName } from './file-utils.js'
 export function generateIndexFile(
   controllerDir: string,
   info: RouteInfo,
-  result: GenerationResult
+  result: GenerationResult,
 ): void {
   const lines = buildFileHeader('index file')
 
@@ -20,6 +20,28 @@ export function generateIndexFile(
   lines.push('')
 
   writeGeneratedFile(controllerDir, 'index.ts', lines, result)
+}
+
+/**
+ * Generate root index.ts file that exports all top-level route modules
+ */
+export function generateRootIndexFile(
+  outputDir: string,
+  routeTree: Map<string, RouteInfo>,
+  result: GenerationResult,
+): void {
+  const lines = buildFileHeader('index file')
+
+  // Export all top-level route modules
+  const segments = Array.from(routeTree.keys()).sort()
+  for (const segment of segments) {
+    const fsName = segmentToFsName(segment)
+    lines.push(`export * as ${fsName} from './${fsName}'`)
+  }
+
+  lines.push('')
+
+  writeGeneratedFile(outputDir, 'index.ts', lines, result)
 }
 
 function addTypeExports(lines: string[], info: RouteInfo): void {
@@ -32,13 +54,13 @@ function addTypeExports(lines: string[], info: RouteInfo): void {
     typeExports.push(getOutputTypeName(methodName, isSSEOperation(operation)))
   }
 
-  lines.push(`export type { ${typeExports.join(', ')} } from './types.js'`)
+  lines.push(`export type { ${typeExports.join(', ')} } from './types'`)
   lines.push('')
 }
 
 function addMethodExports(lines: string[], info: RouteInfo): void {
   for (const method of info.methods.keys()) {
-    lines.push(`export { handle${capitalize(method)} } from './${method}.js'`)
+    lines.push(`export { handle${capitalize(method)} } from './${method}'`)
   }
 
   if (info.methods.size > 0 && info.children.size > 0) {
@@ -49,6 +71,6 @@ function addMethodExports(lines: string[], info: RouteInfo): void {
 function addChildRouteExports(lines: string[], info: RouteInfo): void {
   for (const [childSegment] of info.children) {
     const fsName = segmentToFsName(childSegment)
-    lines.push(`export * as ${fsName} from './${fsName}/index.js'`)
+    lines.push(`export * as ${fsName} from './${fsName}'`)
   }
 }

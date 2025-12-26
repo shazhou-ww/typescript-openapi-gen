@@ -6,7 +6,7 @@ import type { SchemaObject, ReferenceObject } from '../shared/openapi-types.js'
  */
 export function extractSchemaRefs(
   schema: SchemaObject | ReferenceObject | undefined,
-  refs: Set<string> = new Set()
+  refs: Set<string> = new Set(),
 ): Set<string> {
   if (!schema) return refs
 
@@ -39,13 +39,22 @@ function extractFromProperties(schema: SchemaObject, refs: Set<string>): void {
   }
 }
 
-function extractFromAdditionalProperties(schema: SchemaObject, refs: Set<string>): void {
-  if (schema.additionalProperties && typeof schema.additionalProperties !== 'boolean') {
+function extractFromAdditionalProperties(
+  schema: SchemaObject,
+  refs: Set<string>,
+): void {
+  if (
+    schema.additionalProperties &&
+    typeof schema.additionalProperties !== 'boolean'
+  ) {
     extractSchemaRefs(schema.additionalProperties, refs)
   }
 }
 
-function extractFromCompositions(schema: SchemaObject, refs: Set<string>): void {
+function extractFromCompositions(
+  schema: SchemaObject,
+  refs: Set<string>,
+): void {
   if ('anyOf' in schema && schema.anyOf) {
     for (const s of schema.anyOf) {
       extractSchemaRefs(s, refs)
@@ -62,4 +71,3 @@ function extractFromCompositions(schema: SchemaObject, refs: Set<string>): void 
     }
   }
 }
-

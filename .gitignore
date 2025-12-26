@@ -29,7 +29,3 @@ oclif.manifest.json
 
 # TypeScript
 *.tsbuildinfo
-
-# Test output
-test-output/
-
