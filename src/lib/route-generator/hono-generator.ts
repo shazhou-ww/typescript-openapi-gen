@@ -84,17 +84,17 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
     streamSSE(c, async (stream) => {
       try {
         for await (const event of ${handlerCall}(${inputObject})) {
-          await stream.write({
-            id: String(Date.now()),
+          await stream.writeSSE({
+            data: JSON.stringify(event),
             event: 'message',
-            data: JSON.stringify(event)
+            id: String(Date.now()),
           })
         }
       } catch (error) {
-        await stream.write({
-          id: String(Date.now()),
+        await stream.writeSSE({
+          data: JSON.stringify({ error: error.message }),
           event: 'error',
-          data: JSON.stringify({ error: error.message })
+          id: String(Date.now()),
         })
       }
     })`
@@ -125,17 +125,17 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
       ${extractions.join('\n      ')}
       try {
         for await (const event of ${handlerCall}(${inputObject})) {
-          await stream.write({
-            id: String(Date.now()),
+          await stream.writeSSE({
+            data: JSON.stringify(event),
             event: 'message',
-            data: JSON.stringify(event)
+            id: String(Date.now()),
           })
         }
       } catch (error) {
-        await stream.write({
-          id: String(Date.now()),
+        await stream.writeSSE({
+          data: JSON.stringify({ error: error.message }),
           event: 'error',
-          data: JSON.stringify({ error: error.message })
+          id: String(Date.now()),
         })
       }
     })`

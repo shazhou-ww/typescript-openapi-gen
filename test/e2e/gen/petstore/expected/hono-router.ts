@@ -12,17 +12,17 @@ export function createRouter<T extends Hono>(app: T): T {
     streamSSE(c, async (stream) => {
       try {
         for await (const event of events.stream.handleGet({})) {
-          await stream.write({
-            id: String(Date.now()),
-            event: 'message',
+          await stream.writeSSE({
             data: JSON.stringify(event),
+            event: 'message',
+            id: String(Date.now()),
           })
         }
       } catch (error) {
-        await stream.write({
-          id: String(Date.now()),
-          event: 'error',
+        await stream.writeSSE({
           data: JSON.stringify({ error: error.message }),
+          event: 'error',
+          id: String(Date.now()),
         })
       }
     }),
