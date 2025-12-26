@@ -66,16 +66,16 @@ export class ExpressRouteGenerator extends BaseRouteGenerator {
     const reqExtractions: string[] = []
 
     if (inputParts.includes('params')) {
-      reqExtractions.push('const params = req.params as unknown')
+      reqExtractions.push('const params = req.params')
     }
     if (inputParts.includes('query')) {
-      reqExtractions.push('const query = req.query as unknown')
+      reqExtractions.push('const query = req.query')
     }
     if (inputParts.includes('headers')) {
-      reqExtractions.push('const headers = req.headers as unknown')
+      reqExtractions.push('const headers = req.headers')
     }
     if (inputParts.includes('body')) {
-      reqExtractions.push('const body = req.body as unknown')
+      reqExtractions.push('const body = req.body')
     }
 
     let handlerBody: string
