@@ -6,7 +6,6 @@ import { parseOpenAPIFile } from '../../../src/lib/openapi-parser.js'
 import {
   ElysiaRouteGenerator,
   ExpressRouteGenerator,
-  KoaRouteGenerator,
   FastifyRouteGenerator,
   HonoRouteGenerator,
 } from '../../../src/lib/route-generator/index.js'
@@ -71,11 +70,6 @@ const frameworks = [
     name: 'express',
     generator: ExpressRouteGenerator,
     routeFile: 'express-router.ts',
-  },
-  {
-    name: 'koa',
-    generator: KoaRouteGenerator,
-    routeFile: 'koa-router.ts',
   },
   {
     name: 'fastify',
