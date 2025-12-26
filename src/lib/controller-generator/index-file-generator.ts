@@ -14,12 +14,15 @@ export function generateIndexFile(
 ): void {
   const lines = buildFileHeader('index file')
 
-  addTypeExports(lines, info)
-  addMethodExports(lines, info)
-  addChildRouteExports(lines, info)
-  lines.push('')
+  const hadTypeExports = addTypeExports(lines, info)
+  const hadMethodExports = addMethodExports(lines, info)
+  const hadChildExports = addChildRouteExports(lines, info)
 
-  writeGeneratedFile(controllerDir, 'index.ts', lines, result)
+  // Generate file if there are exports or if this is a routing node (has children)
+  if (hadTypeExports || hadMethodExports || hadChildExports || info.children.size > 0) {
+    lines.push('')
+    writeGeneratedFile(controllerDir, 'index.ts', lines, result)
+  }
 }
 
 /**
@@ -34,9 +37,17 @@ export function generateRootIndexFile(
 
   // Export all top-level route modules
   const segments = Array.from(routeTree.keys()).sort()
+
   for (const segment of segments) {
     const fsName = segmentToFsName(segment)
-    lines.push(`export * as ${fsName} from './${fsName}'`)
+    // Use export * as syntax for valid identifiers, import/export for special chars
+    if (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(fsName)) {
+      lines.push(`export * as ${fsName} from './${fsName}'`)
+    } else {
+      const exportName = fsName.replace(/[^a-zA-Z0-9_$]/g, '_')
+      lines.push(`import * as ${exportName} from './${fsName}'`)
+      lines.push(`export { ${exportName} }`)
+    }
   }
 
   lines.push('')
@@ -44,8 +55,8 @@ export function generateRootIndexFile(
   writeGeneratedFile(outputDir, 'index.ts', lines, result)
 }
 
-function addTypeExports(lines: string[], info: RouteInfo): void {
-  if (info.methods.size === 0) return
+function addTypeExports(lines: string[], info: RouteInfo): boolean {
+  if (info.methods.size === 0) return false
 
   const typeExports: string[] = []
   for (const [method, operation] of info.methods) {
@@ -56,22 +67,32 @@ function addTypeExports(lines: string[], info: RouteInfo): void {
 
   lines.push(`export type { ${typeExports.join(', ')} } from './types.gen'`)
   lines.push('')
+  return true
 }
 
-function addMethodExports(lines: string[], info: RouteInfo): void {
+function addMethodExports(lines: string[], info: RouteInfo): boolean {
+  if (info.methods.size === 0) return false
+
   // Export from methods.gen.ts (with validation) instead of direct handlers
   for (const method of info.methods.keys()) {
     lines.push(`export { handle${capitalize(method)} } from './methods.gen'`)
   }
 
-  if (info.methods.size > 0 && info.children.size > 0) {
+  if (info.children.size > 0) {
     lines.push('')
   }
+
+  return true
 }
 
-function addChildRouteExports(lines: string[], info: RouteInfo): void {
+function addChildRouteExports(lines: string[], info: RouteInfo): boolean {
+  if (info.children.size === 0) return false
+
   for (const [childSegment] of info.children) {
     const fsName = segmentToFsName(childSegment)
-    lines.push(`export * as ${fsName} from './${fsName}'`)
+    const exportName = fsName.replace(/[^a-zA-Z0-9_$]/g, '_')
+    lines.push(`export * as ${exportName} from './${fsName}'`)
   }
+
+  return true
 }

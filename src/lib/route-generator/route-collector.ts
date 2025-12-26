@@ -88,6 +88,7 @@ function convertToElysiaPath(routePath: string): string {
 /**
  * Get controller import path segments
  * e.g., "/pets/{petId}/photos" => ["pets", "_petId", "photos"]
+ * Converts segments to valid JavaScript identifiers
  */
 function getControllerImportPath(routePath: string): string[] {
   return routePath
@@ -95,7 +96,11 @@ function getControllerImportPath(routePath: string): string[] {
     .filter(Boolean)
     .map((segment) => {
       const match = segment.match(/^\{(.+)\}$/)
-      return match ? `_${match[1]}` : segment
+      if (match) {
+        return `_${match[1]}`
+      }
+      // Convert segment to valid JavaScript identifier
+      return segment.replace(/[^a-zA-Z0-9_$]/g, '_')
     })
 }
 

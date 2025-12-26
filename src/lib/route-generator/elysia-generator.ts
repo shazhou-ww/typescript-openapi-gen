@@ -84,7 +84,10 @@ export class ElysiaRouteGenerator {
     const modules = new Set<string>()
     for (const route of routes) {
       if (route.controllerImportPath.length > 0) {
-        modules.add(route.controllerImportPath[0])
+        // Use the same conversion as controller generator
+        const originalName = route.controllerImportPath[0]
+        const fsName = originalName.replace(/[^a-zA-Z0-9_$]/g, '_')
+        modules.add(fsName)
       }
     }
     return Array.from(modules).sort()
@@ -130,7 +133,7 @@ export class ElysiaRouteGenerator {
   }
 
   private generateRoute(route: FlatRoute): string {
-    const controllerPath = route.controllerImportPath.join('.')
+    const controllerPath = this.buildControllerPath(route.controllerImportPath)
     const handlerCall = `${controllerPath}.${route.handlerName}`
 
     const inputParts = this.buildInputParts(route)
@@ -139,6 +142,13 @@ export class ElysiaRouteGenerator {
     const inputObject = this.buildInputObject(route)
 
     return `    .${route.method}('${route.elysiaPath}', (${destructure}) => ${handlerCall}(${inputObject}))`
+  }
+
+  private buildControllerPath(importPath: string[]): string {
+    if (importPath.length === 0) return ''
+    // Convert all segments to valid JavaScript identifiers
+    const validSegments = importPath.map(segment => segment.replace(/[^a-zA-Z0-9_$]/g, '_'))
+    return validSegments.join('.')
   }
 
   private buildInputParts(route: FlatRoute): string[] {

@@ -12,6 +12,9 @@ export function writeGeneratedFile(
   lines: string[],
   result: GenerationResult,
 ): void {
+  // Ensure the directory exists
+  fs.mkdirSync(dir, { recursive: true })
+
   const filePath = path.join(dir, filename)
   fs.writeFileSync(filePath, lines.join('\n'))
   result.filesCreated++

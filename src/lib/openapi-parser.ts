@@ -47,7 +47,10 @@ export async function parseOpenAPIFile(
     throw new Error('Invalid OpenAPI document: missing paths field')
   }
 
-  return doc as OpenAPIDocument
+  // Resolve external $ref references
+  const resolvedDoc = await resolveExternalRefs(doc as OpenAPIDocument, path.dirname(absolutePath))
+
+  return resolvedDoc
 }
 
 /**
@@ -141,4 +144,82 @@ export function isReferenceObject(
   obj: unknown,
 ): obj is OpenAPIV3.ReferenceObject {
   return typeof obj === 'object' && obj !== null && '$ref' in obj
+}
+
+/**
+ * Decode a JSON Pointer token
+ * ~1 becomes /, ~0 becomes ~
+ */
+function jsonPointerDecode(token: string): string {
+  return token.replace(/~1/g, '/').replace(/~0/g, '~')
+}
+
+/**
+ * Resolve external $ref references in OpenAPI document
+ */
+async function resolveExternalRefs(
+  doc: OpenAPIDocument,
+  baseDir: string,
+): Promise<OpenAPIDocument> {
+  const resolvedDoc = JSON.parse(JSON.stringify(doc)) // Deep clone
+
+  if (resolvedDoc.paths) {
+    for (const [pathKey, pathItem] of Object.entries(resolvedDoc.paths)) {
+      if (pathItem && typeof pathItem === 'object' && '$ref' in pathItem) {
+        // Resolve external path reference
+        const resolvedPath = await resolveExternalRef((pathItem as any).$ref, baseDir)
+        if (resolvedPath !== undefined) {
+          resolvedDoc.paths[pathKey] = resolvedPath
+        }
+        // If resolution failed, keep the original $ref
+      }
+    }
+  }
+
+  return resolvedDoc
+}
+
+/**
+ * Resolve a single external $ref
+ */
+async function resolveExternalRef(
+  ref: string,
+  baseDir: string,
+): Promise<any> {
+  try {
+    // Parse ref like "./agent-runs/stop.yaml#/paths/~1agent-run~1{agentRunId}~1stop"
+    const [filePath, jsonPath] = ref.split('#')
+    const fullPath = path.resolve(baseDir, filePath)
+
+    // Check if file exists
+    if (!fs.existsSync(fullPath)) {
+      console.warn(`Warning: Referenced file not found: ${fullPath}`)
+      return undefined
+    }
+
+    // Parse the referenced file
+    const refDoc = await parseOpenAPIFile(fullPath)
+
+    if (!jsonPath) {
+      return refDoc
+    }
+
+    // Navigate to the specific path in the document (JSON Pointer syntax)
+    const pathParts = jsonPath.split('/').filter(Boolean).map(jsonPointerDecode)
+    let current: any = refDoc
+
+    for (const part of pathParts) {
+      if (current && typeof current === 'object') {
+        current = current[part]
+      } else {
+        console.warn(`Warning: Cannot resolve path ${jsonPath} in ${filePath}`)
+        return undefined
+      }
+    }
+
+    return current
+  } catch (error) {
+    console.warn(`Warning: Failed to resolve external ref ${ref}: ${error instanceof Error ? error.message : String(error)}`)
+    return undefined
+  }
 }
