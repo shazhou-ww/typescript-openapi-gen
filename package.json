@@ -1,6 +1,6 @@
 {
   "name": "typescript-openapi-gen",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Generate TypeScript controller code from OpenAPI specification",
   "type": "module",
   "main": "dist/index.js",
