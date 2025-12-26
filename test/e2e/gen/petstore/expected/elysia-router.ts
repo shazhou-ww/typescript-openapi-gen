@@ -4,7 +4,7 @@
 import { Elysia } from 'elysia'
 import { events, pets, users } from './controller'
 
-export function createRouter<T extends Elysia>(app: T): T {
+export function createRouter<T extends Elysia>(app: T) {
   return app
     .get('/events/stream', () => events.stream.handleGet({}))
     .get('/pets', ({ query }) => pets.handleGet({ query }))

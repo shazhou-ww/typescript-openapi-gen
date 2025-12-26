@@ -114,7 +114,7 @@ export class ElysiaRouteGenerator {
     const lines: string[] = []
 
     // Generate router decorator function
-    lines.push('export function createRouter<T extends Elysia>(app: T): T {')
+    lines.push('export function createRouter<T extends Elysia>(app: T) {')
     lines.push('  return app')
 
     for (const route of routes) {
