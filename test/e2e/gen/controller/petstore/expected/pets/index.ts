@@ -1,0 +1,9 @@
+// Auto-generated index file
+// DO NOT EDIT - This file is regenerated on each run
+
+export type { GetInput, GetOutput, PostInput, PostOutput } from './types.js'
+
+export { handleGet } from './get.js'
+export { handlePost } from './post.js'
+
+export * as _petId from './_petId/index.js'
