@@ -1,60 +1,158 @@
-# typescript-openapi-gen
+# TypeScript OpenAPI Generator
 
-Generate TypeScript controller code from OpenAPI specification.
+Generate TypeScript controllers and routes from OpenAPI specifications with full type safety and framework support.
+
+## Features
+
+- 🚀 **Multi-Framework Support**: Generate routes for Elysia, Express, Fastify, and Hono
+- 📝 **Type-Safe Controllers**: Auto-generated TypeScript interfaces and Zod validation
+- 🔄 **Server-Sent Events**: Built-in support for SSE endpoints
+- 🎯 **Framework-Specific Optimization**: Tailored code generation for each framework
+- ⚡ **Fast Generation**: Optimized parsing and code generation
+- 🎨 **Auto-Formatting**: Integrated Prettier support
 
 ## Installation
 
 ```bash
-pnpm install
-pnpm build
+npm install -g typescript-openapi-gen
+# or
+pnpm add -g typescript-openapi-gen
+# or
+yarn global add typescript-openapi-gen
 ```
 
-## Usage
+## Quick Start
 
-### Generate Controllers
-
-```bash
-tsoapi gen controller <openapi-file> -o <output-directory>
-```
-
-**Example:**
+### 1. Generate Controllers
 
 ```bash
 tsoapi gen controller openapi.yaml -o ./src/controllers
 ```
 
-This will generate a controller skeleton with:
-- Route-based folder structure matching your API paths
-- Type definitions for request inputs and response outputs
-- Shared types from OpenAPI schemas
-- Support for SSE (Server-Sent Events) endpoints
+### 2. Generate Routes
 
-### Generated Structure
+Choose your framework:
 
-For an OpenAPI spec with paths like `/pets` and `/pets/{petId}`, the generator creates:
+```bash
+# Elysia (recommended)
+tsoapi gen router elysia openapi.yaml -o ./src
+
+# Express
+tsoapi gen router express openapi.yaml -o ./src
+
+# Fastify
+tsoapi gen router fastify openapi.yaml -o ./src
+
+# Hono
+tsoapi gen router hono openapi.yaml -o ./src
+```
+
+### 3. Or Generate Everything at Once
+
+```bash
+# Generate both controllers and routes
+tsoapi gen elysia openapi.yaml -o ./src
+```
+
+## Generated Code Structure
+
+For an OpenAPI spec with `/pets` and `/pets/{petId}` endpoints:
 
 ```
-controllers/
-├── types/
-│   └── index.ts          # Shared types from components/schemas
-├── pets/
-│   ├── index.ts          # Re-exports
-│   ├── types.ts          # Input/Output types for this route
-│   ├── get.ts            # GET handler
-│   ├── post.ts           # POST handler
-│   └── _petId/
+src/
+├── controllers/           # Generated controllers
+│   ├── index.ts          # Main exports
+│   ├── shared-types/     # Shared OpenAPI types
+│   │   ├── index.ts
+│   │   ├── Pet.gen.ts
+│   │   └── Error.gen.ts
+│   └── pets/             # Route-specific controllers
 │       ├── index.ts
-│       ├── types.ts
-│       ├── get.ts
-│       ├── put.ts
-│       └── delete.ts
+│       ├── types.gen.ts  # Input/output types
+│       ├── methods.gen.ts # Validated handlers
+│       ├── get.ts        # User handler (GET /pets)
+│       ├── post.ts       # User handler (POST /pets)
+│       └── _petId/       # Path parameters
+│           ├── get.ts    # GET /pets/{petId}
+│           ├── put.ts    # PUT /pets/{petId}
+│           └── delete.ts # DELETE /pets/{petId}
+├── elysia-router.ts      # Generated routes
+└── ...
+```
+
+## Framework-Specific Features
+
+### Elysia
+- Native type inference with chained route definitions
+- Built-in SSE support with `yield*`
+
+### Express
+- Traditional middleware pattern
+- SSE with proper headers and streaming
+
+### Fastify
+- `@fastify/type-provider-typebox` integration
+- Native SSE plugin support
+
+### Hono
+- `hono/streaming` integration
+- Optimized for edge environments
+
+## Advanced Usage
+
+### Custom Output Structure
+
+```bash
+# Custom folder names
+tsoapi gen controller openapi.yaml \
+  --output-dir ./src \
+  --controller-folder handlers \
+  --shared-types-folder types
+
+# Custom route file
+tsoapi gen router elysia openapi.yaml \
+  --output-dir ./src \
+  --router-file api-routes.ts
+```
+
+### Prettier Integration
+
+The generator automatically detects and uses your project's Prettier configuration, or you can specify a custom config:
+
+```bash
+tsoapi gen controller openapi.yaml -o ./src --prettier ./prettier.config.js
+```
+
+## Type Safety Strategy
+
+1. **Route Layer**: Extracts parameters from framework requests
+2. **Controller Layer**: Zod schemas validate and transform inputs
+3. **Handler Layer**: Your business logic with full type safety
+
+```typescript
+// Generated types.gen.ts
+export interface GetInput {
+  query: { limit?: number; offset?: number }
+}
+export const GetInputSchema = z.object({
+  query: z.object({
+    limit: z.number().int().max(100).optional(),
+    offset: z.number().int().optional(),
+  })
+})
+
+// Generated methods.gen.ts
+export async function handleGet(input: unknown): Promise<GetOutput> {
+  const validated = GetInputSchema.parse(input)
+  return _handleGet(validated) // Your handler with validated input
+}
 ```
 
 ## Development
 
 ```bash
-# Run in development mode
-pnpm dev gen controller <file> -o <output>
+# Install dependencies
+pnpm install
 
 # Build
 pnpm build
@@ -62,9 +160,13 @@ pnpm build
 # Run tests
 pnpm test
 
-# Run tests in watch mode
-pnpm test:watch
+# Development mode
+pnpm dev gen controller openapi.yaml -o ./src
 ```
+
+## Examples
+
+See the `test/e2e/gen/petstore/` directory for complete generated examples.
 
 ## License
 
