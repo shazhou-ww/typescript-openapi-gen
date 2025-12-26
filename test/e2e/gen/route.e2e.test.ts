@@ -5,6 +5,9 @@ import { fileURLToPath } from 'node:url'
 import { parseOpenAPIFile } from '../../../src/lib/openapi-parser.js'
 import { ElysiaRouteGenerator } from '../../../src/lib/route-generator/index.js'
 
+// This test file is kept for backward compatibility
+// New tests should use route-all-frameworks.e2e.test.ts
+
 // Read file content with normalized line endings
 function readFileNormalized(filePath: string): string {
   return fs.readFileSync(filePath, 'utf-8').replace(/\r\n/g, '\n')
