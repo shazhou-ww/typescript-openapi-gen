@@ -101,11 +101,11 @@ console.log('Server running on http://localhost:3000')
 
 ```typescript
 import express from 'express'
-import { decorateRouter } from './express-router.gen'
+import { decorate } from './express-router.gen'
 
 const app = express()
 const router = express.Router()
-decorateRouter(router) // Decorate the router with routes
+decorate(router) // Decorate the router with routes
 app.use(router)
 app.listen(3000)
 ```

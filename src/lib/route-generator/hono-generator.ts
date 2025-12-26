@@ -39,9 +39,9 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
     // Generate router decorator function
     lines.push('/**')
     lines.push(' * Decorates a Hono app with generated routes.')
-    lines.push(' * Usage: const app = new Hono(); decorateRouter(app);')
+    lines.push(' * Usage: const app = new Hono(); decorate(app);')
     lines.push(' */')
-    lines.push('export function decorateRouter<T extends Hono>(app: T): T {')
+    lines.push('export function decorate<T extends Hono>(app: T): T {')
 
     for (const route of routes) {
       lines.push(this.generateRoute(route))
@@ -52,7 +52,7 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
     lines.push('  return app')
     lines.push('}')
     lines.push('')
-    lines.push('export default decorateRouter')
+    lines.push('export default decorate')
 
     return lines
   }

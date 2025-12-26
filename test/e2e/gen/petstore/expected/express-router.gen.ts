@@ -8,9 +8,9 @@ export const router = Router()
 
 /**
  * Decorates an Express router with generated routes.
- * Usage: const router = express.Router(); decorateRouter(router);
+ * Usage: const router = express.Router(); decorate(router);
  */
-export function decorateRouter(router: Router): Router {
+export function decorate(router: Router): Router {
   router.get('/events/stream', async (req, res, next) => {
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
@@ -75,4 +75,4 @@ export function decorateRouter(router: Router): Router {
   return router
 }
 
-export default decorateRouter
+export default decorate

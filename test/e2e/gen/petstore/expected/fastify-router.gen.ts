@@ -8,9 +8,9 @@ import { events, pets, users } from './controller'
 
 /**
  * Decorates a Fastify instance with generated routes.
- * Usage: await decorateRouter(fastify)
+ * Usage: await decorate(fastify)
  */
-export async function decorateRouter(fastify: FastifyInstance): Promise<void> {
+export async function decorate(fastify: FastifyInstance): Promise<void> {
   fastify.register(ssePlugin)
   fastify.withTypeProvider<TypeBoxTypeProvider>()
   fastify.get('/events/stream', { sse: true }, async (request, reply) => {
@@ -78,4 +78,4 @@ export async function decorateRouter(fastify: FastifyInstance): Promise<void> {
   })
 }
 
-export default decorateRouter
+export default decorate

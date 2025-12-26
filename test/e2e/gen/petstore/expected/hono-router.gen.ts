@@ -9,9 +9,9 @@ export const app = new Hono()
 
 /**
  * Decorates a Hono app with generated routes.
- * Usage: const app = new Hono(); decorateRouter(app);
+ * Usage: const app = new Hono(); decorate(app);
  */
-export function decorateRouter<T extends Hono>(app: T): T {
+export function decorate<T extends Hono>(app: T): T {
   app.get('/events/stream', (c) =>
     streamSSE(c, async (stream) => {
       try {
@@ -77,4 +77,4 @@ export function decorateRouter<T extends Hono>(app: T): T {
   return app
 }
 
-export default decorateRouter
+export default decorate
