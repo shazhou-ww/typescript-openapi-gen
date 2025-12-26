@@ -3,20 +3,32 @@
 
 import type { FastifyInstance } from 'fastify'
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
+import ssePlugin from '@fastify/sse'
 import { events, pets, users } from './controller'
 
 export async function createRouter(fastify: FastifyInstance): Promise<void> {
+  await fastify.register(ssePlugin)
   fastify.withTypeProvider<TypeBoxTypeProvider>()
-  fastify.get('/events/stream', async function* (request, reply) {
-    reply.header('Content-Type', 'text/event-stream')
-    reply.header('Cache-Control', 'no-cache')
-    reply.header('Connection', 'keep-alive')
-
-    try {
-      yield* events.stream.handleGet({})
-    } catch (error) {
-      yield { event: 'error', data: { error: error.message } }
-    }
+  fastify.get('/events/stream', async (request, reply) => {
+    return reply.sse(
+      (async function* () {
+        try {
+          for await (const event of events.stream.handleGet({})) {
+            yield {
+              id: String(Date.now()),
+              event: 'message',
+              data: JSON.stringify(event),
+            }
+          }
+        } catch (error) {
+          yield {
+            id: String(Date.now()),
+            event: 'error',
+            data: JSON.stringify({ error: error.message }),
+          }
+        }
+      })(),
+    )
   })
   fastify.get('/pets', async (request, reply) => {
     const query = request.query as unknown

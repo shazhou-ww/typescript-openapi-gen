@@ -13,9 +13,10 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
   protected generateImports(routes: FlatRoute[]): string[] {
     const lines: string[] = []
 
-    // Import Fastify with TypeBox
+    // Import Fastify with TypeBox and SSE
     lines.push("import type { FastifyInstance } from 'fastify'")
     lines.push("import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'")
+    lines.push("import ssePlugin from '@fastify/sse'")
 
     // Import controllers
     const topLevelModules = this.getTopLevelModules(routes)
@@ -35,6 +36,7 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
 
     // Generate router decorator function
     lines.push('export async function createRouter(fastify: FastifyInstance): Promise<void> {')
+    lines.push('  await fastify.register(ssePlugin)')
     lines.push('  fastify.withTypeProvider<TypeBoxTypeProvider>()')
 
     for (const route of routes) {
@@ -78,21 +80,29 @@ export class FastifyRouteGenerator extends BaseRouteGenerator {
     let handlerBody: string
 
     if (isSSE) {
-      // SSE handler: set headers and return async generator
+      // SSE handler: use reply.sse() with async generator
       const setupCode = requestExtractions.length > 0
         ? `${requestExtractions.join('\n    ')}\n    `
         : ''
 
-      handlerBody = `async function* (request, reply) {
-    ${setupCode}reply.header('Content-Type', 'text/event-stream')
-    reply.header('Cache-Control', 'no-cache')
-    reply.header('Connection', 'keep-alive')
-
-    try {
-      yield* ${handlerCall}(${inputObject})
-    } catch (error) {
-      yield { event: 'error', data: { error: error.message } }
-    }
+      handlerBody = `async (request, reply) => {
+    ${setupCode}return reply.sse(async function* () {
+      try {
+        for await (const event of ${handlerCall}(${inputObject})) {
+          yield {
+            id: String(Date.now()),
+            event: 'message',
+            data: JSON.stringify(event)
+          }
+        }
+      } catch (error) {
+        yield {
+          id: String(Date.now()),
+          event: 'error',
+          data: JSON.stringify({ error: error.message })
+        }
+      }
+    }())
   }`
     } else {
       // Regular handler
