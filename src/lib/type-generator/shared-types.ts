@@ -1,7 +1,7 @@
-import { isReferenceObject, getRefName } from '../openapi-parser.js'
-import { buildFileHeader } from '../shared/codegen-utils.js'
-import type { SchemaObject, ReferenceObject } from '../shared/openapi-types.js'
-import { schemaToZod } from './zod-schema-converter.js'
+import { isReferenceObject, getRefName } from '../openapi-parser'
+import { buildFileHeader } from '../shared/codegen-utils'
+import type { SchemaObject, ReferenceObject } from '../shared/openapi-types'
+import { schemaToZod } from './zod-schema-converter'
 
 export interface SharedTypeFile {
   name: string

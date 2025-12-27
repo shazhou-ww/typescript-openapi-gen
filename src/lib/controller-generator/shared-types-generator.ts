@@ -1,8 +1,8 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import type { SchemaObject, ReferenceObject } from '../shared/openapi-types.js'
-import { generateSharedTypes } from '../type-generator/index.js'
-import type { GenerationResult } from './types.js'
+import type { SchemaObject, ReferenceObject } from '../shared/openapi-types'
+import { generateSharedTypes } from '../type-generator/index'
+import type { GenerationResult } from './types'
 
 /**
  * Generate the shared types folder with separate files per type

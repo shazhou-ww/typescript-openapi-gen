@@ -1,8 +1,8 @@
-import { isSSEOperation } from '../openapi-parser.js'
-import { buildFileHeader, capitalize } from '../shared/codegen-utils.js'
-import type { RouteInfo, GenerationResult } from './types.js'
-import { writeGeneratedFile, getOutputTypeName } from './file-utils.js'
-import { getBodySchema } from './zod-input-generator.js'
+import { isSSEOperation } from '../openapi-parser'
+import { buildFileHeader, capitalize } from '../shared/codegen-utils'
+import type { RouteInfo, GenerationResult } from './types'
+import { writeGeneratedFile, getOutputTypeName } from './file-utils'
+import { getBodySchema } from './zod-input-generator'
 
 /**
  * Generate methods.gen.ts file with validation wrappers

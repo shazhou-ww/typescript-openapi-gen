@@ -1,5 +1,5 @@
-import { isReferenceObject, getRefName } from '../openapi-parser.js'
-import type { SchemaObject, ReferenceObject } from '../shared/openapi-types.js'
+import { isReferenceObject, getRefName } from '../openapi-parser'
+import type { SchemaObject, ReferenceObject } from '../shared/openapi-types'
 
 /**
  * Extract all referenced schema names from a schema

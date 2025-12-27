@@ -1,6 +1,6 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import type { GenerationResult } from './types.js'
+import type { GenerationResult } from './types'
 
 /**
  * Write file and increment result counter

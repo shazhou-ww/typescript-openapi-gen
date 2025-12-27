@@ -2,11 +2,11 @@ import { Args, Command, Flags } from '@oclif/core'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import * as yaml from 'js-yaml'
-import { parseOpenAPIFile } from '../../lib/openapi-parser.js'
-import { buildRouteTree } from '../../lib/controller-generator/route-tree.js'
-import { segmentToFsName } from '../../lib/controller-generator/utils.js'
-import type { RouteInfo } from '../../lib/controller-generator/types.js'
-import type { OpenAPIDocument } from '../../lib/openapi-parser.js'
+import { parseOpenAPIFile } from '../../lib/openapi-parser'
+import { buildRouteTree } from '../../lib/controller-generator/route-tree'
+import { segmentToFsName } from '../../lib/controller-generator/utils'
+import type { RouteInfo } from '../../lib/controller-generator/types'
+import type { OpenAPIDocument } from '../../lib/openapi-parser'
 
 export default class GenOpenapi extends Command {
   static override args = {

@@ -1,5 +1,5 @@
 // Shared utilities between type-generator and controller-generator
 
-export * from './codegen-utils.js'
-export * from './openapi-types.js'
-export * from './formatter.js'
+export * from './codegen-utils'
+export * from './openapi-types'
+export * from './formatter'

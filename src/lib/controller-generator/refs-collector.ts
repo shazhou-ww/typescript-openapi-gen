@@ -1,11 +1,11 @@
-import { isReferenceObject } from '../openapi-parser.js'
+import { isReferenceObject } from '../openapi-parser'
 import type {
   OperationObject,
   ParameterObject,
   RequestBodyObject,
   ResponseObject,
-} from '../shared/openapi-types.js'
-import { extractSchemaRefs } from '../type-generator/index.js'
+} from '../shared/openapi-types'
+import { extractSchemaRefs } from '../type-generator/index'
 
 /**
  * Collect all referenced type names from an operation

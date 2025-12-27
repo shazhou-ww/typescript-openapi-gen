@@ -1,8 +1,8 @@
 import { Args, Command, Flags } from '@oclif/core'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import { parseOpenAPIFile } from '../../../lib/openapi-parser.js'
-import { FastifyRouteGenerator } from '../../../lib/route-generator/index.js'
+import { parseOpenAPIFile } from '../../../lib/openapi-parser'
+import { FastifyRouteGenerator } from '../../../lib/route-generator/index'
 
 export default class GenRouterFastify extends Command {
   static override args = {

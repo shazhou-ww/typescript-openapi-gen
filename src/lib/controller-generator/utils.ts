@@ -1,6 +1,6 @@
 import * as path from 'node:path'
-import { capitalize } from '../shared/codegen-utils.js'
-import type { RouteInfo } from './types.js'
+import { capitalize } from '../shared/codegen-utils'
+import type { RouteInfo } from './types'
 
 /**
  * Get relative path from controller directory to shared types folder

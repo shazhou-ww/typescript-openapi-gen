@@ -1,11 +1,11 @@
-import { extractPathParams, isReferenceObject } from '../openapi-parser.js'
-import { formatPropertyName } from '../shared/codegen-utils.js'
+import { extractPathParams, isReferenceObject } from '../openapi-parser'
+import { formatPropertyName } from '../shared/codegen-utils'
 import type {
   OperationObject,
   ParameterObject,
   RequestBodyObject,
-} from '../shared/openapi-types.js'
-import { schemaToTypeScript } from '../type-generator/index.js'
+} from '../shared/openapi-types'
+import { schemaToTypeScript } from '../type-generator/index'
 
 /**
  * Generate input type for an operation

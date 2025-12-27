@@ -1,14 +1,14 @@
-import { isSSEOperation } from '../openapi-parser.js'
-import { buildFileHeader, capitalize } from '../shared/codegen-utils.js'
-import type { RouteInfo, GenerationResult } from './types.js'
-import { getRelativePathToTypes } from './utils.js'
-import { writeGeneratedFile, getOutputTypeName } from './file-utils.js'
+import { isSSEOperation } from '../openapi-parser'
+import { buildFileHeader, capitalize } from '../shared/codegen-utils'
+import type { RouteInfo, GenerationResult } from './types'
+import { getRelativePathToTypes } from './utils'
+import { writeGeneratedFile, getOutputTypeName } from './file-utils'
 import {
   generateSeparateInputTypes,
   getBodySchema,
-} from './zod-input-generator.js'
-import { generateOutputType } from './output-type-generator.js'
-import { collectReferencedTypes } from './refs-collector.js'
+} from './zod-input-generator'
+import { generateOutputType } from './output-type-generator'
+import { collectReferencedTypes } from './refs-collector'
 
 /**
  * Generate types.ts file for a controller

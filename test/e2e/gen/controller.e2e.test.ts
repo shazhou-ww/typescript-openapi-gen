@@ -2,8 +2,8 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parseOpenAPIFile } from '../../../src/lib/openapi-parser.js'
-import { ControllerGenerator } from '../../../src/lib/controller-generator/index.js'
+import { parseOpenAPIFile } from '../../../src/lib/openapi-parser'
+import { ControllerGenerator } from '../../../src/lib/controller-generator/index'
 
 // Get all test case directories (directories with input/expected subdirs)
 function getTestCases(e2eDir: string): string[] {

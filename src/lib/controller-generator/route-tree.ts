@@ -1,7 +1,7 @@
-import { routePathToFsPath, getPathMethods } from '../openapi-parser.js'
-import type { OpenAPIDocument } from '../openapi-parser.js'
-import type { OperationObject } from '../shared/openapi-types.js'
-import type { RouteInfo } from './types.js'
+import { routePathToFsPath, getPathMethods } from '../openapi-parser'
+import type { OpenAPIDocument } from '../openapi-parser'
+import type { OperationObject } from '../shared/openapi-types'
+import type { RouteInfo } from './types'
 
 /**
  * Build a hierarchical tree of routes from the OpenAPI paths

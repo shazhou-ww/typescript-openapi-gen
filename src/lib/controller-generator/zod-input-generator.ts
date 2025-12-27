@@ -1,12 +1,12 @@
-import { extractPathParams, isReferenceObject } from '../openapi-parser.js'
-import { formatPropertyName } from '../shared/codegen-utils.js'
+import { extractPathParams, isReferenceObject } from '../openapi-parser'
+import { formatPropertyName } from '../shared/codegen-utils'
 import type {
   OperationObject,
   ParameterObject,
   RequestBodyObject,
-} from '../shared/openapi-types.js'
-import { schemaToZod } from '../type-generator/zod-schema-converter.js'
-import { schemaToTypeScript } from '../type-generator/schema-converter.js'
+} from '../shared/openapi-types'
+import { schemaToZod } from '../type-generator/zod-schema-converter'
+import { schemaToTypeScript } from '../type-generator/schema-converter'
 
 /**
  * Generate separate input type definitions and schemas

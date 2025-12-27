@@ -3,11 +3,11 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as yaml from 'js-yaml'
-import { parseOpenAPIFile } from '../../../src/lib/openapi-parser.js'
-import { buildRouteTree } from '../../../src/lib/controller-generator/route-tree.js'
-import { segmentToFsName } from '../../../src/lib/controller-generator/utils.js'
-import type { RouteInfo } from '../../../src/lib/controller-generator/types.js'
-import type { OpenAPIDocument } from '../../../src/lib/openapi-parser.js'
+import { parseOpenAPIFile } from '../../../src/lib/openapi-parser'
+import { buildRouteTree } from '../../../src/lib/controller-generator/route-tree'
+import { segmentToFsName } from '../../../src/lib/controller-generator/utils'
+import type { RouteInfo } from '../../../src/lib/controller-generator/types'
+import type { OpenAPIDocument } from '../../../src/lib/openapi-parser'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.join(__dirname, '../fixtures')

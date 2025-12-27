@@ -1,7 +1,7 @@
 import { Args, Command, Flags } from '@oclif/core'
 import * as path from 'node:path'
 import * as fs from 'node:fs'
-import { parseOpenAPIFile } from '../lib/openapi-parser.js'
+import { parseOpenAPIFile } from '../lib/openapi-parser'
 
 export default class Ir extends Command {
   static override args = {

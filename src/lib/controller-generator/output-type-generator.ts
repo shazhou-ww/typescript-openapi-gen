@@ -1,9 +1,9 @@
-import { isReferenceObject } from '../openapi-parser.js'
+import { isReferenceObject } from '../openapi-parser'
 import type {
   OperationObject,
   ResponseObject,
-} from '../shared/openapi-types.js'
-import { schemaToTypeScript } from '../type-generator/index.js'
+} from '../shared/openapi-types'
+import { schemaToTypeScript } from '../type-generator/index'
 
 /**
  * Generate output type for an operation

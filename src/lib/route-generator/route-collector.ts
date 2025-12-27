@@ -1,8 +1,8 @@
-import { getPathMethods, isSSEOperation } from '../openapi-parser.js'
-import type { OpenAPIDocument } from '../openapi-parser.js'
-import type { OperationObject } from '../shared/openapi-types.js'
-import { capitalize } from '../shared/codegen-utils.js'
-import type { FlatRoute } from './types.js'
+import { getPathMethods, isSSEOperation } from '../openapi-parser'
+import type { OpenAPIDocument } from '../openapi-parser'
+import type { OperationObject } from '../shared/openapi-types'
+import { capitalize } from '../shared/codegen-utils'
+import type { FlatRoute } from './types'
 
 // HTTP method order for sorting
 const METHOD_ORDER = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head']

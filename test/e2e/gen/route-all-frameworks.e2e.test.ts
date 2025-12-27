@@ -2,13 +2,13 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parseOpenAPIFile } from '../../../src/lib/openapi-parser.js'
+import { parseOpenAPIFile } from '../../../src/lib/openapi-parser'
 import {
   ElysiaRouteGenerator,
   ExpressRouteGenerator,
   FastifyRouteGenerator,
   HonoRouteGenerator,
-} from '../../../src/lib/route-generator/index.js'
+} from '../../../src/lib/route-generator/index'
 
 // Read file content with normalized line endings
 function readFileNormalized(filePath: string): string {

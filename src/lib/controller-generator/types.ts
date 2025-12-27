@@ -1,4 +1,4 @@
-import type { OperationObject } from '../shared/openapi-types.js'
+import type { OperationObject } from '../shared/openapi-types'
 
 export interface GenerationResult {
   controllersGenerated: number

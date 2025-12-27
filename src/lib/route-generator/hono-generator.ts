@@ -1,7 +1,7 @@
-import { isSSEOperation } from '../openapi-parser.js'
-import type { OpenAPIDocument } from '../openapi-parser.js'
-import type { FlatRoute } from './types.js'
-import { BaseRouteGenerator, type RouteGeneratorOptions } from './base-generator.js'
+import { isSSEOperation } from '../openapi-parser'
+import type { OpenAPIDocument } from '../openapi-parser'
+import type { FlatRoute } from './types'
+import { BaseRouteGenerator, type RouteGeneratorOptions } from './base-generator'
 
 export interface HonoRouteGeneratorOptions extends RouteGeneratorOptions {}
 

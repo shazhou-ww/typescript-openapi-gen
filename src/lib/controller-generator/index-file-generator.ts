@@ -1,8 +1,8 @@
-import { isSSEOperation } from '../openapi-parser.js'
-import { buildFileHeader, capitalize } from '../shared/codegen-utils.js'
-import type { RouteInfo, GenerationResult } from './types.js'
-import { segmentToFsName } from './utils.js'
-import { writeGeneratedFile, getOutputTypeName } from './file-utils.js'
+import { isSSEOperation } from '../openapi-parser'
+import { buildFileHeader, capitalize } from '../shared/codegen-utils'
+import type { RouteInfo, GenerationResult } from './types'
+import { segmentToFsName } from './utils'
+import { writeGeneratedFile, getOutputTypeName } from './file-utils'
 
 /**
  * Generate index.ts file with re-exports

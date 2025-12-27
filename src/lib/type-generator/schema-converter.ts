@@ -1,6 +1,6 @@
-import { isReferenceObject, getRefName } from '../openapi-parser.js'
-import type { SchemaObject, ReferenceObject } from '../shared/openapi-types.js'
-import { formatPropertyName } from '../shared/codegen-utils.js'
+import { isReferenceObject, getRefName } from '../openapi-parser'
+import type { SchemaObject, ReferenceObject } from '../shared/openapi-types'
+import { formatPropertyName } from '../shared/codegen-utils'
 
 /**
  * Generate TypeScript type from OpenAPI schema

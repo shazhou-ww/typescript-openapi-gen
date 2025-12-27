@@ -1,20 +1,20 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import type { OpenAPIDocument } from '../openapi-parser.js'
-import type { SchemaObject, ReferenceObject } from '../shared/openapi-types.js'
-import { formatFilesWithPrettier } from '../shared/formatter.js'
-import type { GenerationResult, RouteInfo } from './types.js'
-import { createEmptyResult } from './types.js'
-import { segmentToFsName, checkForNamingConflicts } from './utils.js'
-import { buildRouteTree } from './route-tree.js'
-import { generateSharedTypesFolder } from './shared-types-generator.js'
-import { generateTypesFile } from './types-file-generator.js'
-import { generateMethodFileIfNotExists } from './method-file-generator.js'
-import { generateMethodsFile } from './methods-generator.js'
+import type { OpenAPIDocument } from '../openapi-parser'
+import type { SchemaObject, ReferenceObject } from '../shared/openapi-types'
+import { formatFilesWithPrettier } from '../shared/formatter'
+import type { GenerationResult, RouteInfo } from './types'
+import { createEmptyResult } from './types'
+import { segmentToFsName, checkForNamingConflicts } from './utils'
+import { buildRouteTree } from './route-tree'
+import { generateSharedTypesFolder } from './shared-types-generator'
+import { generateTypesFile } from './types-file-generator'
+import { generateMethodFileIfNotExists } from './method-file-generator'
+import { generateMethodsFile } from './methods-generator'
 import {
   generateIndexFile,
   generateRootIndexFile,
-} from './index-file-generator.js'
+} from './index-file-generator'
 
 export interface ControllerGeneratorOptions {
   prettierConfig?: string

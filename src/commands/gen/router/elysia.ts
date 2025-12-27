@@ -1,8 +1,8 @@
 import { Args, Command, Flags } from '@oclif/core'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import { parseOpenAPIFile } from '../../../lib/openapi-parser.js'
-import { ElysiaRouteGenerator } from '../../../lib/route-generator/index.js'
+import { parseOpenAPIFile } from '../../../lib/openapi-parser'
+import { ElysiaRouteGenerator } from '../../../lib/route-generator/index'
 
 export default class GenRouterElysia extends Command {
   static override args = {

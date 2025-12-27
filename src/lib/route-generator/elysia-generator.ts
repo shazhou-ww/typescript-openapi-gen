@@ -1,12 +1,12 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import type { OpenAPIDocument } from '../openapi-parser.js'
-import { buildFileHeader } from '../shared/codegen-utils.js'
-import { formatFileWithPrettier } from '../shared/formatter.js'
-import type { FlatRoute, RouteGenerationResult } from './types.js'
-import { createEmptyResult } from './types.js'
-import { collectRoutes } from './route-collector.js'
-import { extractPathParams } from '../openapi-parser.js'
+import type { OpenAPIDocument } from '../openapi-parser'
+import { buildFileHeader } from '../shared/codegen-utils'
+import { formatFileWithPrettier } from '../shared/formatter'
+import type { FlatRoute, RouteGenerationResult } from './types'
+import { createEmptyResult } from './types'
+import { collectRoutes } from './route-collector'
+import { extractPathParams } from '../openapi-parser'
 
 export interface ElysiaRouteGeneratorOptions {
   prettierConfig?: string

@@ -1,9 +1,9 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import { isSSEOperation } from '../openapi-parser.js'
-import { capitalize } from '../shared/codegen-utils.js'
-import type { GenerationResult } from './types.js'
-import { writeGeneratedFile, getOutputTypeName } from './file-utils.js'
+import { isSSEOperation } from '../openapi-parser'
+import { capitalize } from '../shared/codegen-utils'
+import type { GenerationResult } from './types'
+import { writeGeneratedFile, getOutputTypeName } from './file-utils'
 
 /**
  * Generate method handler file (e.g., get.ts, post.ts)
