@@ -20,7 +20,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/GetProjectRequest'
+            $ref: '../components/schemas/GetProjectRequest.yaml'
       required: true
     responses:
       '200':
@@ -33,7 +33,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/create:
   post:
     tags:
@@ -44,7 +44,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateProjectRequest'
+            $ref: '../components/schemas/CreateProjectRequest.yaml'
       required: true
     responses:
       '200':
@@ -57,7 +57,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/update:
   post:
     tags:
@@ -68,7 +68,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/UpdateProjectRequest'
+            $ref: '../components/schemas/UpdateProjectRequest.yaml'
       required: true
     responses:
       '200':
@@ -81,7 +81,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/delete:
   post:
     tags:
@@ -92,7 +92,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/DeleteProjectRequest'
+            $ref: '../components/schemas/DeleteProjectRequest.yaml'
       required: true
     responses:
       '200':
@@ -105,7 +105,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/bulk-delete:
   post:
     tags:
@@ -117,7 +117,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BulkDeleteRequest'
+            $ref: '../components/schemas/BulkDeleteRequest.yaml'
       required: true
     responses:
       '200':
@@ -130,7 +130,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/projects/{project_id}/files/upload:
   post:
     tags:
@@ -157,7 +157,7 @@
       content:
         multipart/form-data:
           schema:
-            $ref: '#/components/schemas/Body_upload_project_file_api_projects__project_id__files_upload_post'
+            $ref: '../components/schemas/Body_upload_project_file_api_projects__project_id__files_upload_post.yaml'
     responses:
       '200':
         description: Successful Response
@@ -169,7 +169,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/projects/{project_id}/files/info:
   get:
     tags:
@@ -207,7 +207,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/files:
   get:
     tags:
@@ -239,7 +239,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
   delete:
     tags:
     - sandbox
@@ -272,7 +272,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
   post:
     tags:
     - sandbox
@@ -291,7 +291,7 @@
       content:
         multipart/form-data:
           schema:
-            $ref: '#/components/schemas/Body_create_project_file_api_project__project_id__files_post'
+            $ref: '../components/schemas/Body_create_project_file_api_project__project_id__files_post.yaml'
     responses:
       '200':
         description: Successful Response
@@ -303,7 +303,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/files/content:
   get:
     tags:
@@ -363,7 +363,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/files/batch-download:
   post:
     tags:
@@ -384,7 +384,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BatchDownloadRequest'
+            $ref: '../components/schemas/BatchDownloadRequest.yaml'
     responses:
       '200':
         description: Successful Response
@@ -396,7 +396,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/files/preview/stream:
   get:
     tags:
@@ -441,7 +441,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/files/preview:
   get:
     tags:
@@ -473,7 +473,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/files/docx:
   get:
     tags:
@@ -525,7 +525,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/presentation:
   get:
     tags:
@@ -571,7 +571,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/presentation/{sub_folder_path}:
   get:
     tags:
@@ -623,7 +623,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/webappfiles:
   get:
     tags:
@@ -649,7 +649,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/onedrive/export:
   post:
     tags:
@@ -679,7 +679,7 @@
       content:
         multipart/form-data:
           schema:
-            $ref: '#/components/schemas/Body_export_to_onedrive_api_project__project_id__onedrive_export_post'
+            $ref: '../components/schemas/Body_export_to_onedrive_api_project__project_id__onedrive_export_post.yaml'
     responses:
       '200':
         description: Successful Response
@@ -691,7 +691,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/sandbox/url:
   get:
     tags:
@@ -729,7 +729,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/project/{project_id}/files/url:
   get:
     tags:
@@ -758,4 +758,4 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'

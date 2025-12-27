@@ -9,7 +9,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/FavoriteAddRequest'
+            $ref: '../components/schemas/FavoriteAddRequest.yaml'
       required: true
     responses:
       '200':
@@ -22,7 +22,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/favorites/remove:
   post:
     tags:
@@ -38,7 +38,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/FavoriteRemoveRequest'
+            $ref: '../components/schemas/FavoriteRemoveRequest.yaml'
       required: true
     responses:
       '200':
@@ -51,7 +51,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/favorites/toggle:
   post:
     tags:
@@ -63,7 +63,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/FavoriteToggleRequest'
+            $ref: '../components/schemas/FavoriteToggleRequest.yaml'
       required: true
     responses:
       '200':
@@ -79,7 +79,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/favorites/list:
   post:
     tags:
@@ -91,7 +91,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/FavoriteListRequest'
+            $ref: '../components/schemas/FavoriteListRequest.yaml'
       required: true
     responses:
       '200':
@@ -107,7 +107,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/favorites/count:
   post:
     tags:
@@ -119,7 +119,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/FavoriteListRequest'
+            $ref: '../components/schemas/FavoriteListRequest.yaml'
       required: true
     responses:
       '200':
@@ -135,4 +135,4 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'

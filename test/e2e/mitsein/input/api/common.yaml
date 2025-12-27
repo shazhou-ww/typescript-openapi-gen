@@ -24,7 +24,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/GetProjectRequest'
+            $ref: '../components/schemas/GetProjectRequest.yaml'
       required: true
     responses:
       '200':
@@ -37,7 +37,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/agent/quick-start:
   post:
     tags:
@@ -55,7 +55,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/QuickStartRequest'
+            $ref: '../components/schemas/QuickStartRequest.yaml'
       required: true
     responses:
       '200':
@@ -63,13 +63,13 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuickStartResponse'
+              $ref: '../components/schemas/QuickStartResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/share/thread/get:
   post:
     tags:
@@ -80,7 +80,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ThreadGetRequest'
+            $ref: '../components/schemas/ThreadGetRequest.yaml'
       required: true
     responses:
       '200':
@@ -93,7 +93,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/version:
   get:
     summary: Get Version
@@ -105,7 +105,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VersionInfo'
+              $ref: '../components/schemas/VersionInfo.yaml'
 /api/health-check:
   get:
     summary: Api Health Check

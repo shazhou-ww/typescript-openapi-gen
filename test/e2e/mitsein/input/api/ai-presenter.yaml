@@ -13,7 +13,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VolcengineTrainingListResponse'
+              $ref: '../components/schemas/VolcengineTrainingListResponse.yaml'
 /api/ai-presenter/training:
   post:
     tags:
@@ -29,7 +29,7 @@
       content:
         multipart/form-data:
           schema:
-            $ref: '#/components/schemas/Body_train_voiceprint_api_ai_presenter_training_post'
+            $ref: '../components/schemas/Body_train_voiceprint_api_ai_presenter_training_post.yaml'
       required: true
     responses:
       '200':
@@ -37,13 +37,13 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VolcengineBaseResponse'
+              $ref: '../components/schemas/VolcengineBaseResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/ai-presenter/presentation_info/{project_id}:
   get:
     tags:
@@ -75,7 +75,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/ai-presenter/tts:
   post:
     tags:
@@ -90,7 +90,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/TTSRequest'
+            $ref: '../components/schemas/TTSRequest.yaml'
       required: true
     responses:
       '200':
@@ -98,13 +98,13 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VolcengineBaseResponse'
+              $ref: '../components/schemas/VolcengineBaseResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/ai-presenter/avatar:
   post:
     tags:
@@ -119,7 +119,7 @@
       content:
         multipart/form-data:
           schema:
-            $ref: '#/components/schemas/Body_upload_avatar_api_ai_presenter_avatar_post'
+            $ref: '../components/schemas/Body_upload_avatar_api_ai_presenter_avatar_post.yaml'
       required: true
     responses:
       '200':
@@ -127,13 +127,13 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VolcengineBaseResponse'
+              $ref: '../components/schemas/VolcengineBaseResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/ai-presenter/generate_video:
   post:
     tags:
@@ -148,7 +148,7 @@
       content:
         multipart/form-data:
           schema:
-            $ref: '#/components/schemas/Body_generate_video_from_assets_api_ai_presenter_generate_video_post'
+            $ref: '../components/schemas/Body_generate_video_from_assets_api_ai_presenter_generate_video_post.yaml'
       required: true
     responses:
       '200':
@@ -156,13 +156,13 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VideoGenerationResponse'
+              $ref: '../components/schemas/VideoGenerationResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/ai-presenter/video_status/{video_id}:
   get:
     tags:
@@ -184,10 +184,10 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VideoGenerationResponse'
+              $ref: '../components/schemas/VideoGenerationResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'

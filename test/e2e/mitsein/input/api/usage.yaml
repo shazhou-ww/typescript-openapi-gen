@@ -59,7 +59,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/usage/admin/daily:
   get:
     tags:
@@ -138,7 +138,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/usage/admin/events:
   get:
     tags:
@@ -225,7 +225,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/usage/admin/pricing:
   get:
     tags:
@@ -338,4 +338,4 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'

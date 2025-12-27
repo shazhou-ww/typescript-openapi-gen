@@ -155,25 +155,89 @@ function jsonPointerDecode(token: string): string {
 }
 
 /**
+ * Extract type name from a $ref
+ * Examples:
+ *   #/components/schemas/MessageRequestBody -> MessageRequestBody
+ *   ../components/schemas/MessageRequestBody.yaml -> MessageRequestBody
+ *   ./components/schemas/ValidationError.yaml#/... -> ValidationError
+ */
+function extractTypeName(ref: string): string | null {
+  // Internal reference: #/components/schemas/TypeName
+  if (ref.startsWith('#/components/schemas/')) {
+    return ref.replace('#/components/schemas/', '')
+  }
+  
+  // External reference: ../components/schemas/TypeName.yaml or ./components/schemas/TypeName.yaml
+  const externalMatch = ref.match(/components\/schemas\/([^\/\.]+)(?:\.yaml)?(?:#.*)?$/)
+  if (externalMatch) {
+    return externalMatch[1]
+  }
+  
+  return null
+}
+
+/**
+ * Convert a $ref to a type name reference
+ * Returns { "$ref": "TypeName" } if the type exists in mainDoc, null otherwise
+ */
+function convertToTypeRef(ref: string, mainDoc: OpenAPIDocument): { "$ref": string } | null {
+  const typeName = extractTypeName(ref)
+  if (!typeName) {
+    return null
+  }
+  
+  // Verify the type exists in the main document's components
+  if (mainDoc.components?.schemas?.[typeName]) {
+    return { "$ref": typeName }
+  }
+  
+  return null
+}
+
+/**
  * Resolve internal $ref references (e.g., #/components/schemas/...) in an object
  * These references point to the main document's components
  */
 async function resolveInternalRefs(
   obj: any,
   mainDoc: OpenAPIDocument,
+  baseDir?: string,
 ): Promise<any> {
   if (obj === null || obj === undefined) {
     return obj
   }
 
   if (Array.isArray(obj)) {
-    return Promise.all(obj.map(item => resolveInternalRefs(item, mainDoc)))
+    return Promise.all(obj.map(item => resolveInternalRefs(item, mainDoc, baseDir)))
   }
 
   if (typeof obj === 'object' && '$ref' in obj) {
     const ref = (obj as any).$ref
-    // Only resolve internal references (starting with #)
+    
+    // Try to convert to type name reference first
+    const typeRef = convertToTypeRef(ref, mainDoc)
+    if (typeRef) {
+      return typeRef
+    }
+    
+    // For internal references (starting with #), try to convert to type name
     if (ref.startsWith('#')) {
+      // If it's a components/schemas reference, convert to type name
+      if (ref.startsWith('#/components/schemas/')) {
+        const typeName = extractTypeName(ref)
+        // Check if type exists in original doc or resolved doc
+        if (typeName) {
+          // Try resolved doc first (components may have been resolved)
+          if (mainDoc.components?.schemas?.[typeName]) {
+            return { "$ref": typeName }
+          }
+          // If not found, the type might not exist or components not resolved yet
+          // In this case, we still convert to type name for consistency
+          // The type should exist if the reference is valid
+          return { "$ref": typeName }
+        }
+      }
+      // For other internal references, verify they exist but keep as-is if not a schema ref
       const pathParts = ref.substring(1).split('/').filter(Boolean)
       let current: any = mainDoc
 
@@ -181,18 +245,26 @@ async function resolveInternalRefs(
         if (current && typeof current === 'object') {
           current = current[part]
         } else {
-          return obj // Return original if path not found
+          // Reference doesn't exist, return as-is (might be invalid)
+          return obj
         }
       }
 
-      // If the resolved value is itself a reference, resolve it recursively
-      if (current && typeof current === 'object' && '$ref' in current) {
-        return resolveInternalRefs(current, mainDoc)
-      }
-
-      return current
+      // Reference exists, but not a schema reference, return as-is
+      return obj
     }
-    // External references are handled separately
+    
+    // Resolve external references if baseDir is provided
+    if (baseDir && (ref.startsWith('./') || ref.startsWith('../'))) {
+      const resolvedValue = await resolveExternalRef(ref, baseDir, mainDoc)
+      if (resolvedValue !== undefined) {
+        // Recursively resolve any references in the resolved value
+        // This will convert schema references to type names
+        return resolveInternalRefs(resolvedValue, mainDoc, baseDir)
+      }
+    }
+    
+    // External references without baseDir are returned as-is
     return obj
   }
 
@@ -200,7 +272,7 @@ async function resolveInternalRefs(
   if (typeof obj === 'object') {
     const result: any = {}
     for (const [key, value] of Object.entries(obj)) {
-      result[key] = await resolveInternalRefs(value, mainDoc)
+      result[key] = await resolveInternalRefs(value, mainDoc, baseDir)
     }
     return result
   }
@@ -229,17 +301,33 @@ async function resolveComponentsRefs(
         if (value && typeof value === 'object' && !Array.isArray(value) && '$ref' in value) {
           // Resolve external reference
           const ref = (value as any).$ref
-          if (ref.startsWith('./') || ref.startsWith('../')) {
+          
+          // Try to convert to type name reference first
+          const typeRef = convertToTypeRef(ref, mainDoc)
+          if (typeRef) {
+            resolved[sectionKey][name] = typeRef
+          } else if (ref.startsWith('./') || ref.startsWith('../')) {
+            // External reference: resolve and then convert
             const resolvedValue = await resolveExternalRef(ref, baseDir, mainDoc)
             if (resolvedValue !== undefined) {
-              // Recursively resolve any internal references in the resolved value
-              resolved[sectionKey][name] = await resolveInternalRefs(resolvedValue, mainDoc)
+              // Recursively resolve, which will convert schema references to type names
+              resolved[sectionKey][name] = await resolveInternalRefs(resolvedValue, mainDoc, baseDir)
             } else {
               resolved[sectionKey][name] = value
             }
           } else if (ref.startsWith('#')) {
-            // Internal reference - resolve it
-            resolved[sectionKey][name] = await resolveInternalRefs(value, mainDoc)
+            // Internal reference: try to convert to type name
+            if (ref.startsWith('#/components/schemas/')) {
+              const typeName = extractTypeName(ref)
+              if (typeName && mainDoc.components?.schemas?.[typeName]) {
+                resolved[sectionKey][name] = { "$ref": typeName }
+              } else {
+                resolved[sectionKey][name] = value
+              }
+            } else {
+              // Not a schema reference, keep as-is
+              resolved[sectionKey][name] = value
+            }
           } else {
             resolved[sectionKey][name] = value
           }
@@ -280,14 +368,15 @@ async function resolveExternalRefs(
         // Resolve external path reference
         const resolvedPath = await resolveExternalRef((pathItem as any).$ref, baseDir, resolvedDoc)
         if (resolvedPath !== undefined) {
-          // Resolve internal references in the resolved path
-          const fullyResolvedPath = await resolveInternalRefs(resolvedPath, resolvedDoc)
+          // Resolve internal and external references in the resolved path
+          // Pass baseDir so external refs in path fragments can be resolved
+          const fullyResolvedPath = await resolveInternalRefs(resolvedPath, resolvedDoc, baseDir)
           resolvedDoc.paths[pathKey] = fullyResolvedPath
         }
         // If resolution failed, keep the original $ref
       } else if (pathItem) {
-        // Resolve internal references in path items that are not external refs
-        resolvedDoc.paths[pathKey] = await resolveInternalRefs(pathItem, resolvedDoc)
+        // Resolve internal and external references in path items that are not external refs
+        resolvedDoc.paths[pathKey] = await resolveInternalRefs(pathItem, resolvedDoc, baseDir)
       }
     }
   }
@@ -360,6 +449,16 @@ async function resolveExternalRef(
       } else {
         console.warn(`Warning: Cannot resolve path ${jsonPath} in ${filePath}`)
         return undefined
+      }
+    }
+
+    // If we resolved a path fragment, resolve external refs in it using the fragment file's directory
+    // This is important because path fragments may contain external refs relative to the fragment file
+    if (current && typeof current === 'object') {
+      const fragmentDir = path.dirname(fullPath)
+      // Resolve internal and external references in the resolved path fragment
+      if (mainDoc) {
+        current = await resolveInternalRefs(current, mainDoc, fragmentDir)
       }
     }
 

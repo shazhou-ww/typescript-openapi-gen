@@ -9,7 +9,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ApprovalDecisionRequest'
+            $ref: '../components/schemas/ApprovalDecisionRequest.yaml'
       required: true
     responses:
       '200':
@@ -22,7 +22,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/connectors/execute:
   post:
     tags:
@@ -34,7 +34,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ExecuteWriteRequest'
+            $ref: '../components/schemas/ExecuteWriteRequest.yaml'
       required: true
     responses:
       '200':
@@ -47,7 +47,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/connectors/disconnect:
   post:
     tags:
@@ -59,7 +59,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/DisconnectRequest'
+            $ref: '../components/schemas/DisconnectRequest.yaml'
       required: true
     responses:
       '200':
@@ -72,7 +72,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/connectors/activity:
   get:
     tags:
@@ -106,7 +106,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/connectors/list:
   get:
     tags:
@@ -139,20 +139,20 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/OAuthInitiateRequest'
+            $ref: '../components/schemas/OAuthInitiateRequest.yaml'
     responses:
       '200':
         description: Successful Response
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OAuthInitiateResponse'
+              $ref: '../components/schemas/OAuthInitiateResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/connectors/{connector_id}/callback:
   get:
     tags:
@@ -185,13 +185,13 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OAuthCallbackResponse'
+              $ref: '../components/schemas/OAuthCallbackResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/connectors/{connector_id}/files:
   get:
     tags:
@@ -237,13 +237,13 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FileListResponse'
+              $ref: '../components/schemas/FileListResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
   post:
     tags:
     - connectors
@@ -262,20 +262,20 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/FileUploadRequest'
+            $ref: '../components/schemas/FileUploadRequest.yaml'
     responses:
       '200':
         description: Successful Response
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FileUploadResponse'
+              $ref: '../components/schemas/FileUploadResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/connectors/{connector_id}/files/search:
   get:
     tags:
@@ -313,13 +313,13 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FileListResponse'
+              $ref: '../components/schemas/FileListResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/connectors/{connector_id}/documents/{document_id}:
   get:
     tags:
@@ -353,10 +353,10 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DocumentReadResponse'
+              $ref: '../components/schemas/DocumentReadResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'

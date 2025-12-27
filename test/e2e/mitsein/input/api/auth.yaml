@@ -14,7 +14,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GoogleAuthInitiateResponse'
+              $ref: '../components/schemas/GoogleAuthInitiateResponse.yaml'
 /api/auth/google/callback:
   get:
     tags:
@@ -48,10 +48,10 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GoogleAuthCallbackResponse'
+              $ref: '../components/schemas/GoogleAuthCallbackResponse.yaml'
       '422':
         description: Validation Error
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'

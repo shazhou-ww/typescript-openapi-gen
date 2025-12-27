@@ -8,7 +8,7 @@
       content:
         multipart/form-data:
           schema:
-            $ref: '#/components/schemas/MessageAddRequestBody'
+            $ref: '../components/schemas/MessageAddRequestBody.yaml'
     responses:
       '200':
         description: Successful Response
@@ -20,7 +20,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/message/add-theme:
   post:
     tags:
@@ -32,7 +32,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/AddThemeMessageRequest'
+            $ref: '../components/schemas/AddThemeMessageRequest.yaml'
       required: true
     responses:
       '200':
@@ -45,7 +45,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/message/add-chart:
   post:
     tags:
@@ -57,7 +57,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/AddChartMessageRequest'
+            $ref: '../components/schemas/AddChartMessageRequest.yaml'
       required: true
     responses:
       '200':
@@ -70,7 +70,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/message/list:
   post:
     tags:
@@ -82,7 +82,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ListMessagesRequest'
+            $ref: '../components/schemas/ListMessagesRequest.yaml'
       required: true
     responses:
       '200':
@@ -95,4 +95,4 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'

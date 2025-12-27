@@ -16,7 +16,7 @@
       content:
         application/x-www-form-urlencoded:
           schema:
-            $ref: '#/components/schemas/AgentStartRequestBody'
+            $ref: '../components/schemas/AgentStartRequestBody.yaml'
     responses:
       '200':
         description: Successful Response
@@ -28,7 +28,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/thread/{thread_id}/agent-runs:
   post:
     tags:
@@ -54,7 +54,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/thread/list:
   post:
     tags:
@@ -65,7 +65,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ThreadListRequest'
+            $ref: '../components/schemas/ThreadListRequest.yaml'
       required: true
     responses:
       '200':
@@ -78,7 +78,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/thread/search:
   post:
     tags:
@@ -89,7 +89,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ThreadSearchRequest'
+            $ref: '../components/schemas/ThreadSearchRequest.yaml'
       required: true
     responses:
       '200':
@@ -102,7 +102,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/thread/get:
   post:
     tags:
@@ -113,7 +113,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ThreadGetRequest'
+            $ref: '../components/schemas/ThreadGetRequest.yaml'
       required: true
     responses:
       '200':
@@ -126,7 +126,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/thread/create:
   post:
     tags:
@@ -137,7 +137,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ThreadCreateRequest'
+            $ref: '../components/schemas/ThreadCreateRequest.yaml'
       required: true
     responses:
       '200':
@@ -150,4 +150,4 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'

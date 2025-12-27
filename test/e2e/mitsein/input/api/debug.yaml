@@ -28,7 +28,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/FrontendLogsRequest'
+            $ref: '../components/schemas/FrontendLogsRequest.yaml'
       required: true
     responses:
       '200':
@@ -41,7 +41,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/debug/config/llm:
   get:
     tags:
@@ -58,7 +58,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LLMConfigResponse'
+              $ref: '../components/schemas/LLMConfigResponse.yaml'
 /debug:
   get:
     summary: Debug Endpoint
@@ -79,7 +79,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ChatRequest'
+            $ref: '../components/schemas/ChatRequest.yaml'
       required: true
     responses:
       '200':
@@ -92,7 +92,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /debug/chat/suggestions:
   get:
     summary: Get Suggestions
@@ -163,7 +163,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /debug/frontend-logs:
   post:
     summary: Receive Frontend Logs
@@ -215,7 +215,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /debug/critical-issues:
   get:
     summary: Get Critical Issues Endpoint
@@ -248,7 +248,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/EventBatchRequest'
+            $ref: '../components/schemas/EventBatchRequest.yaml'
       required: true
     responses:
       '200':
@@ -261,7 +261,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /debug/agent-runs/{agent_run_id}/traces:
   get:
     summary: Get Agent Run Traces
@@ -295,7 +295,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /debug/agent-runs/{agent_run_id}/events:
   get:
     summary: Get Agent Run Events
@@ -327,7 +327,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /debug/agent-runs/{agent_run_id}/analysis:
   get:
     summary: Get Agent Run Analysis
@@ -358,7 +358,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /debug/threads/{thread_id}/agent-runs:
   get:
     summary: Get Thread Agent Runs
@@ -389,7 +389,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /debug/threads/{thread_id}/traces:
   get:
     summary: Get Thread Traces
@@ -420,7 +420,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /debug/threads/{thread_id}/events:
   get:
     summary: Get Thread Events
@@ -459,7 +459,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/debug/test/agent-run:
   post:
     tags:
@@ -481,7 +481,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Body_create_local_test_agent_run_api_debug_test_agent_run_post'
+            $ref: '../components/schemas/Body_create_local_test_agent_run_api_debug_test_agent_run_post.yaml'
       required: true
     responses:
       '200':
@@ -494,7 +494,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/debug/test/extractors:
   get:
     tags:
@@ -545,7 +545,7 @@
       content:
         multipart/form-data:
           schema:
-            $ref: '#/components/schemas/Body_extract_file_api_debug_test_extract_file_post'
+            $ref: '../components/schemas/Body_extract_file_api_debug_test_extract_file_post.yaml'
     responses:
       '200':
         description: Successful Response
@@ -557,7 +557,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/debug/contracts/status:
   get:
     tags:
@@ -618,7 +618,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/debug/contracts/toggle:
   post:
     tags:
@@ -648,7 +648,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/debug/contracts/enable:
   post:
     tags:
@@ -679,7 +679,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/debug/contracts/disable:
   post:
     tags:
@@ -710,7 +710,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/debug/contracts/validate/tool-call:
   post:
     tags:
@@ -741,7 +741,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/debug/contracts/validate/tool-result:
   post:
     tags:
@@ -772,7 +772,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/debug/contracts/validate/api/{domain}/{operation}:
   post:
     tags:
@@ -818,7 +818,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/debug/contracts/validate/entity/{entity_type}:
   post:
     tags:
@@ -857,4 +857,4 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'

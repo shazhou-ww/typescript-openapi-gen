@@ -2,402 +2,462 @@ openapi: 3.1.0
 info:
   title: Mitsein API
   version: 0.1.0
-  description: |
-    Mitsein API - Elysia implementation
-    
+  description: 'Mitsein API - Elysia implementation
+
+
     This OpenAPI specification is split into multiple files for better maintainability:
+
     - `api/*.yaml` - Route definitions grouped by module
+
     - `components/schemas/*.yaml` - Schema definitions (one per file)
+
     - `components/parameters/*.yaml` - Parameter definitions (one per file)
+
     - `components/responses/*.yaml` - Response definitions (one per file)
 
+    '
 paths:
-  # Messages API
   /api/message/add:
-    $ref: './api/messages.yaml#/~1api~1message~1add'
+    $ref: ./api/messages.yaml#/~1api~1message~1add
   /api/message/add-theme:
-    $ref: './api/messages.yaml#/~1api~1message~1add-theme'
+    $ref: ./api/messages.yaml#/~1api~1message~1add-theme
   /api/message/add-chart:
-    $ref: './api/messages.yaml#/~1api~1message~1add-chart'
+    $ref: ./api/messages.yaml#/~1api~1message~1add-chart
   /api/message/list:
-    $ref: './api/messages.yaml#/~1api~1message~1list'
-  
-  # Threads API
+    $ref: ./api/messages.yaml#/~1api~1message~1list
   /api/thread/list:
-    $ref: './api/threads.yaml#/~1api~1thread~1list'
+    $ref: ./api/threads.yaml#/~1api~1thread~1list
   /api/thread/search:
-    $ref: './api/threads.yaml#/~1api~1thread~1search'
+    $ref: ./api/threads.yaml#/~1api~1thread~1search
   /api/thread/get:
-    $ref: './api/threads.yaml#/~1api~1thread~1get'
+    $ref: ./api/threads.yaml#/~1api~1thread~1get
   /api/thread/create:
-    $ref: './api/threads.yaml#/~1api~1thread~1create'
+    $ref: ./api/threads.yaml#/~1api~1thread~1create
   /api/share/thread/get:
-    $ref: './api/threads.yaml#/~1api~1share~1thread~1get'
+    $ref: ./api/common.yaml#/~1api~1share~1thread~1get
   /api/thread/{thread_id}/agent/start:
-    $ref: './api/agent-runs.yaml#/~1api~1thread~1{thread_id}~1agent~1start'
+    $ref: ./api/threads.yaml#/~1api~1thread~1{thread_id}~1agent~1start
   /api/thread/{thread_id}/agent-runs:
-    $ref: './api/agent-runs.yaml#/~1api~1thread~1{thread_id}~1agent-runs'
-  
-  # Agent Runs API
+    $ref: ./api/threads.yaml#/~1api~1thread~1{thread_id}~1agent-runs
   /api/agent-run/{agent_run_id}/stop:
-    $ref: './api/agent-runs.yaml#/~1api~1agent-run~1{agent_run_id}~1stop'
+    $ref: ./api/agent-runs.yaml#/~1api~1agent-run~1{agent_run_id}~1stop
   /api/agent-run/{agent_run_id}:
-    $ref: './api/agent-runs.yaml#/~1api~1agent-run~1{agent_run_id}'
+    $ref: ./api/agent-runs.yaml#/~1api~1agent-run~1{agent_run_id}
   /api/agent-run/{agent_run_id}/stream:
-    $ref: './api/agent-runs.yaml#/~1api~1agent-run~1{agent_run_id}~1stream'
+    $ref: ./api/agent-runs.yaml#/~1api~1agent-run~1{agent_run_id}~1stream
   /api/agent/quick-start:
-    $ref: './api/agent-runs.yaml#/~1api~1agent~1quick-start'
-  
-  # Projects API - 使用通配符引用所有项目相关路径
+    $ref: ./api/common.yaml#/~1api~1agent~1quick-start
   /api/project/list:
-    $ref: './api/projects.yaml#/~1api~1project~1list'
+    $ref: ./api/projects.yaml#/~1api~1project~1list
   /api/project/get:
-    $ref: './api/projects.yaml#/~1api~1project~1get'
+    $ref: ./api/projects.yaml#/~1api~1project~1get
   /api/project/create:
-    $ref: './api/projects.yaml#/~1api~1project~1create'
+    $ref: ./api/projects.yaml#/~1api~1project~1create
   /api/project/update:
-    $ref: './api/projects.yaml#/~1api~1project~1update'
+    $ref: ./api/projects.yaml#/~1api~1project~1update
   /api/project/delete:
-    $ref: './api/projects.yaml#/~1api~1project~1delete'
+    $ref: ./api/projects.yaml#/~1api~1project~1delete
   /api/project/bulk-delete:
-    $ref: './api/projects.yaml#/~1api~1project~1bulk-delete'
+    $ref: ./api/projects.yaml#/~1api~1project~1bulk-delete
   /api/share/project/get:
-    $ref: './api/projects.yaml#/~1api~1share~1project~1get'
+    $ref: ./api/common.yaml#/~1api~1share~1project~1get
   /api/project/{project_id}/files:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1files'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1files
   /api/project/{project_id}/files/content:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1files~1content'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1files~1content
   /api/project/{project_id}/files/batch-download:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1files~1batch-download'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1files~1batch-download
   /api/project/{project_id}/files/preview/stream:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1files~1preview~1stream'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1files~1preview~1stream
   /api/project/{project_id}/files/preview:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1files~1preview'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1files~1preview
   /api/project/{project_id}/files/docx:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1files~1docx'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1files~1docx
   /api/project/{project_id}/presentation:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1presentation'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1presentation
   /api/project/{project_id}/presentation/{sub_folder_path}:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1presentation~1{sub_folder_path}'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1presentation~1{sub_folder_path}
   /api/project/{project_id}/webappfiles:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1webappfiles'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1webappfiles
   /api/project/{project_id}/onedrive/export:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1onedrive~1export'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1onedrive~1export
   /api/project/{project_id}/sandbox/url:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1sandbox~1url'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1sandbox~1url
   /api/project/{project_id}/files/url:
-    $ref: './api/projects.yaml#/~1api~1project~1{project_id}~1files~1url'
+    $ref: ./api/projects.yaml#/~1api~1project~1{project_id}~1files~1url
   /api/projects/{project_id}/files/upload:
-    $ref: './api/projects.yaml#/~1api~1projects~1{project_id}~1files~1upload'
+    $ref: ./api/projects.yaml#/~1api~1projects~1{project_id}~1files~1upload
   /api/projects/{project_id}/files/info:
-    $ref: './api/projects.yaml#/~1api~1projects~1{project_id}~1files~1info'
-  
-  # Tools API
+    $ref: ./api/projects.yaml#/~1api~1projects~1{project_id}~1files~1info
   /api/tools/list:
-    $ref: './api/tools.yaml#/~1api~1tools~1list'
+    $ref: ./api/tools.yaml#/~1api~1tools~1list
   /api/tools/check-video-status:
-    $ref: './api/tools.yaml#/~1api~1tools~1check-video-status'
-  
-  # Connectors API
+    $ref: ./api/tools.yaml#/~1api~1tools~1check-video-status
   /api/connectors/approve:
-    $ref: './api/connectors.yaml#/~1api~1connectors~1approve'
+    $ref: ./api/connectors.yaml#/~1api~1connectors~1approve
   /api/connectors/execute:
-    $ref: './api/connectors.yaml#/~1api~1connectors~1execute'
+    $ref: ./api/connectors.yaml#/~1api~1connectors~1execute
   /api/connectors/disconnect:
-    $ref: './api/connectors.yaml#/~1api~1connectors~1disconnect'
+    $ref: ./api/connectors.yaml#/~1api~1connectors~1disconnect
   /api/connectors/activity:
-    $ref: './api/connectors.yaml#/~1api~1connectors~1activity'
+    $ref: ./api/connectors.yaml#/~1api~1connectors~1activity
   /api/connectors/list:
-    $ref: './api/connectors.yaml#/~1api~1connectors~1list'
+    $ref: ./api/connectors.yaml#/~1api~1connectors~1list
   /api/connectors/{connector_id}/authorize:
-    $ref: './api/connectors.yaml#/~1api~1connectors~1{connector_id}~1authorize'
+    $ref: ./api/connectors.yaml#/~1api~1connectors~1{connector_id}~1authorize
   /api/connectors/{connector_id}/callback:
-    $ref: './api/connectors.yaml#/~1api~1connectors~1{connector_id}~1callback'
+    $ref: ./api/connectors.yaml#/~1api~1connectors~1{connector_id}~1callback
   /api/connectors/{connector_id}/files:
-    $ref: './api/connectors.yaml#/~1api~1connectors~1{connector_id}~1files'
+    $ref: ./api/connectors.yaml#/~1api~1connectors~1{connector_id}~1files
   /api/connectors/{connector_id}/files/search:
-    $ref: './api/connectors.yaml#/~1api~1connectors~1{connector_id}~1files~1search'
+    $ref: ./api/connectors.yaml#/~1api~1connectors~1{connector_id}~1files~1search
   /api/connectors/{connector_id}/documents/{document_id}:
-    $ref: './api/connectors.yaml#/~1api~1connectors~1{connector_id}~1documents~1{document_id}'
-  
-  # Favorites API
+    $ref: ./api/connectors.yaml#/~1api~1connectors~1{connector_id}~1documents~1{document_id}
   /api/favorites/add:
-    $ref: './api/favorites.yaml#/~1api~1favorites~1add'
+    $ref: ./api/favorites.yaml#/~1api~1favorites~1add
   /api/favorites/remove:
-    $ref: './api/favorites.yaml#/~1api~1favorites~1remove'
+    $ref: ./api/favorites.yaml#/~1api~1favorites~1remove
   /api/favorites/toggle:
-    $ref: './api/favorites.yaml#/~1api~1favorites~1toggle'
+    $ref: ./api/favorites.yaml#/~1api~1favorites~1toggle
   /api/favorites/list:
-    $ref: './api/favorites.yaml#/~1api~1favorites~1list'
+    $ref: ./api/favorites.yaml#/~1api~1favorites~1list
   /api/favorites/count:
-    $ref: './api/favorites.yaml#/~1api~1favorites~1count'
-  
-  # Workflow API
+    $ref: ./api/favorites.yaml#/~1api~1favorites~1count
   /api/workflow/list:
-    $ref: './api/workflow.yaml#/~1api~1workflow~1list'
+    $ref: ./api/workflow.yaml#/~1api~1workflow~1list
   /api/workflow/{workflow_id}/details:
-    $ref: './api/workflow.yaml#/~1api~1workflow~1{workflow_id}~1details'
-  
-  # Auth API
+    $ref: ./api/workflow.yaml#/~1api~1workflow~1{workflow_id}~1details
   /api/auth/google/initiate:
-    $ref: './api/auth.yaml#/~1api~1auth~1google~1initiate'
+    $ref: ./api/auth.yaml#/~1api~1auth~1google~1initiate
   /api/auth/google/callback:
-    $ref: './api/auth.yaml#/~1api~1auth~1google~1callback'
-  
-  # User API
+    $ref: ./api/auth.yaml#/~1api~1auth~1google~1callback
   /api/user/create:
-    $ref: './api/user.yaml#/~1api~1user~1create'
+    $ref: ./api/user.yaml#/~1api~1user~1create
   /api/user/get:
-    $ref: './api/user.yaml#/~1api~1user~1get'
+    $ref: ./api/user.yaml#/~1api~1user~1get
   /api/user/update-throttle-rule:
-    $ref: './api/user.yaml#/~1api~1user~1update-throttle-rule'
+    $ref: ./api/user.yaml#/~1api~1user~1update-throttle-rule
   /api/user/check-owner:
-    $ref: './api/user.yaml#/~1api~1user~1check-owner'
+    $ref: ./api/user.yaml#/~1api~1user~1check-owner
   /api/user/cred:
-    $ref: './api/user.yaml#/~1api~1user~1cred'
+    $ref: ./api/user.yaml#/~1api~1user~1cred
   /api/user/gdpr-consent:
-    $ref: './api/user.yaml#/~1api~1user~1gdpr-consent'
+    $ref: ./api/user.yaml#/~1api~1user~1gdpr-consent
   /api/user/delete-personal-data:
-    $ref: './api/user.yaml#/~1api~1user~1delete-personal-data'
+    $ref: ./api/user.yaml#/~1api~1user~1delete-personal-data
   /api/user/export-personal-data:
-    $ref: './api/user.yaml#/~1api~1user~1export-personal-data'
+    $ref: ./api/user.yaml#/~1api~1user~1export-personal-data
   /api/user/skills:
-    $ref: './api/user.yaml#/~1api~1user~1skills'
+    $ref: ./api/user.yaml#/~1api~1user~1skills
   /api/user/skills/toggle:
-    $ref: './api/user.yaml#/~1api~1user~1skills~1toggle'
+    $ref: ./api/user.yaml#/~1api~1user~1skills~1toggle
   /api/user/skills/{skill_name}:
-    $ref: './api/user.yaml#/~1api~1user~1skills~1{skill_name}'
+    $ref: ./api/user.yaml#/~1api~1user~1skills~1{skill_name}
   /api/user/skills/upload:
-    $ref: './api/user.yaml#/~1api~1user~1skills~1upload'
+    $ref: ./api/user.yaml#/~1api~1user~1skills~1upload
   /api/user/preferences/file-summarization:
-    $ref: './api/user.yaml#/~1api~1user~1preferences~1file-summarization'
-  
-  # Usage API
+    $ref: ./api/user.yaml#/~1api~1user~1preferences~1file-summarization
   /api/usage/admin/overview:
-    $ref: './api/usage.yaml#/~1api~1usage~1admin~1overview'
+    $ref: ./api/usage.yaml#/~1api~1usage~1admin~1overview
   /api/usage/admin/daily:
-    $ref: './api/usage.yaml#/~1api~1usage~1admin~1daily'
+    $ref: ./api/usage.yaml#/~1api~1usage~1admin~1daily
   /api/usage/admin/events:
-    $ref: './api/usage.yaml#/~1api~1usage~1admin~1events'
+    $ref: ./api/usage.yaml#/~1api~1usage~1admin~1events
   /api/usage/admin/pricing:
-    $ref: './api/usage.yaml#/~1api~1usage~1admin~1pricing'
+    $ref: ./api/usage.yaml#/~1api~1usage~1admin~1pricing
   /api/usage/admin/quota:
-    $ref: './api/usage.yaml#/~1api~1usage~1admin~1quota'
+    $ref: ./api/usage.yaml#/~1api~1usage~1admin~1quota
   /api/usage/admin/export:
-    $ref: './api/usage.yaml#/~1api~1usage~1admin~1export'
-  
-  # Admin API
+    $ref: ./api/usage.yaml#/~1api~1usage~1admin~1export
   /api/admin/projects/list:
-    $ref: './api/admin.yaml#/~1api~1admin~1projects~1list'
+    $ref: ./api/admin.yaml#/~1api~1admin~1projects~1list
   /api/admin/projects/count:
-    $ref: './api/admin.yaml#/~1api~1admin~1projects~1count'
+    $ref: ./api/admin.yaml#/~1api~1admin~1projects~1count
   /api/admin/projects/bulk-delete:
-    $ref: './api/admin.yaml#/~1api~1admin~1projects~1bulk-delete'
+    $ref: ./api/admin.yaml#/~1api~1admin~1projects~1bulk-delete
   /api/admin/usage/overview:
-    $ref: './api/admin.yaml#/~1api~1admin~1usage~1overview'
-  
-  # AI Presenter API
+    $ref: ./api/admin.yaml#/~1api~1admin~1usage~1overview
   /api/ai-presenter/list:
-    $ref: './api/ai-presenter.yaml#/~1api~1ai-presenter~1list'
+    $ref: ./api/ai-presenter.yaml#/~1api~1ai-presenter~1list
   /api/ai-presenter/training:
-    $ref: './api/ai-presenter.yaml#/~1api~1ai-presenter~1training'
+    $ref: ./api/ai-presenter.yaml#/~1api~1ai-presenter~1training
   /api/ai-presenter/presentation_info/{project_id}:
-    $ref: './api/ai-presenter.yaml#/~1api~1ai-presenter~1presentation_info~1{project_id}'
+    $ref: ./api/ai-presenter.yaml#/~1api~1ai-presenter~1presentation_info~1{project_id}
   /api/ai-presenter/tts:
-    $ref: './api/ai-presenter.yaml#/~1api~1ai-presenter~1tts'
+    $ref: ./api/ai-presenter.yaml#/~1api~1ai-presenter~1tts
   /api/ai-presenter/avatar:
-    $ref: './api/ai-presenter.yaml#/~1api~1ai-presenter~1avatar'
+    $ref: ./api/ai-presenter.yaml#/~1api~1ai-presenter~1avatar
   /api/ai-presenter/generate_video:
-    $ref: './api/ai-presenter.yaml#/~1api~1ai-presenter~1generate_video'
+    $ref: ./api/ai-presenter.yaml#/~1api~1ai-presenter~1generate_video
   /api/ai-presenter/video_status/{video_id}:
-    $ref: './api/ai-presenter.yaml#/~1api~1ai-presenter~1video_status~1{video_id}'
-  
-  # Suggestions API
+    $ref: ./api/ai-presenter.yaml#/~1api~1ai-presenter~1video_status~1{video_id}
   /api/suggestions/generate:
-    $ref: './api/suggestions.yaml#/~1api~1suggestions~1generate'
-  
-  # Memory API
+    $ref: ./api/suggestions.yaml#/~1api~1suggestions~1generate
   /api/memory/list:
-    $ref: './api/memory.yaml#/~1api~1memory~1list'
+    $ref: ./api/memory.yaml#/~1api~1memory~1list
   /api/memory/add:
-    $ref: './api/memory.yaml#/~1api~1memory~1add'
+    $ref: ./api/memory.yaml#/~1api~1memory~1add
   /api/memory/update:
-    $ref: './api/memory.yaml#/~1api~1memory~1update'
+    $ref: ./api/memory.yaml#/~1api~1memory~1update
   /api/memory/delete:
-    $ref: './api/memory.yaml#/~1api~1memory~1delete'
+    $ref: ./api/memory.yaml#/~1api~1memory~1delete
   /api/memory/search:
-    $ref: './api/memory.yaml#/~1api~1memory~1search'
+    $ref: ./api/memory.yaml#/~1api~1memory~1search
   /api/memory/upload-document:
-    $ref: './api/memory.yaml#/~1api~1memory~1upload-document'
-  
-  # Debug API
+    $ref: ./api/memory.yaml#/~1api~1memory~1upload-document
   /api/debug/environment:
-    $ref: './api/debug.yaml#/~1api~1debug~1environment'
+    $ref: ./api/debug.yaml#/~1api~1debug~1environment
   /api/debug/frontend-logs:
-    $ref: './api/debug.yaml#/~1api~1debug~1frontend-logs'
+    $ref: ./api/debug.yaml#/~1api~1debug~1frontend-logs
   /api/debug/config/llm:
-    $ref: './api/debug.yaml#/~1api~1debug~1config~1llm'
+    $ref: ./api/debug.yaml#/~1api~1debug~1config~1llm
   /api/debug/test/agent-run:
-    $ref: './api/debug.yaml#/~1api~1debug~1test~1agent-run'
+    $ref: ./api/debug.yaml#/~1api~1debug~1test~1agent-run
   /api/debug/test/extractors:
-    $ref: './api/debug.yaml#/~1api~1debug~1test~1extractors'
+    $ref: ./api/debug.yaml#/~1api~1debug~1test~1extractors
   /api/debug/test/extract-file:
-    $ref: './api/debug.yaml#/~1api~1debug~1test~1extract-file'
+    $ref: ./api/debug.yaml#/~1api~1debug~1test~1extract-file
   /api/debug/contracts/status:
-    $ref: './api/debug.yaml#/~1api~1debug~1contracts~1status'
+    $ref: ./api/debug.yaml#/~1api~1debug~1contracts~1status
   /api/debug/contracts/schemas:
-    $ref: './api/debug.yaml#/~1api~1debug~1contracts~1schemas'
+    $ref: ./api/debug.yaml#/~1api~1debug~1contracts~1schemas
   /api/debug/contracts/schemas/{schema_path}:
-    $ref: './api/debug.yaml#/~1api~1debug~1contracts~1schemas~1{schema_path}'
+    $ref: ./api/debug.yaml#/~1api~1debug~1contracts~1schemas~1{schema_path}
   /api/debug/contracts/toggle:
-    $ref: './api/debug.yaml#/~1api~1debug~1contracts~1toggle'
+    $ref: ./api/debug.yaml#/~1api~1debug~1contracts~1toggle
   /api/debug/contracts/enable:
-    $ref: './api/debug.yaml#/~1api~1debug~1contracts~1enable'
+    $ref: ./api/debug.yaml#/~1api~1debug~1contracts~1enable
   /api/debug/contracts/disable:
-    $ref: './api/debug.yaml#/~1api~1debug~1contracts~1disable'
+    $ref: ./api/debug.yaml#/~1api~1debug~1contracts~1disable
   /api/debug/contracts/validate/tool-call:
-    $ref: './api/debug.yaml#/~1api~1debug~1contracts~1validate~1tool-call'
+    $ref: ./api/debug.yaml#/~1api~1debug~1contracts~1validate~1tool-call
   /api/debug/contracts/validate/tool-result:
-    $ref: './api/debug.yaml#/~1api~1debug~1contracts~1validate~1tool-result'
+    $ref: ./api/debug.yaml#/~1api~1debug~1contracts~1validate~1tool-result
   /api/debug/contracts/validate/api/{domain}/{operation}:
-    $ref: './api/debug.yaml#/~1api~1debug~1contracts~1validate~1api~1{domain}~1{operation}'
+    $ref: ./api/debug.yaml#/~1api~1debug~1contracts~1validate~1api~1{domain}~1{operation}
   /api/debug/contracts/validate/entity/{entity_type}:
-    $ref: './api/debug.yaml#/~1api~1debug~1contracts~1validate~1entity~1{entity_type}'
+    $ref: ./api/debug.yaml#/~1api~1debug~1contracts~1validate~1entity~1{entity_type}
   /debug:
-    $ref: './api/debug.yaml#/~1debug'
+    $ref: ./api/debug.yaml#/~1debug
   /debug/chat:
-    $ref: './api/debug.yaml#/~1debug~1chat'
+    $ref: ./api/debug.yaml#/~1debug~1chat
   /debug/chat/suggestions:
-    $ref: './api/debug.yaml#/~1debug~1chat~1suggestions'
+    $ref: ./api/debug.yaml#/~1debug~1chat~1suggestions
   /debug/errors:
-    $ref: './api/debug.yaml#/~1debug~1errors'
+    $ref: ./api/debug.yaml#/~1debug~1errors
   /debug/threads:
-    $ref: './api/debug.yaml#/~1debug~1threads'
+    $ref: ./api/debug.yaml#/~1debug~1threads
   /debug/threads/register:
-    $ref: './api/debug.yaml#/~1debug~1threads~1register'
+    $ref: ./api/debug.yaml#/~1debug~1threads~1register
   /debug/timeline/{thread_id}:
-    $ref: './api/debug.yaml#/~1debug~1timeline~1{thread_id}'
+    $ref: ./api/debug.yaml#/~1debug~1timeline~1{thread_id}
   /debug/frontend-logs:
-    $ref: './api/debug.yaml#/~1debug~1frontend-logs'
+    $ref: ./api/debug.yaml#/~1debug~1frontend-logs
   /debug/frontend-telemetry:
-    $ref: './api/debug.yaml#/~1debug~1frontend-telemetry'
+    $ref: ./api/debug.yaml#/~1debug~1frontend-telemetry
   /debug/critical-issues:
-    $ref: './api/debug.yaml#/~1debug~1critical-issues'
+    $ref: ./api/debug.yaml#/~1debug~1critical-issues
   /debug/events:
-    $ref: './api/debug.yaml#/~1debug~1events'
+    $ref: ./api/debug.yaml#/~1debug~1events
   /debug/agent-runs/{agent_run_id}/traces:
-    $ref: './api/debug.yaml#/~1debug~1agent-runs~1{agent_run_id}~1traces'
+    $ref: ./api/debug.yaml#/~1debug~1agent-runs~1{agent_run_id}~1traces
   /debug/agent-runs/{agent_run_id}/events:
-    $ref: './api/debug.yaml#/~1debug~1agent-runs~1{agent_run_id}~1events'
+    $ref: ./api/debug.yaml#/~1debug~1agent-runs~1{agent_run_id}~1events
   /debug/agent-runs/{agent_run_id}/analysis:
-    $ref: './api/debug.yaml#/~1debug~1agent-runs~1{agent_run_id}~1analysis'
+    $ref: ./api/debug.yaml#/~1debug~1agent-runs~1{agent_run_id}~1analysis
   /debug/threads/{thread_id}/agent-runs:
-    $ref: './api/debug.yaml#/~1debug~1threads~1{thread_id}~1agent-runs'
+    $ref: ./api/debug.yaml#/~1debug~1threads~1{thread_id}~1agent-runs
   /debug/threads/{thread_id}/traces:
-    $ref: './api/debug.yaml#/~1debug~1threads~1{thread_id}~1traces'
+    $ref: ./api/debug.yaml#/~1debug~1threads~1{thread_id}~1traces
   /debug/threads/{thread_id}/events:
-    $ref: './api/debug.yaml#/~1debug~1threads~1{thread_id}~1events'
-  
-  # Triggers API
+    $ref: ./api/debug.yaml#/~1debug~1threads~1{thread_id}~1events
   /api/triggers:
-    $ref: './api/triggers.yaml#/~1api~1triggers'
+    $ref: ./api/triggers.yaml#/~1api~1triggers
   /api/triggers/{trigger_id}:
-    $ref: './api/triggers.yaml#/~1api~1triggers~1{trigger_id}'
+    $ref: ./api/triggers.yaml#/~1api~1triggers~1{trigger_id}
   /api/triggers/{trigger_id}/delete:
-    $ref: './api/triggers.yaml#/~1api~1triggers~1{trigger_id}~1delete'
+    $ref: ./api/triggers.yaml#/~1api~1triggers~1{trigger_id}~1delete
   /api/triggers/{trigger_id}/toggle:
-    $ref: './api/triggers.yaml#/~1api~1triggers~1{trigger_id}~1toggle'
+    $ref: ./api/triggers.yaml#/~1api~1triggers~1{trigger_id}~1toggle
   /api/triggers/createScheduledTaskWithPrompt:
-    $ref: './api/triggers.yaml#/~1api~1triggers~1createScheduledTaskWithPrompt'
+    $ref: ./api/triggers.yaml#/~1api~1triggers~1createScheduledTaskWithPrompt
   /api/triggers/webhook:
-    $ref: './api/triggers.yaml#/~1api~1triggers~1webhook'
-  
-  # Common endpoints
+    $ref: ./api/triggers.yaml#/~1api~1triggers~1webhook
   /api/version:
-    $ref: './api/common.yaml#/~1api~1version'
+    $ref: ./api/common.yaml#/~1api~1version
   /api/health-check:
-    $ref: './api/common.yaml#/~1api~1health-check'
+    $ref: ./api/common.yaml#/~1api~1health-check
   /health:
-    $ref: './api/common.yaml#/~1health'
-
+    $ref: ./api/common.yaml#/~1health
 components:
   schemas:
-    # Common types
-    ThreadIdRequest:
-      $ref: './components/schemas/ThreadIdRequest.yaml'
-    ProjectIdRequest:
-      $ref: './components/schemas/ProjectIdRequest.yaml'
-    AgentRunIdRequest:
-      $ref: './components/schemas/AgentRunIdRequest.yaml'
-    PaginationRequest:
-      $ref: './components/schemas/PaginationRequest.yaml'
-    StandardResponse:
-      $ref: './components/schemas/StandardResponse.yaml'
-    ErrorResponse:
-      $ref: './components/schemas/ErrorResponse.yaml'
-    PaginationResponse:
-      $ref: './components/schemas/PaginationResponse.yaml'
-    HTTPValidationError:
-      $ref: './components/schemas/HTTPValidationError.yaml'
-    ValidationError:
-      $ref: './components/schemas/ValidationError.yaml'
-    
-    # RequestBody types
-    MessageAddRequestBody:
-      $ref: './components/schemas/MessageAddRequestBody.yaml'
-    AgentStartRequestBody:
-      $ref: './components/schemas/AgentStartRequestBody.yaml'
-    
-    # Request types - add all as needed
     AddChartMessageRequest:
-      $ref: './components/schemas/AddChartMessageRequest.yaml'
+      $ref: ./components/schemas/AddChartMessageRequest.yaml
     AddThemeMessageRequest:
-      $ref: './components/schemas/AddThemeMessageRequest.yaml'
-    ListMessagesRequest:
-      $ref: './components/schemas/ListMessagesRequest.yaml'
-    ThreadCreateRequest:
-      $ref: './components/schemas/ThreadCreateRequest.yaml'
-    ThreadGetRequest:
-      $ref: './components/schemas/ThreadGetRequest.yaml'
-    ThreadListRequest:
-      $ref: './components/schemas/ThreadListRequest.yaml'
-    ThreadSearchRequest:
-      $ref: './components/schemas/ThreadSearchRequest.yaml'
-    CreateProjectRequest:
-      $ref: './components/schemas/CreateProjectRequest.yaml'
-    GetProjectRequest:
-      $ref: './components/schemas/GetProjectRequest.yaml'
-    UpdateProjectRequest:
-      $ref: './components/schemas/UpdateProjectRequest.yaml'
-    DeleteProjectRequest:
-      $ref: './components/schemas/DeleteProjectRequest.yaml'
+      $ref: ./components/schemas/AddThemeMessageRequest.yaml
+    AdminBulkDeleteRequest:
+      $ref: ./components/schemas/AdminBulkDeleteRequest.yaml
+    AgentRunIdRequest:
+      $ref: ./components/schemas/AgentRunIdRequest.yaml
+    AgentStartRequestBody:
+      $ref: ./components/schemas/AgentStartRequestBody.yaml
+    ApprovalDecisionRequest:
+      $ref: ./components/schemas/ApprovalDecisionRequest.yaml
+    BatchDownloadRequest:
+      $ref: ./components/schemas/BatchDownloadRequest.yaml
+    Body_create_local_test_agent_run_api_debug_test_agent_run_post:
+      $ref: ./components/schemas/Body_create_local_test_agent_run_api_debug_test_agent_run_post.yaml
+    Body_create_project_file_api_project__project_id__files_post:
+      $ref: ./components/schemas/Body_create_project_file_api_project__project_id__files_post.yaml
+    Body_export_to_onedrive_api_project__project_id__onedrive_export_post:
+      $ref: ./components/schemas/Body_export_to_onedrive_api_project__project_id__onedrive_export_post.yaml
+    Body_extract_file_api_debug_test_extract_file_post:
+      $ref: ./components/schemas/Body_extract_file_api_debug_test_extract_file_post.yaml
+    Body_generate_video_from_assets_api_ai_presenter_generate_video_post:
+      $ref: ./components/schemas/Body_generate_video_from_assets_api_ai_presenter_generate_video_post.yaml
+    Body_train_voiceprint_api_ai_presenter_training_post:
+      $ref: ./components/schemas/Body_train_voiceprint_api_ai_presenter_training_post.yaml
+    Body_upload_avatar_api_ai_presenter_avatar_post:
+      $ref: ./components/schemas/Body_upload_avatar_api_ai_presenter_avatar_post.yaml
+    Body_upload_document_endpoint_api_memory_upload_document_post:
+      $ref: ./components/schemas/Body_upload_document_endpoint_api_memory_upload_document_post.yaml
+    Body_upload_project_file_api_projects__project_id__files_upload_post:
+      $ref: ./components/schemas/Body_upload_project_file_api_projects__project_id__files_upload_post.yaml
+    Body_upload_skill_api_user_skills_upload_post:
+      $ref: ./components/schemas/Body_upload_skill_api_user_skills_upload_post.yaml
     BulkDeleteRequest:
-      $ref: './components/schemas/BulkDeleteRequest.yaml'
-    
-    # Response types
-    QuickStartResponse:
-      $ref: './components/schemas/QuickStartResponse.yaml'
-    VersionInfo:
-      $ref: './components/schemas/VersionInfo.yaml'
+      $ref: ./components/schemas/BulkDeleteRequest.yaml
+    ChatRequest:
+      $ref: ./components/schemas/ChatRequest.yaml
+    CreateProjectRequest:
+      $ref: ./components/schemas/CreateProjectRequest.yaml
+    CreateScheduledTaskRequest:
+      $ref: ./components/schemas/CreateScheduledTaskRequest.yaml
+    CreateTriggerApiRequest:
+      $ref: ./components/schemas/CreateTriggerApiRequest.yaml
+    DeleteProjectRequest:
+      $ref: ./components/schemas/DeleteProjectRequest.yaml
+    DisconnectRequest:
+      $ref: ./components/schemas/DisconnectRequest.yaml
+    DocumentReadResponse:
+      $ref: ./components/schemas/DocumentReadResponse.yaml
+    ErrorResponse:
+      $ref: ./components/schemas/ErrorResponse.yaml
+    EventBatchRequest:
+      $ref: ./components/schemas/EventBatchRequest.yaml
+    ExecuteWriteRequest:
+      $ref: ./components/schemas/ExecuteWriteRequest.yaml
+    FavoriteAddRequest:
+      $ref: ./components/schemas/FavoriteAddRequest.yaml
+    FavoriteListRequest:
+      $ref: ./components/schemas/FavoriteListRequest.yaml
+    FavoriteRemoveRequest:
+      $ref: ./components/schemas/FavoriteRemoveRequest.yaml
+    FavoriteToggleRequest:
+      $ref: ./components/schemas/FavoriteToggleRequest.yaml
+    FileListResponse:
+      $ref: ./components/schemas/FileListResponse.yaml
+    FileSummarizationPreferences:
+      $ref: ./components/schemas/FileSummarizationPreferences.yaml
+    FileUploadRequest:
+      $ref: ./components/schemas/FileUploadRequest.yaml
+    FileUploadResponse:
+      $ref: ./components/schemas/FileUploadResponse.yaml
+    FrontendEvent:
+      $ref: ./components/schemas/FrontendEvent.yaml
+    FrontendLogsRequest:
+      $ref: ./components/schemas/FrontendLogsRequest.yaml
+    GenerateSuggestionsRequest:
+      $ref: ./components/schemas/GenerateSuggestionsRequest.yaml
+    GetProjectRequest:
+      $ref: ./components/schemas/GetProjectRequest.yaml
+    GoogleAuthCallbackResponse:
+      $ref: ./components/schemas/GoogleAuthCallbackResponse.yaml
+    GoogleAuthInitiateResponse:
+      $ref: ./components/schemas/GoogleAuthInitiateResponse.yaml
+    HTTPValidationError:
+      $ref: ./components/schemas/HTTPValidationError.yaml
     LLMConfigResponse:
-      $ref: './components/schemas/LLMConfigResponse.yaml'
-    
-    # Note: All other schemas can be added here as needed
-    # They are available in components/schemas/*.yaml
-
+      $ref: ./components/schemas/LLMConfigResponse.yaml
+    LLMParameterLimits:
+      $ref: ./components/schemas/LLMParameterLimits.yaml
+    ListMessagesRequest:
+      $ref: ./components/schemas/ListMessagesRequest.yaml
+    LogEntry:
+      $ref: ./components/schemas/LogEntry.yaml
+    MessageAddRequestBody:
+      $ref: ./components/schemas/MessageAddRequestBody.yaml
+    ModelInfo:
+      $ref: ./components/schemas/ModelInfo.yaml
+    OAuthCallbackResponse:
+      $ref: ./components/schemas/OAuthCallbackResponse.yaml
+    OAuthInitiateRequest:
+      $ref: ./components/schemas/OAuthInitiateRequest.yaml
+    OAuthInitiateResponse:
+      $ref: ./components/schemas/OAuthInitiateResponse.yaml
+    PaginationRequest:
+      $ref: ./components/schemas/PaginationRequest.yaml
+    PaginationResponse:
+      $ref: ./components/schemas/PaginationResponse.yaml
+    ProjectIdRequest:
+      $ref: ./components/schemas/ProjectIdRequest.yaml
+    QuickStartRequest:
+      $ref: ./components/schemas/QuickStartRequest.yaml
+    QuickStartResponse:
+      $ref: ./components/schemas/QuickStartResponse.yaml
+    StandardResponse:
+      $ref: ./components/schemas/StandardResponse.yaml
+    TTSRequest:
+      $ref: ./components/schemas/TTSRequest.yaml
+    ThreadCreateRequest:
+      $ref: ./components/schemas/ThreadCreateRequest.yaml
+    ThreadGetRequest:
+      $ref: ./components/schemas/ThreadGetRequest.yaml
+    ThreadIdRequest:
+      $ref: ./components/schemas/ThreadIdRequest.yaml
+    ThreadListRequest:
+      $ref: ./components/schemas/ThreadListRequest.yaml
+    ThreadSearchRequest:
+      $ref: ./components/schemas/ThreadSearchRequest.yaml
+    ToggleSkillRequest:
+      $ref: ./components/schemas/ToggleSkillRequest.yaml
+    ToggleTriggerRequest:
+      $ref: ./components/schemas/ToggleTriggerRequest.yaml
+    TriggerType:
+      $ref: ./components/schemas/TriggerType.yaml
+    UpdateGdprConsentRequest:
+      $ref: ./components/schemas/UpdateGdprConsentRequest.yaml
+    UpdateProjectRequest:
+      $ref: ./components/schemas/UpdateProjectRequest.yaml
+    UpdateThrottleRuleRequest:
+      $ref: ./components/schemas/UpdateThrottleRuleRequest.yaml
+    UpdateTriggerRequest:
+      $ref: ./components/schemas/UpdateTriggerRequest.yaml
+    ValidationError:
+      $ref: ./components/schemas/ValidationError.yaml
+    VersionInfo:
+      $ref: ./components/schemas/VersionInfo.yaml
+    VideoGenerationResponse:
+      $ref: ./components/schemas/VideoGenerationResponse.yaml
+    VolcengineBaseResponse:
+      $ref: ./components/schemas/VolcengineBaseResponse.yaml
+    VolcengineTrainingListResponse:
+      $ref: ./components/schemas/VolcengineTrainingListResponse.yaml
+    VolcengineTrainingStatus:
+      $ref: ./components/schemas/VolcengineTrainingStatus.yaml
+    WorkflowVars:
+      $ref: ./components/schemas/WorkflowVars.yaml
   parameters:
     ThreadIdPath:
-      $ref: './components/parameters/ThreadIdPath.yaml'
+      $ref: ./components/parameters/ThreadIdPath.yaml
     ProjectIdPath:
-      $ref: './components/parameters/ProjectIdPath.yaml'
+      $ref: ./components/parameters/ProjectIdPath.yaml
     AgentRunIdPath:
-      $ref: './components/parameters/AgentRunIdPath.yaml'
-
+      $ref: ./components/parameters/AgentRunIdPath.yaml
   responses:
     ValidationError:
-      $ref: './components/responses/ValidationError.yaml'
+      $ref: ./components/responses/ValidationError.yaml
     NotFound:
-      $ref: './components/responses/NotFound.yaml'
+      $ref: ./components/responses/NotFound.yaml
     InternalServerError:
-      $ref: './components/responses/InternalServerError.yaml'
-
+      $ref: ./components/responses/InternalServerError.yaml

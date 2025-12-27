@@ -62,7 +62,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/admin/projects/count:
   get:
     tags:
@@ -92,7 +92,7 @@
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/AdminBulkDeleteRequest'
+            $ref: '../components/schemas/AdminBulkDeleteRequest.yaml'
       required: true
     responses:
       '200':
@@ -105,7 +105,7 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
 /api/admin/usage/overview:
   get:
     tags:
@@ -151,4 +151,4 @@
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/HTTPValidationError'
+              $ref: '../components/schemas/HTTPValidationError.yaml'
