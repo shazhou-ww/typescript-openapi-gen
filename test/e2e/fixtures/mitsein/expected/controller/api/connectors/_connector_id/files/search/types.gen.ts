@@ -1,9 +1,14 @@
 // Auto-generated types from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-import type { FileListResponse, HTTPValidationError } from '../../../../../../shared-types'
-import { FileListResponseSchema, HTTPValidationErrorSchema } from '../../../../../../shared-types'
-
+import type {
+  FileListResponse,
+  HTTPValidationError,
+} from '../../../../../../shared-types'
+import {
+  FileListResponseSchema,
+  HTTPValidationErrorSchema,
+} from '../../../../../../shared-types'
 
 import { z } from 'zod'
 
@@ -20,13 +25,13 @@ export interface GetQuery {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    connector_id: z.string()
-  })
+    connector_id: z.string(),
+  }),
 })
 
 export const GetQuerySchema = z.object({
-    query: z.string(),
-    page_size: z.number().int().min(1).max(1000).optional()
+  query: z.string(),
+  page_size: z.number().int().min(1).max(1000).optional(),
 })
 
 export interface GetInput {
@@ -36,7 +41,7 @@ export interface GetInput {
 
 export const GetInputSchema = z.object({
   params: GetParamsSchema,
-  query: GetQuerySchema
+  query: GetQuerySchema,
 })
 
 export type GetOutput = FileListResponse

@@ -4,7 +4,6 @@
 import type { LLMConfigResponse } from '../../../../../shared-types'
 import { LLMConfigResponseSchema } from '../../../../../shared-types'
 
-
 import { z } from 'zod'
 
 export type GetInput = {}

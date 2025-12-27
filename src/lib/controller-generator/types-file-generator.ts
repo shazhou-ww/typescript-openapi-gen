@@ -113,11 +113,40 @@ function addImportIfNeeded(
 ): void {
   if (referencedTypes.size > 0) {
     const relativePath = getRelativePathToTypes(controllerDir, sharedTypesDir)
-    const typeImports = Array.from(referencedTypes).join(', ')
+    const typeImports = Array.from(referencedTypes).sort()
     const schemaImports = Array.from(referencedTypes)
       .map((t) => `${t}Schema`)
-      .join(', ')
-    lines.splice(3, 0, `import type { ${typeImports} } from '${relativePath}'`, '')
-    lines.splice(4, 0, `import { ${schemaImports} } from '${relativePath}'`, '')
+      .sort()
+    
+    // Format type imports - always use multi-line format to match prettier
+    // Insert before "import { z } from 'zod'" which is at index 3
+    const importLines: string[] = []
+    importLines.push("import type {")
+    // Add imports with trailing comma except for the last one
+    typeImports.forEach((t, i) => {
+      if (i === typeImports.length - 1) {
+        importLines.push(`  ${t}`)
+      } else {
+        importLines.push(`  ${t},`)
+      }
+    })
+    importLines.push(`} from '${relativePath}'`)
+    importLines.push('')
+    
+    // Format schema imports - always use multi-line format to match prettier
+    importLines.push('import {')
+    // Add imports with trailing comma except for the last one
+    schemaImports.forEach((s, i) => {
+      if (i === schemaImports.length - 1) {
+        importLines.push(`  ${s}`)
+      } else {
+        importLines.push(`  ${s},`)
+      }
+    })
+    importLines.push(`} from '${relativePath}'`)
+    importLines.push('')
+    
+    // Insert all import lines before "import { z } from 'zod'"
+    lines.splice(3, 0, ...importLines)
   }
 }

@@ -1,9 +1,16 @@
 // Auto-generated types from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-import type { OAuthInitiateRequest, OAuthInitiateResponse, HTTPValidationError } from '../../../../../shared-types'
-import { OAuthInitiateRequestSchema, OAuthInitiateResponseSchema, HTTPValidationErrorSchema } from '../../../../../shared-types'
-
+import type {
+  OAuthInitiateRequest,
+  OAuthInitiateResponse,
+  HTTPValidationError,
+} from '../../../../../shared-types'
+import {
+  OAuthInitiateRequestSchema,
+  OAuthInitiateResponseSchema,
+  HTTPValidationErrorSchema,
+} from '../../../../../shared-types'
 
 import { z } from 'zod'
 
@@ -17,8 +24,8 @@ export type PostBody = unknown
 
 export const PostParamsSchema = z.object({
   params: z.object({
-    connector_id: z.string()
-  })
+    connector_id: z.string(),
+  }),
 })
 
 export const PostBodySchema = OAuthInitiateRequestSchema
@@ -30,7 +37,7 @@ export interface PostInput {
 
 export const PostInputSchema = z.object({
   params: PostParamsSchema,
-  body: z.unknown()
+  body: z.unknown(),
 })
 
 export type PostOutput = OAuthInitiateResponse

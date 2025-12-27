@@ -4,7 +4,6 @@
 import type { HTTPValidationError } from '../../../../shared-types'
 import { HTTPValidationErrorSchema } from '../../../../shared-types'
 
-
 import { z } from 'zod'
 
 export type PostInput = {}

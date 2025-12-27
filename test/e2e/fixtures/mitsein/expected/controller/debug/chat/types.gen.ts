@@ -2,8 +2,10 @@
 // DO NOT EDIT - This file is regenerated on each run
 
 import type { ChatRequest, HTTPValidationError } from '../../../shared-types'
-import { ChatRequestSchema, HTTPValidationErrorSchema } from '../../../shared-types'
-
+import {
+  ChatRequestSchema,
+  HTTPValidationErrorSchema,
+} from '../../../shared-types'
 
 import { z } from 'zod'
 
@@ -16,7 +18,7 @@ export interface PostInput {
 }
 
 export const PostInputSchema = z.object({
-  body: z.unknown()
+  body: z.unknown(),
 })
 
 export type PostOutput = unknown

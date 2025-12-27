@@ -4,7 +4,6 @@
 import type { HTTPValidationError } from '../../../../../shared-types'
 import { HTTPValidationErrorSchema } from '../../../../../shared-types'
 
-
 import { z } from 'zod'
 
 export interface GetParams {
@@ -20,13 +19,13 @@ export interface GetQuery {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    thread_id: z.string()
-  })
+    thread_id: z.string(),
+  }),
 })
 
 export const GetQuerySchema = z.object({
-    event_type: z.union([z.string(), z.unknown()]).optional(),
-    limit: z.number().int().optional()
+  event_type: z.union([z.string(), z.unknown()]).optional(),
+  limit: z.number().int().optional(),
 })
 
 export interface GetInput {
@@ -36,7 +35,7 @@ export interface GetInput {
 
 export const GetInputSchema = z.object({
   params: GetParamsSchema,
-  query: GetQuerySchema
+  query: GetQuerySchema,
 })
 
 export type GetOutput = unknown

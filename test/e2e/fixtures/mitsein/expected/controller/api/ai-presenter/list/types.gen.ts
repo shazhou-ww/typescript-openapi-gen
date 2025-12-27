@@ -4,7 +4,6 @@
 import type { VolcengineTrainingListResponse } from '../../../../shared-types'
 import { VolcengineTrainingListResponseSchema } from '../../../../shared-types'
 
-
 import { z } from 'zod'
 
 export type GetInput = {}

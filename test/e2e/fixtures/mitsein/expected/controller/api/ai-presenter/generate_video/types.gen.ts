@@ -1,9 +1,14 @@
 // Auto-generated types from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-import type { VideoGenerationResponse, HTTPValidationError } from '../../../../shared-types'
-import { VideoGenerationResponseSchema, HTTPValidationErrorSchema } from '../../../../shared-types'
-
+import type {
+  VideoGenerationResponse,
+  HTTPValidationError,
+} from '../../../../shared-types'
+import {
+  VideoGenerationResponseSchema,
+  HTTPValidationErrorSchema,
+} from '../../../../shared-types'
 
 import { z } from 'zod'
 

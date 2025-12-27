@@ -1,9 +1,14 @@
 // Auto-generated types from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-import type { DocumentReadResponse, HTTPValidationError } from '../../../../../../shared-types'
-import { DocumentReadResponseSchema, HTTPValidationErrorSchema } from '../../../../../../shared-types'
-
+import type {
+  DocumentReadResponse,
+  HTTPValidationError,
+} from '../../../../../../shared-types'
+import {
+  DocumentReadResponseSchema,
+  HTTPValidationErrorSchema,
+} from '../../../../../../shared-types'
 
 import { z } from 'zod'
 
@@ -21,12 +26,12 @@ export interface GetQuery {
 export const GetParamsSchema = z.object({
   params: z.object({
     connector_id: z.string(),
-    document_id: z.string()
-  })
+    document_id: z.string(),
+  }),
 })
 
 export const GetQuerySchema = z.object({
-    include_raw: z.boolean().optional()
+  include_raw: z.boolean().optional(),
 })
 
 export interface GetInput {
@@ -36,7 +41,7 @@ export interface GetInput {
 
 export const GetInputSchema = z.object({
   params: GetParamsSchema,
-  query: GetQuerySchema
+  query: GetQuerySchema,
 })
 
 export type GetOutput = DocumentReadResponse

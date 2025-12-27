@@ -4,7 +4,6 @@
 import type { HTTPValidationError } from '../../../../../../shared-types'
 import { HTTPValidationErrorSchema } from '../../../../../../shared-types'
 
-
 import { z } from 'zod'
 
 export interface PostParams {
@@ -19,12 +18,12 @@ export interface PostHeaders {
 
 export const PostParamsSchema = z.object({
   params: z.object({
-    project_id: z.string()
-  })
+    project_id: z.string(),
+  }),
 })
 
 export const PostHeadersSchema = z.object({
-    'user-token': z.union([z.string(), z.unknown()]).optional()
+  'user-token': z.union([z.string(), z.unknown()]).optional(),
 })
 
 export interface PostInput {
@@ -34,7 +33,7 @@ export interface PostInput {
 
 export const PostInputSchema = z.object({
   params: PostParamsSchema,
-  headers: PostHeadersSchema
+  headers: PostHeadersSchema,
 })
 
 export type PostOutput = unknown

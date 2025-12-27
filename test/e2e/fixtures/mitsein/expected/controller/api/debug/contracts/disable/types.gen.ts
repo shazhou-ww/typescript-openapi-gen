@@ -4,7 +4,6 @@
 import type { HTTPValidationError } from '../../../../../shared-types'
 import { HTTPValidationErrorSchema } from '../../../../../shared-types'
 
-
 import { z } from 'zod'
 
 export interface PostQuery {
@@ -12,7 +11,7 @@ export interface PostQuery {
 }
 
 export const PostQuerySchema = z.object({
-    toggled_by: z.string().optional()
+  toggled_by: z.string().optional(),
 })
 
 export interface PostInput {
@@ -20,7 +19,7 @@ export interface PostInput {
 }
 
 export const PostInputSchema = z.object({
-  query: PostQuerySchema
+  query: PostQuerySchema,
 })
 
 export type PostOutput = unknown

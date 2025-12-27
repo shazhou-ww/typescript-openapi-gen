@@ -40,9 +40,12 @@ export function generateMethodsFile(
     }
   }
   
-  // Format type imports - single line if only one, multi-line if multiple
-  if (typeImports.length === 1) {
-    lines.push(`import type { ${typeImports[0]} } from './types.gen'`)
+  // Format type imports - use single line if short enough, multi-line otherwise
+  // This matches prettier's formatting behavior
+  const typeImportsStr = typeImports.join(', ')
+  if (typeImportsStr.length <= 60) {
+    // Single line if it fits (leaving room for "import type { ... } from './types.gen'")
+    lines.push(`import type { ${typeImportsStr} } from './types.gen'`)
   } else {
     lines.push("import type {")
     lines.push(typeImports.map(t => `  ${t}`).join(',\n'))
@@ -50,9 +53,11 @@ export function generateMethodsFile(
   }
   lines.push('')
   
-  // Format schema imports - single line if only one, multi-line if multiple
-  if (schemaImports.length === 1) {
-    lines.push(`import { ${schemaImports[0]} } from './types.gen'`)
+  // Format schema imports - use single line if short enough, multi-line otherwise
+  const schemaImportsStr = schemaImports.join(', ')
+  if (schemaImportsStr.length <= 60) {
+    // Single line if it fits (leaving room for "import { ... } from './types.gen'")
+    lines.push(`import { ${schemaImportsStr} } from './types.gen'`)
   } else {
     lines.push('import {')
     lines.push(schemaImports.map(s => `  ${s}`).join(',\n'))

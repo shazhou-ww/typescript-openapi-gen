@@ -4,7 +4,6 @@
 import type { HTTPValidationError } from '../../../../../shared-types'
 import { HTTPValidationErrorSchema } from '../../../../../shared-types'
 
-
 import { z } from 'zod'
 
 export interface GetParams {
@@ -15,8 +14,8 @@ export interface GetParams {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    agent_run_id: z.string()
-  })
+    agent_run_id: z.string(),
+  }),
 })
 
 export interface GetInput {
@@ -24,7 +23,7 @@ export interface GetInput {
 }
 
 export const GetInputSchema = z.object({
-  params: GetParamsSchema
+  params: GetParamsSchema,
 })
 
 export type GetOutput = unknown

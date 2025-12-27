@@ -4,7 +4,6 @@
 import type { HTTPValidationError } from '../../../../../shared-types'
 import { HTTPValidationErrorSchema } from '../../../../../shared-types'
 
-
 import { z } from 'zod'
 
 export interface PostParams {
@@ -15,8 +14,8 @@ export interface PostParams {
 
 export const PostParamsSchema = z.object({
   params: z.object({
-    trigger_id: z.string()
-  })
+    trigger_id: z.string(),
+  }),
 })
 
 export interface PostInput {
@@ -24,7 +23,7 @@ export interface PostInput {
 }
 
 export const PostInputSchema = z.object({
-  params: PostParamsSchema
+  params: PostParamsSchema,
 })
 
 export type PostOutput = unknown

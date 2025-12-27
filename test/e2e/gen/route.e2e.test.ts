@@ -4,6 +4,7 @@ import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseOpenAPIFile } from '../../../src/lib/openapi-parser'
 import { ElysiaRouteGenerator } from '../../../src/lib/route-generator/index'
+import { formatFileWithPrettier } from '../../../src/lib/shared/formatter'
 
 // This test file is kept for backward compatibility
 // New tests should use route-all-frameworks.e2e.test.ts
@@ -101,7 +102,14 @@ describe('Route Generator E2E Tests', () => {
           tempControllerDir,
           outputFilePath,
         )
-        generator.generate()
+        const result = generator.generate()
+        
+        // Format generated file (matching command behavior)
+        const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..')
+        const prettierConfig = path.join(projectRoot, '.prettierrc')
+        if (fs.existsSync(prettierConfig) && result.fileCreated) {
+          formatFileWithPrettier(outputFilePath, prettierConfig)
+        }
       })
 
       afterAll(() => {

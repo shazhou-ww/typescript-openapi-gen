@@ -4,7 +4,6 @@
 import type { VersionInfo } from '../../../shared-types'
 import { VersionInfoSchema } from '../../../shared-types'
 
-
 import { z } from 'zod'
 
 export type GetInput = {}

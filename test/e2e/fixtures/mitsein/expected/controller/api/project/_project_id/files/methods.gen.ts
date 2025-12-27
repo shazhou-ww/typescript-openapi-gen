@@ -7,17 +7,9 @@ import { handleGet as _handleGet } from './get'
 import { handlePost as _handlePost } from './post'
 import { handleDelete as _handleDelete } from './delete'
 
-import type {
-  GetOutput,
-  PostOutput,
-  DeleteOutput
-} from './types.gen'
+import type { GetOutput, PostOutput, DeleteOutput } from './types.gen'
 
-import {
-  GetInputSchema,
-  PostInputSchema,
-  DeleteInputSchema
-} from './types.gen'
+import { GetInputSchema, PostInputSchema, DeleteInputSchema } from './types.gen'
 
 export async function handleGet(input: unknown): Promise<GetOutput> {
   const validatedInput = GetInputSchema.parse(input)

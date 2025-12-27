@@ -4,7 +4,6 @@
 import type { HTTPValidationError } from '../../../shared-types'
 import { HTTPValidationErrorSchema } from '../../../shared-types'
 
-
 import { z } from 'zod'
 
 export interface GetQuery {
@@ -13,8 +12,8 @@ export interface GetQuery {
 }
 
 export const GetQuerySchema = z.object({
-    thread_id: z.string().optional(),
-    minutes: z.number().int().optional()
+  thread_id: z.string().optional(),
+  minutes: z.number().int().optional(),
 })
 
 export interface GetInput {
@@ -22,7 +21,7 @@ export interface GetInput {
 }
 
 export const GetInputSchema = z.object({
-  query: GetQuerySchema
+  query: GetQuerySchema,
 })
 
 export type GetOutput = unknown

@@ -5,14 +5,9 @@ import { z } from 'zod'
 
 import { handlePost as _handlePost } from './post'
 
-import type {
-  PostOutput
-} from './types.gen'
+import type { PostOutput } from './types.gen'
 
-import {
-  PostInputSchema,
-  PostBodySchema
-} from './types.gen'
+import { PostInputSchema, PostBodySchema } from './types.gen'
 
 export async function handlePost(input: unknown): Promise<PostOutput> {
   const validatedInput = PostInputSchema.parse(input)

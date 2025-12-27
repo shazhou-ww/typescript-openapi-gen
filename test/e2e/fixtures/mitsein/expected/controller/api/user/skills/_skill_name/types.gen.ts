@@ -4,7 +4,6 @@
 import type { HTTPValidationError } from '../../../../../shared-types'
 import { HTTPValidationErrorSchema } from '../../../../../shared-types'
 
-
 import { z } from 'zod'
 
 export interface GetParams {
@@ -15,8 +14,8 @@ export interface GetParams {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    skill_name: z.string()
-  })
+    skill_name: z.string(),
+  }),
 })
 
 export interface GetInput {
@@ -24,7 +23,7 @@ export interface GetInput {
 }
 
 export const GetInputSchema = z.object({
-  params: GetParamsSchema
+  params: GetParamsSchema,
 })
 
 export type GetOutput = unknown
@@ -37,8 +36,8 @@ export interface DeleteParams {
 
 export const DeleteParamsSchema = z.object({
   params: z.object({
-    skill_name: z.string()
-  })
+    skill_name: z.string(),
+  }),
 })
 
 export interface DeleteInput {
@@ -46,7 +45,7 @@ export interface DeleteInput {
 }
 
 export const DeleteInputSchema = z.object({
-  params: DeleteParamsSchema
+  params: DeleteParamsSchema,
 })
 
 export type DeleteOutput = unknown
