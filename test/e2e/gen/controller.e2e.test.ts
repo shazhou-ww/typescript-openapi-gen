@@ -79,13 +79,14 @@ function generateDiff(expected: string, actual: string): string {
 }
 
 const e2eDir = path.dirname(fileURLToPath(import.meta.url))
+const fixturesDir = path.join(e2eDir, '../fixtures')
 
 describe('Controller Generator E2E Tests', () => {
-  const testCases = getTestCases(e2eDir)
+  const testCases = getTestCases(fixturesDir)
 
   for (const testCase of testCases) {
     describe(`Test case: ${testCase}`, () => {
-      const testCaseDir = path.join(e2eDir, testCase)
+      const testCaseDir = path.join(fixturesDir, testCase)
       const inputDir = path.join(testCaseDir, 'input')
       const expectedBaseDir = path.join(testCaseDir, 'expected')
       let tempOutputDir: string

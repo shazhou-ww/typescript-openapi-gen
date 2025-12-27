@@ -42,17 +42,18 @@ function generateDiff(expected: string, actual: string): string {
 }
 
 const e2eDir = path.dirname(fileURLToPath(import.meta.url))
+const fixturesDir = path.join(e2eDir, '../fixtures')
 
 // Get all test case directories (directories with input/expected subdirs)
 function getTestCases(): string[] {
-  const entries = fs.readdirSync(e2eDir, { withFileTypes: true })
+  const entries = fs.readdirSync(fixturesDir, { withFileTypes: true })
   return entries
     .filter((entry) => {
       if (!entry.isDirectory()) return false
       // Check if it has input and expected subdirectories
-      const hasInput = fs.existsSync(path.join(e2eDir, entry.name, 'input'))
+      const hasInput = fs.existsSync(path.join(fixturesDir, entry.name, 'input'))
       const hasExpected = fs.existsSync(
-        path.join(e2eDir, entry.name, 'expected'),
+        path.join(fixturesDir, entry.name, 'expected'),
       )
       return hasInput && hasExpected
     })
@@ -89,7 +90,7 @@ describe('Route Generator E2E Tests (All Frameworks)', () => {
   for (const testCase of testCases) {
     for (const framework of frameworks) {
       describe(`Test case: ${testCase} - ${framework.name}`, () => {
-        const testCaseDir = path.join(e2eDir, testCase)
+        const testCaseDir = path.join(fixturesDir, testCase)
         const inputDir = path.join(testCaseDir, 'input')
         const expectedDir = path.join(testCaseDir, 'expected')
         let tempOutputDir: string
