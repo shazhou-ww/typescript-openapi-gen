@@ -1,8 +1,8 @@
 // Auto-generated types from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-import type { Pet, CreatePetRequest } from '../../shared-types'
-import { PetSchema, CreatePetRequestSchema } from '../../shared-types'
+import type { CreatePetRequest, Pet } from '../../shared-types'
+import { CreatePetRequestSchema, PetSchema } from '../../shared-types'
 
 import { z } from 'zod'
 

@@ -2,12 +2,12 @@
 // DO NOT EDIT - This file is regenerated on each run
 
 import type {
-  VideoGenerationResponse,
   HTTPValidationError,
+  VideoGenerationResponse,
 } from '../../../../shared-types'
 import {
-  VideoGenerationResponseSchema,
   HTTPValidationErrorSchema,
+  VideoGenerationResponseSchema,
 } from '../../../../shared-types'
 
 import { z } from 'zod'

@@ -109,12 +109,19 @@ export function formatFileWithPrettier(
     }
 
     try {
-      execSync(
+      const result = execSync(
         `npx prettier --write --config "${absoluteConfig}" "${absolutePath}"`,
-        { cwd: projectRoot, stdio: 'pipe' },
+        { cwd: projectRoot, stdio: 'pipe', encoding: 'utf-8' },
       )
       return true
-    } catch {
+    } catch (error: any) {
+      // Log error for debugging (only in development)
+      if (process.env.DEBUG || process.env.NODE_ENV === 'development') {
+        console.error(`Prettier formatting failed for ${absolutePath}:`, error.message)
+        if (error.stderr) {
+          console.error('stderr:', error.stderr.toString())
+        }
+      }
       return false
     }
   }
@@ -130,23 +137,31 @@ export function formatFileWithPrettier(
     return false
   }
 
-  try {
-    // If config is in package.json, don't use --config flag
-    if (detectedConfig.endsWith('package.json')) {
-      execSync(`npx prettier --write "${absolutePath}"`, {
-        cwd: projectRoot,
-        stdio: 'pipe',
-      })
-    } else {
-      execSync(
-        `npx prettier --write --config "${detectedConfig}" "${absolutePath}"`,
-        { cwd: projectRoot, stdio: 'pipe' },
-      )
+    try {
+      // If config is in package.json, don't use --config flag
+      if (detectedConfig.endsWith('package.json')) {
+        execSync(`npx prettier --write "${absolutePath}"`, {
+          cwd: projectRoot,
+          stdio: 'pipe',
+          encoding: 'utf-8',
+        })
+      } else {
+        execSync(
+          `npx prettier --write --config "${detectedConfig}" "${absolutePath}"`,
+          { cwd: projectRoot, stdio: 'pipe', encoding: 'utf-8' },
+        )
+      }
+      return true
+    } catch (error: any) {
+      // Log error for debugging (only in development)
+      if (process.env.DEBUG || process.env.NODE_ENV === 'development') {
+        console.error(`Prettier formatting failed for ${absolutePath}:`, error.message)
+        if (error.stderr) {
+          console.error('stderr:', error.stderr.toString())
+        }
+      }
+      return false
     }
-    return true
-  } catch {
-    return false
-  }
 }
 
 /**
@@ -182,9 +197,17 @@ export function formatFilesWithPrettier(
       execSync(`npx prettier --write --config "${absoluteConfig}" ${fileList}`, {
         cwd: projectRoot,
         stdio: 'pipe',
+        encoding: 'utf-8',
       })
       return filePaths.length
-    } catch {
+    } catch (error: any) {
+      // Log error for debugging (only in development)
+      if (process.env.DEBUG || process.env.NODE_ENV === 'development') {
+        console.error(`Prettier formatting failed:`, error.message)
+        if (error.stderr) {
+          console.error('stderr:', error.stderr.toString())
+        }
+      }
       return 0
     }
   }
@@ -200,22 +223,30 @@ export function formatFilesWithPrettier(
     return 0
   }
 
-  try {
-    const fileList = absolutePaths.map((p) => `"${p}"`).join(' ')
-    // If config is in package.json, don't use --config flag
-    if (detectedConfig.endsWith('package.json')) {
-      execSync(`npx prettier --write ${fileList}`, {
-        cwd: projectRoot,
-        stdio: 'pipe',
-      })
-    } else {
-      execSync(
-        `npx prettier --write --config "${detectedConfig}" ${fileList}`,
-        { cwd: projectRoot, stdio: 'pipe' },
-      )
+    try {
+      const fileList = absolutePaths.map((p) => `"${p}"`).join(' ')
+      // If config is in package.json, don't use --config flag
+      if (detectedConfig.endsWith('package.json')) {
+        execSync(`npx prettier --write ${fileList}`, {
+          cwd: projectRoot,
+          stdio: 'pipe',
+          encoding: 'utf-8',
+        })
+      } else {
+        execSync(
+          `npx prettier --write --config "${detectedConfig}" ${fileList}`,
+          { cwd: projectRoot, stdio: 'pipe', encoding: 'utf-8' },
+        )
+      }
+      return filePaths.length
+    } catch (error: any) {
+      // Log error for debugging (only in development)
+      if (process.env.DEBUG || process.env.NODE_ENV === 'development') {
+        console.error(`Prettier formatting failed:`, error.message)
+        if (error.stderr) {
+          console.error('stderr:', error.stderr.toString())
+        }
+      }
+      return 0
     }
-    return filePaths.length
-  } catch {
-    return 0
-  }
 }

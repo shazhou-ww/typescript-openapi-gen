@@ -22,16 +22,16 @@ export interface GetHeaders {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    project_id: z.string(),
-  }),
+    project_id: z.string()
+  })
 })
 
 export const GetQuerySchema = z.object({
-  path: z.string(),
+    path: z.string()
 })
 
 export const GetHeadersSchema = z.object({
-  cachedPreviewUrl: z.union([z.string(), z.unknown()]).optional(),
+    cachedPreviewUrl: z.union([z.string(), z.unknown()]).optional()
 })
 
 export interface GetInput {
@@ -43,7 +43,7 @@ export interface GetInput {
 export const GetInputSchema = z.object({
   params: GetParamsSchema,
   query: GetQuerySchema,
-  headers: GetHeadersSchema,
+  headers: GetHeadersSchema
 })
 
 export type GetOutput = unknown

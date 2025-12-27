@@ -15,25 +15,48 @@ function readFileNormalized(filePath: string): string {
 }
 
 // Generate a diff-like output for two strings
+// Groups adjacent differences together by +/- signs
 function generateDiff(expected: string, actual: string): string {
   const expectedLines = expected.split('\n')
   const actualLines = actual.split('\n')
   const lines: string[] = []
   const maxLen = Math.max(expectedLines.length, actualLines.length)
 
-  for (let i = 0; i < maxLen; i++) {
+  let i = 0
+  while (i < maxLen) {
     const expLine = expectedLines[i]
     const actLine = actualLines[i]
 
     if (expLine === actLine) {
+      // Same line, just show it
       lines.push(`  ${i + 1}: ${expLine ?? ''}`)
+      i++
     } else {
-      if (expLine !== undefined) {
-        lines.push(`- ${i + 1}: ${expLine}`)
+      // Found a difference, collect all adjacent differences
+      const removedLines: string[] = []
+      const addedLines: string[] = []
+
+      // Collect consecutive differences
+      while (i < maxLen) {
+        const exp = expectedLines[i]
+        const act = actualLines[i]
+
+        if (exp === act) {
+          // End of difference group
+          break
+        }
+
+        if (exp !== undefined) {
+          removedLines.push(`- ${i + 1}: ${exp}`)
+        }
+        if (act !== undefined) {
+          addedLines.push(`+ ${i + 1}: ${act}`)
+        }
+        i++
       }
-      if (actLine !== undefined) {
-        lines.push(`+ ${i + 1}: ${actLine}`)
-      }
+
+      // Add the grouped differences: first all removals (-), then all additions (+)
+      lines.push(...removedLines, ...addedLines)
     }
   }
 
@@ -72,9 +95,11 @@ describe('Route Generator E2E Tests', () => {
       let outputFilePath: string
 
       beforeAll(async () => {
-        // Create temp directory for output in the same location as test cases
-        // This ensures relative paths work correctly
-        tempOutputDir = fs.mkdtempSync(path.join(testCaseDir, `temp-route-`))
+        // Create temp directory in system temp folder
+        const os = await import('node:os')
+        tempOutputDir = fs.mkdtempSync(
+          path.join(os.tmpdir(), `typescript-openapi-gen-route-${testCase}-`),
+        )
 
         // Find OpenAPI file in input directory
         const inputFiles = fs.readdirSync(inputDir)
@@ -97,19 +122,15 @@ describe('Route Generator E2E Tests', () => {
         outputFilePath = path.join(tempOutputDir, 'elysia-router.gen.ts')
 
         const openApiDoc = await parseOpenAPIFile(openapiPath)
+        const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..')
+        const prettierConfig = path.join(projectRoot, '.prettierrc')
         const generator = new ElysiaRouteGenerator(
           openApiDoc,
           tempControllerDir,
           outputFilePath,
+          { prettierConfig },
         )
-        const result = generator.generate()
-        
-        // Format generated file (matching command behavior)
-        const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..')
-        const prettierConfig = path.join(projectRoot, '.prettierrc')
-        if (fs.existsSync(prettierConfig) && result.fileCreated) {
-          formatFileWithPrettier(outputFilePath, prettierConfig)
-        }
+        generator.generate()
       })
 
       afterAll(() => {

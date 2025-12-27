@@ -2,12 +2,12 @@
 // DO NOT EDIT - This file is regenerated on each run
 
 import type {
-  ThreadCreateRequest,
   HTTPValidationError,
+  ThreadCreateRequest,
 } from '../../../../shared-types'
 import {
-  ThreadCreateRequestSchema,
   HTTPValidationErrorSchema,
+  ThreadCreateRequestSchema,
 } from '../../../../shared-types'
 
 import { z } from 'zod'
@@ -21,7 +21,7 @@ export interface PostInput {
 }
 
 export const PostInputSchema = z.object({
-  body: z.unknown(),
+  body: z.unknown()
 })
 
 export type PostOutput = unknown

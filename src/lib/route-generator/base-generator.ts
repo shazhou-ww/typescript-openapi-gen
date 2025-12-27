@@ -47,9 +47,8 @@ export abstract class BaseRouteGenerator {
   protected generateFileContent(routes: FlatRoute[]): string {
     const lines: string[] = []
 
-    // Add file header
+    // Add file header (includes trailing empty line)
     lines.push(...buildFileHeader(this.getFrameworkName() + ' routes from OpenAPI specification'))
-    lines.push('')
 
     // Add imports
     lines.push(...this.generateImports(routes))

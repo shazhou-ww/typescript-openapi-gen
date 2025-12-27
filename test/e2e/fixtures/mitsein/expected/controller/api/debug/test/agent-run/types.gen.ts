@@ -14,15 +14,14 @@ import { z } from 'zod'
 
 export type PostBody = unknown
 
-export const PostBodySchema =
-  Body_create_local_test_agent_run_api_debug_test_agent_run_postSchema
+export const PostBodySchema = Body_create_local_test_agent_run_api_debug_test_agent_run_postSchema
 
 export interface PostInput {
   body: PostBody
 }
 
 export const PostInputSchema = z.object({
-  body: z.unknown(),
+  body: z.unknown()
 })
 
 export type PostOutput = unknown

@@ -15,7 +15,7 @@ export interface PostInput {
 }
 
 export const PostInputSchema = z.object({
-  body: z.unknown(),
+  body: z.unknown()
 })
 
 export type PostOutput = Record<string, unknown>

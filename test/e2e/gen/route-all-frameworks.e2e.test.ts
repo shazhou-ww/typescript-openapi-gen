@@ -16,25 +16,48 @@ function readFileNormalized(filePath: string): string {
 }
 
 // Generate a diff-like output for two strings
+// Groups adjacent differences together by +/- signs
 function generateDiff(expected: string, actual: string): string {
   const expectedLines = expected.split('\n')
   const actualLines = actual.split('\n')
   const lines: string[] = []
   const maxLen = Math.max(expectedLines.length, actualLines.length)
 
-  for (let i = 0; i < maxLen; i++) {
+  let i = 0
+  while (i < maxLen) {
     const expLine = expectedLines[i]
     const actLine = actualLines[i]
 
     if (expLine === actLine) {
+      // Same line, just show it
       lines.push(`  ${i + 1}: ${expLine ?? ''}`)
+      i++
     } else {
-      if (expLine !== undefined) {
-        lines.push(`- ${i + 1}: ${expLine}`)
+      // Found a difference, collect all adjacent differences
+      const removedLines: string[] = []
+      const addedLines: string[] = []
+
+      // Collect consecutive differences
+      while (i < maxLen) {
+        const exp = expectedLines[i]
+        const act = actualLines[i]
+
+        if (exp === act) {
+          // End of difference group
+          break
+        }
+
+        if (exp !== undefined) {
+          removedLines.push(`- ${i + 1}: ${exp}`)
+        }
+        if (act !== undefined) {
+          addedLines.push(`+ ${i + 1}: ${act}`)
+        }
+        i++
       }
-      if (actLine !== undefined) {
-        lines.push(`+ ${i + 1}: ${actLine}`)
-      }
+
+      // Add the grouped differences: first all removals (-), then all additions (+)
+      lines.push(...removedLines, ...addedLines)
     }
   }
 
@@ -43,6 +66,30 @@ function generateDiff(expected: string, actual: string): string {
 
 const e2eDir = path.dirname(fileURLToPath(import.meta.url))
 const fixturesDir = path.join(e2eDir, '../fixtures')
+const projectRoot = path.resolve(e2eDir, '../../')
+
+// Find prettier config file
+function findPrettierConfig(): string | undefined {
+  const configFiles = [
+    '.prettierrc',
+    '.prettierrc.json',
+    '.prettierrc.yml',
+    '.prettierrc.yaml',
+    'prettier.config.js',
+    'prettier.config.cjs',
+  ]
+
+  for (const configFile of configFiles) {
+    const configPath = path.join(projectRoot, configFile)
+    if (fs.existsSync(configPath)) {
+      return configPath
+    }
+  }
+
+  return undefined
+}
+
+const prettierConfig = findPrettierConfig()
 
 // Get all test case directories (directories with input/expected subdirs)
 function getTestCases(): string[] {
@@ -97,10 +144,13 @@ describe('Route Generator E2E Tests (All Frameworks)', () => {
         let outputFilePath: string
 
         beforeAll(async () => {
-          // Create temp directory for output in the same location as test cases
-          // This ensures relative paths work correctly
+          // Create temp directory in system temp folder
+          const os = await import('node:os')
           tempOutputDir = fs.mkdtempSync(
-            path.join(testCaseDir, `temp-route-${framework.name}-`),
+            path.join(
+              os.tmpdir(),
+              `typescript-openapi-gen-route-${framework.name}-${testCase}-`,
+            ),
           )
 
           // Find OpenAPI file in input directory
@@ -130,6 +180,7 @@ describe('Route Generator E2E Tests (All Frameworks)', () => {
             openApiDoc,
             tempControllerDir,
             outputFilePath,
+            { prettierConfig },
           )
           generator.generate()
         })

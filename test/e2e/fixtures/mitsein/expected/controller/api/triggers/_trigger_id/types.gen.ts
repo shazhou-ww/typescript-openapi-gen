@@ -20,8 +20,8 @@ export interface GetParams {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    trigger_id: z.string(),
-  }),
+    trigger_id: z.string()
+  })
 })
 
 export interface GetInput {
@@ -29,7 +29,7 @@ export interface GetInput {
 }
 
 export const GetInputSchema = z.object({
-  params: GetParamsSchema,
+  params: GetParamsSchema
 })
 
 export type GetOutput = unknown
@@ -44,8 +44,8 @@ export type PostBody = unknown
 
 export const PostParamsSchema = z.object({
   params: z.object({
-    trigger_id: z.string(),
-  }),
+    trigger_id: z.string()
+  })
 })
 
 export const PostBodySchema = UpdateTriggerRequestSchema
@@ -57,7 +57,7 @@ export interface PostInput {
 
 export const PostInputSchema = z.object({
   params: PostParamsSchema,
-  body: z.unknown(),
+  body: z.unknown()
 })
 
 export type PostOutput = unknown

@@ -2,12 +2,12 @@
 // DO NOT EDIT - This file is regenerated on each run
 
 import type {
-  VolcengineBaseResponse,
   HTTPValidationError,
+  VolcengineBaseResponse,
 } from '../../../../shared-types'
 import {
-  VolcengineBaseResponseSchema,
   HTTPValidationErrorSchema,
+  VolcengineBaseResponseSchema,
 } from '../../../../shared-types'
 
 import { z } from 'zod'

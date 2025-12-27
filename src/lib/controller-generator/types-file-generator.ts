@@ -118,32 +118,36 @@ function addImportIfNeeded(
       .map((t) => `${t}Schema`)
       .sort()
     
-    // Format type imports - always use multi-line format to match prettier
+    // Format type imports - single line if only one, multi-line if multiple
     // Insert before "import { z } from 'zod'" which is at index 3
     const importLines: string[] = []
-    importLines.push("import type {")
-    // Add imports with trailing comma except for the last one
-    typeImports.forEach((t, i) => {
-      if (i === typeImports.length - 1) {
-        importLines.push(`  ${t}`)
-      } else {
+    if (typeImports.length === 1) {
+      // Single line format for single import
+      importLines.push(`import type { ${typeImports[0]} } from '${relativePath}'`)
+    } else {
+      // Multi-line format for multiple imports
+      importLines.push("import type {")
+      typeImports.forEach((t) => {
+        // Add trailing comma for all items (prettier will format based on trailingComma config)
         importLines.push(`  ${t},`)
-      }
-    })
-    importLines.push(`} from '${relativePath}'`)
-    importLines.push('')
+      })
+      importLines.push(`} from '${relativePath}'`)
+    }
     
-    // Format schema imports - always use multi-line format to match prettier
-    importLines.push('import {')
-    // Add imports with trailing comma except for the last one
-    schemaImports.forEach((s, i) => {
-      if (i === schemaImports.length - 1) {
-        importLines.push(`  ${s}`)
-      } else {
+    // Format schema imports - single line if only one, multi-line if multiple
+    if (schemaImports.length === 1) {
+      // Single line format for single import
+      importLines.push(`import { ${schemaImports[0]} } from '${relativePath}'`)
+    } else {
+      // Multi-line format for multiple imports
+      importLines.push('import {')
+      schemaImports.forEach((s) => {
+        // Add trailing comma for all items (prettier will format based on trailingComma config)
         importLines.push(`  ${s},`)
-      }
-    })
-    importLines.push(`} from '${relativePath}'`)
+      })
+      importLines.push(`} from '${relativePath}'`)
+    }
+    // Add empty line after all imports, before "import { z } from 'zod'"
     importLines.push('')
     
     // Insert all import lines before "import { z } from 'zod'"

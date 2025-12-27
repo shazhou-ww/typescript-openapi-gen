@@ -18,12 +18,12 @@ export interface GetQuery {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    project_id: z.string(),
-  }),
+    project_id: z.string()
+  })
 })
 
 export const GetQuerySchema = z.object({
-  path: z.string(),
+    path: z.string()
 })
 
 export interface GetInput {
@@ -33,7 +33,7 @@ export interface GetInput {
 
 export const GetInputSchema = z.object({
   params: GetParamsSchema,
-  query: GetQuerySchema,
+  query: GetQuerySchema
 })
 
 export type GetOutput = unknown

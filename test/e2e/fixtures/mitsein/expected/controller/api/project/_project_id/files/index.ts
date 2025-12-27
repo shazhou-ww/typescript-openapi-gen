@@ -1,14 +1,7 @@
 // Auto-generated index file
 // DO NOT EDIT - This file is regenerated on each run
 
-export type {
-  GetInput,
-  GetOutput,
-  PostInput,
-  PostOutput,
-  DeleteInput,
-  DeleteOutput,
-} from './types.gen'
+export type { GetInput, GetOutput, PostInput, PostOutput, DeleteInput, DeleteOutput } from './types.gen'
 
 export { handleGet } from './methods.gen'
 export { handlePost } from './methods.gen'

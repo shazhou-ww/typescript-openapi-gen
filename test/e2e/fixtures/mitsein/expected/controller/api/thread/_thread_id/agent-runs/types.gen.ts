@@ -14,8 +14,8 @@ export interface PostParams {
 
 export const PostParamsSchema = z.object({
   params: z.object({
-    thread_id: z.string(),
-  }),
+    thread_id: z.string()
+  })
 })
 
 export interface PostInput {
@@ -23,7 +23,7 @@ export interface PostInput {
 }
 
 export const PostInputSchema = z.object({
-  params: PostParamsSchema,
+  params: PostParamsSchema
 })
 
 export type PostOutput = unknown

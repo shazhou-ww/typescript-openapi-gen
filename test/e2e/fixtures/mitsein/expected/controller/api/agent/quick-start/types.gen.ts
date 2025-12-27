@@ -2,14 +2,14 @@
 // DO NOT EDIT - This file is regenerated on each run
 
 import type {
+  HTTPValidationError,
   QuickStartRequest,
   QuickStartResponse,
-  HTTPValidationError,
 } from '../../../../shared-types'
 import {
+  HTTPValidationErrorSchema,
   QuickStartRequestSchema,
   QuickStartResponseSchema,
-  HTTPValidationErrorSchema,
 } from '../../../../shared-types'
 
 import { z } from 'zod'
@@ -23,7 +23,7 @@ export interface PostInput {
 }
 
 export const PostInputSchema = z.object({
-  body: z.unknown(),
+  body: z.unknown()
 })
 
 export type PostOutput = QuickStartResponse

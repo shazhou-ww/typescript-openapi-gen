@@ -3,15 +3,15 @@
 
 import type {
   FileListResponse,
-  HTTPValidationError,
   FileUploadRequest,
   FileUploadResponse,
+  HTTPValidationError,
 } from '../../../../../shared-types'
 import {
   FileListResponseSchema,
-  HTTPValidationErrorSchema,
   FileUploadRequestSchema,
   FileUploadResponseSchema,
+  HTTPValidationErrorSchema,
 } from '../../../../../shared-types'
 
 import { z } from 'zod'
@@ -30,14 +30,14 @@ export interface GetQuery {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    connector_id: z.string(),
-  }),
+    connector_id: z.string()
+  })
 })
 
 export const GetQuerySchema = z.object({
-  folder_id: z.union([z.string(), z.unknown()]).optional(),
-  page_size: z.number().int().min(1).max(1000).optional(),
-  page_token: z.union([z.string(), z.unknown()]).optional(),
+    folder_id: z.union([z.string(), z.unknown()]).optional(),
+    page_size: z.number().int().min(1).max(1000).optional(),
+    page_token: z.union([z.string(), z.unknown()]).optional()
 })
 
 export interface GetInput {
@@ -47,7 +47,7 @@ export interface GetInput {
 
 export const GetInputSchema = z.object({
   params: GetParamsSchema,
-  query: GetQuerySchema,
+  query: GetQuerySchema
 })
 
 export type GetOutput = FileListResponse
@@ -62,8 +62,8 @@ export type PostBody = unknown
 
 export const PostParamsSchema = z.object({
   params: z.object({
-    connector_id: z.string(),
-  }),
+    connector_id: z.string()
+  })
 })
 
 export const PostBodySchema = FileUploadRequestSchema
@@ -75,7 +75,7 @@ export interface PostInput {
 
 export const PostInputSchema = z.object({
   params: PostParamsSchema,
-  body: z.unknown(),
+  body: z.unknown()
 })
 
 export type PostOutput = FileUploadResponse

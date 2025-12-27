@@ -47,9 +47,8 @@ export class ElysiaRouteGenerator {
   private generateFileContent(routes: FlatRoute[]): string {
     const lines: string[] = []
 
-    // Add file header
+    // Add file header (includes trailing empty line)
     lines.push(...buildFileHeader('Elysia routes from OpenAPI specification'))
-    lines.push('')
 
     // Add imports
     lines.push(...this.generateImports(routes))
