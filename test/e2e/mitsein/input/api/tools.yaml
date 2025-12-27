@@ -1,0 +1,45 @@
+/api/tools/list:
+  get:
+    tags:
+    - tools
+    summary: List Tools
+    description: 'List all available tools.
+
+
+      Note: MCP/Smithery marketplace integration has been removed.
+
+      Returns empty list for now.'
+    operationId: list_tools_api_tools_list_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/tools/check-video-status:
+  post:
+    tags:
+    - tools
+    summary: Check Video Status
+    description: Check the status of a video generation operation.
+    operationId: check_video_status_api_tools_check_video_status_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            additionalProperties: true
+            type: object
+            title: Request
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

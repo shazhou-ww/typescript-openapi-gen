@@ -1,0 +1,11 @@
+properties:
+  project_ids:
+    items:
+      type: string
+    type: array
+    title: Project Ids
+type: object
+required:
+- project_ids
+title: AdminBulkDeleteRequest
+description: Request body for admin bulk delete.

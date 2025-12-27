@@ -1,0 +1,27 @@
+/api/suggestions/generate:
+  post:
+    tags:
+    - suggestions
+    summary: Generate Suggestions
+    description: "Generate follow-up suggestions for a thread.\n\nArgs:\n    request:\
+      \ FastAPI request object\n    body: Request body with thread_id and optional\
+      \ limit\n\nReturns:\n    List of suggestion strings"
+    operationId: generate_suggestions_api_suggestions_generate_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenerateSuggestionsRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

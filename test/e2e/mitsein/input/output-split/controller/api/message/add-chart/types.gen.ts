@@ -1,0 +1,28 @@
+// Auto-generated types from OpenAPI specification
+// DO NOT EDIT - This file is regenerated on each run
+
+import type { ValidationError.yaml } from '../../../../shared-types'
+import { ValidationError.yamlSchema } from '../../../../shared-types'
+
+
+import { z } from 'zod'
+
+export type PostBody = unknown
+
+export const PostBodySchema = z.object({
+  thread_id: z.string().optional(),
+  type: z.string().optional(),
+  is_llm_message: z.boolean().optional(),
+  chart_type: z.string().optional(),
+  format_type: z.string().optional()
+})
+
+export interface PostInput {
+  body: PostBody
+}
+
+export const PostInputSchema = z.object({
+  body: z.unknown()
+})
+
+export type PostOutput = unknown

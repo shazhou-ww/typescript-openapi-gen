@@ -1,0 +1,16 @@
+properties:
+  authorization_url:
+    type: string
+    title: Authorization Url
+  state:
+    type: string
+    title: State
+  connector_id:
+    type: string
+    title: Connector Id
+type: object
+required:
+- authorization_url
+- state
+- connector_id
+title: OAuthInitiateResponse

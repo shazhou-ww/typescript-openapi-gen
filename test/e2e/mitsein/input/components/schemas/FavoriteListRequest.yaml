@@ -1,0 +1,16 @@
+properties:
+  entity_type:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Entity Type
+  offset:
+    type: integer
+    title: Offset
+    default: 0
+  limit:
+    type: integer
+    title: Limit
+    default: 50
+type: object
+title: FavoriteListRequest

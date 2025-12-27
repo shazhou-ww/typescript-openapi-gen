@@ -1,0 +1,23 @@
+properties:
+  redirect_uri:
+    type: string
+    title: Redirect Uri
+    description: Redirect URI after authorization
+  scopes:
+    anyOf:
+    - items:
+        type: string
+      type: array
+    - type: 'null'
+    title: Scopes
+    description: Custom scopes (optional)
+  account_label:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Account Label
+    description: User-friendly label for account
+type: object
+required:
+- redirect_uri
+title: OAuthInitiateRequest

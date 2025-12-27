@@ -1,0 +1,191 @@
+/api/triggers:
+  get:
+    tags:
+    - triggers
+    summary: List Triggers
+    description: List all triggers for the authenticated user
+    operationId: list_triggers_api_triggers_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+  post:
+    tags:
+    - triggers
+    summary: Create Trigger
+    description: Create a new trigger
+    operationId: create_trigger_api_triggers_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTriggerApiRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/triggers/{trigger_id}:
+  get:
+    tags:
+    - triggers
+    summary: Get Trigger
+    description: Get a specific trigger by ID
+    operationId: get_trigger_api_triggers__trigger_id__get
+    parameters:
+    - name: trigger_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Trigger Id
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+  post:
+    tags:
+    - triggers
+    summary: Update Trigger
+    description: Update a trigger
+    operationId: update_trigger_api_triggers__trigger_id__post
+    parameters:
+    - name: trigger_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Trigger Id
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateTriggerRequest'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/triggers/{trigger_id}/delete:
+  post:
+    tags:
+    - triggers
+    summary: Delete Trigger
+    description: Delete a trigger
+    operationId: delete_trigger_api_triggers__trigger_id__delete_post
+    parameters:
+    - name: trigger_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Trigger Id
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/triggers/{trigger_id}/toggle:
+  post:
+    tags:
+    - triggers
+    summary: Toggle Trigger
+    description: Toggle trigger active/inactive status
+    operationId: toggle_trigger_api_triggers__trigger_id__toggle_post
+    parameters:
+    - name: trigger_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Trigger Id
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ToggleTriggerRequest'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/triggers/createScheduledTaskWithPrompt:
+  post:
+    tags:
+    - triggers
+    summary: Create Scheduled Task
+    description: Generate scheduled task configuration from a natural language prompt
+      using LLM
+    operationId: create_scheduled_task_api_triggers_createScheduledTaskWithPrompt_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateScheduledTaskRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/triggers/webhook:
+  post:
+    tags:
+    - triggers
+    summary: Handle Webhook
+    description: Handle QStash webhook for scheduled trigger execution
+    operationId: handle_webhook_api_triggers_webhook_post
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}

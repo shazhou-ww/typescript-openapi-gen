@@ -1,0 +1,21 @@
+properties:
+  timestamp:
+    type: string
+    title: Timestamp
+  level:
+    type: string
+    title: Level
+  message:
+    type: string
+    title: Message
+  data:
+    additionalProperties: true
+    type: object
+    title: Data
+type: object
+required:
+- timestamp
+- level
+- message
+- data
+title: LogEntry

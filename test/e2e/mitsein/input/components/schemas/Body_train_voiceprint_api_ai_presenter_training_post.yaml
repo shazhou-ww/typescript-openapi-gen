@@ -1,0 +1,22 @@
+properties:
+  speaker_id:
+    type: string
+    title: Speaker Id
+  audio_file:
+    type: string
+    format: binary
+    title: Audio File
+  language:
+    type: integer
+    title: Language
+    default: 0
+  text:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Text
+type: object
+required:
+- speaker_id
+- audio_file
+title: Body_train_voiceprint_api_ai_presenter_training_post

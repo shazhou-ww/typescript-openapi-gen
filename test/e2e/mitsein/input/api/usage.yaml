@@ -1,0 +1,341 @@
+/api/usage/admin/overview:
+  get:
+    tags:
+    - usage-admin
+    summary: Get Usage Overview
+    description: Overview KPIs + trend for admin dashboard.
+    operationId: get_usage_overview_api_usage_admin_overview_get
+    parameters:
+    - name: start_date
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+          format: date
+        - type: 'null'
+        title: Start Date
+    - name: end_date
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+          format: date
+        - type: 'null'
+        title: End Date
+    - name: provider
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Provider
+    - name: model
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Model
+    - name: task_type
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Task Type
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/usage/admin/daily:
+  get:
+    tags:
+    - usage-admin
+    summary: Get Daily Usage
+    description: Paginated daily summaries.
+    operationId: get_daily_usage_api_usage_admin_daily_get
+    parameters:
+    - name: start_date
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+          format: date
+        - type: 'null'
+        title: Start Date
+    - name: end_date
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+          format: date
+        - type: 'null'
+        title: End Date
+    - name: provider
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Provider
+    - name: model
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Model
+    - name: task_type
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Task Type
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+        title: Page
+    - name: page_size
+      in: query
+      required: false
+      schema:
+        type: integer
+        maximum: 200
+        minimum: 1
+        default: 50
+        title: Page Size
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/usage/admin/events:
+  get:
+    tags:
+    - usage-admin
+    summary: Get Usage Events Endpoint
+    description: Paginated usage events (admin).
+    operationId: get_usage_events_endpoint_api_usage_admin_events_get
+    parameters:
+    - name: start_date
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+          format: date
+        - type: 'null'
+        title: Start Date
+    - name: end_date
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+          format: date
+        - type: 'null'
+        title: End Date
+    - name: provider
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Provider
+    - name: model
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Model
+    - name: task_type
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Task Type
+    - name: status
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Status
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+        title: Page
+    - name: page_size
+      in: query
+      required: false
+      schema:
+        type: integer
+        maximum: 200
+        minimum: 1
+        default: 50
+        title: Page Size
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/usage/admin/pricing:
+  get:
+    tags:
+    - usage-admin
+    summary: Get Pricing
+    description: Return latest pricing entries (for UI caching).
+    operationId: get_pricing_api_usage_admin_pricing_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/usage/admin/quota:
+  get:
+    tags:
+    - usage-admin
+    summary: Get Quota
+    description: Return quota config + counters for the requesting admin account.
+    operationId: get_quota_api_usage_admin_quota_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/usage/admin/export:
+  get:
+    tags:
+    - usage-admin
+    summary: Export Usage Events
+    description: Export usage events in CSV or JSON.
+    operationId: export_usage_events_api_usage_admin_export_get
+    parameters:
+    - name: export_format
+      in: query
+      required: false
+      schema:
+        type: string
+        pattern: ^(csv|json)$
+        default: csv
+        title: Export Format
+    - name: start_date
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+          format: date
+        - type: 'null'
+        title: Start Date
+    - name: end_date
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+          format: date
+        - type: 'null'
+        title: End Date
+    - name: provider
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Provider
+    - name: model
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Model
+    - name: task_type
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Task Type
+    - name: status
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Status
+    - name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        maximum: 5000
+        minimum: 1
+        default: 1000
+        title: Limit
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

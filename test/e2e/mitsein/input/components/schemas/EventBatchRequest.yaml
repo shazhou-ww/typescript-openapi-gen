@@ -1,0 +1,12 @@
+properties:
+  events:
+    items:
+      $ref: '#/components/schemas/FrontendEvent'
+    type: array
+    maxItems: 100
+    title: Events
+type: object
+required:
+- events
+title: EventBatchRequest
+description: Batch of frontend events.

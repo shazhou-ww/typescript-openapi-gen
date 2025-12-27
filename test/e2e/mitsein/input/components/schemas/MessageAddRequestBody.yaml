@@ -1,0 +1,37 @@
+type: object
+required:
+- thread_id
+- content
+properties:
+  thread_id:
+    type: string
+    title: Thread Id
+    description: Thread identifier (UUID)
+  message_type:
+    type: string
+    title: Message Type
+    default: user
+    description: Type of message (user, assistant, etc.)
+  is_llm_message:
+    type: boolean
+    title: Is Llm Message
+    default: false
+    description: Whether this is an LLM-generated message
+  content:
+    type: string
+    title: Content
+    description: Message content text
+  metadata:
+    type: string
+    title: Metadata
+    default: '{}'
+    description: Additional metadata as JSON string
+  files:
+    items:
+      type: string
+      format: binary
+    type: array
+    title: Files
+    description: Attached files (optional)
+title: MessageAddRequestBody
+description: Request body for adding a message to a thread

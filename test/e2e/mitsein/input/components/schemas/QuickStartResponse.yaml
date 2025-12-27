@@ -1,0 +1,36 @@
+properties:
+  project_id:
+    type: string
+    title: Project Id
+  thread_id:
+    type: string
+    title: Thread Id
+  message_id:
+    type: string
+    title: Message Id
+  agent_run_id:
+    type: string
+    title: Agent Run Id
+  project:
+    additionalProperties: true
+    type: object
+    title: Project
+  thread:
+    additionalProperties: true
+    type: object
+    title: Thread
+  performance_metrics:
+    additionalProperties: true
+    type: object
+    title: Performance Metrics
+    default: {}
+type: object
+required:
+- project_id
+- thread_id
+- message_id
+- agent_run_id
+- project
+- thread
+title: QuickStartResponse
+description: Response model for quick start endpoint.

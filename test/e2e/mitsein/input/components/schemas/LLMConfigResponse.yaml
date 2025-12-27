@@ -1,0 +1,24 @@
+properties:
+  limits:
+    $ref: '#/components/schemas/LLMParameterLimits'
+  models:
+    items:
+      $ref: '#/components/schemas/ModelInfo'
+    type: array
+    title: Models
+  default_model:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Default Model
+  env_mode:
+    type: string
+    title: Env Mode
+type: object
+required:
+- limits
+- models
+- default_model
+- env_mode
+title: LLMConfigResponse
+description: Response model for LLM configuration.

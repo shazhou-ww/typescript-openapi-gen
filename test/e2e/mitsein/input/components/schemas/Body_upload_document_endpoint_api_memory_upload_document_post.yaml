@@ -1,0 +1,9 @@
+properties:
+  file:
+    type: string
+    format: binary
+    title: File
+type: object
+required:
+- file
+title: Body_upload_document_endpoint_api_memory_upload_document_post

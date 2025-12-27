@@ -1,0 +1,13 @@
+type: object
+properties:
+  data:
+    description: Response data array
+  has_more:
+    type: boolean
+    description: Whether there are more items available
+  error:
+    anyOf:
+    - type: string
+    - type: 'null'
+    description: Error message if operation failed
+title: PaginationResponse

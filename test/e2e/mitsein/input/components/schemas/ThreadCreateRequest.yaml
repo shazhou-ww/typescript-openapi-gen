@@ -1,0 +1,7 @@
+properties:
+  project_id:
+    type: string
+    title: Project Id
+    default: ''
+type: object
+title: ThreadCreateRequest

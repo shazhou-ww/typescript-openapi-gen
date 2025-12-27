@@ -1,0 +1,26 @@
+properties:
+  project_id:
+    type: string
+    title: Project Id
+    default: ''
+  name:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Name
+  description:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Description
+  is_public:
+    anyOf:
+    - type: boolean
+    - type: 'null'
+    title: Is Public
+  access_token:
+    type: string
+    title: Access Token
+    default: ''
+type: object
+title: UpdateProjectRequest

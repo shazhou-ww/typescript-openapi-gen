@@ -1,0 +1,25 @@
+properties:
+  speaker_id:
+    type: string
+    title: Speaker Id
+  script_text:
+    type: string
+    title: Script Text
+  slide_filename:
+    type: string
+    title: Slide Filename
+  project_id:
+    type: string
+    title: Project Id
+  language:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Language
+type: object
+required:
+- speaker_id
+- script_text
+- slide_filename
+- project_id
+title: TTSRequest

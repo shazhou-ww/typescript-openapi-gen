@@ -1,0 +1,761 @@
+/api/project/list:
+  post:
+    tags:
+    - projects
+    summary: Project List
+    operationId: project_list_api_project_list_post
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/project/get:
+  post:
+    tags:
+    - projects
+    summary: Project Get
+    operationId: project_get_api_project_get_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetProjectRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/create:
+  post:
+    tags:
+    - projects
+    summary: Project Create
+    operationId: project_create_api_project_create_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateProjectRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/update:
+  post:
+    tags:
+    - projects
+    summary: Project Update
+    operationId: project_update_api_project_update_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateProjectRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/delete:
+  post:
+    tags:
+    - projects
+    summary: Project Delete
+    operationId: project_delete_api_project_delete_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeleteProjectRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/bulk-delete:
+  post:
+    tags:
+    - projects
+    summary: Project Bulk Delete
+    description: Bulk delete multiple projects - for admin/debug purposes
+    operationId: project_bulk_delete_api_project_bulk_delete_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/projects/{project_id}/files/upload:
+  post:
+    tags:
+    - files
+    summary: Upload Project File
+    description: 'Upload a file to the project''s filesystem.
+
+
+      If thread_id is provided and the file is a presentation slide, this will also
+
+      update the corresponding toolCall in the database to preserve edited content
+
+      for AI iteration.'
+    operationId: upload_project_file_api_projects__project_id__files_upload_post
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/Body_upload_project_file_api_projects__project_id__files_upload_post'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/projects/{project_id}/files/info:
+  get:
+    tags:
+    - files
+    summary: Get Project File Info
+    description: Get file information including size for a specific file in the project.
+    operationId: get_project_file_info_api_projects__project_id__files_info_get
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    - name: file_path
+      in: query
+      required: true
+      schema:
+        type: string
+        title: File Path
+    - name: is_user_uploaded
+      in: query
+      required: true
+      schema:
+        type: boolean
+        title: Is User Uploaded
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/files:
+  get:
+    tags:
+    - sandbox
+    summary: List Project Files
+    description: List files in the project's sandbox.
+    operationId: list_project_files_api_project__project_id__files_get
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    - name: path
+      in: query
+      required: true
+      schema:
+        type: string
+        title: Path
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+  delete:
+    tags:
+    - sandbox
+    summary: Delete Project File
+    description: Delete a file from the project's sandbox.
+    operationId: delete_project_file_api_project__project_id__files_delete
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    - name: path
+      in: query
+      required: true
+      schema:
+        type: string
+        description: File path to delete
+        title: Path
+      description: File path to delete
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+  post:
+    tags:
+    - sandbox
+    summary: Create Project File
+    description: Create a file in the project's sandbox using direct file upload
+    operationId: create_project_file_api_project__project_id__files_post
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/Body_create_project_file_api_project__project_id__files_post'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/files/content:
+  get:
+    tags:
+    - sandbox
+    summary: Read Project File
+    description: 'Read a file from the project''s sandbox with streaming support.
+
+
+      This endpoint now supports:
+
+      - Streaming for large files to avoid memory issues
+
+      - Optional caching for small files (<64KB) when cache-busting parameter is not
+      present
+
+      - Partial downloads (Range requests) for video/audio streaming
+
+      - Cache bypass with _t parameter (always fetch fresh from Azure Storage)'
+    operationId: read_project_file_api_project__project_id__files_content_get
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    - name: path
+      in: query
+      required: true
+      schema:
+        type: string
+        title: Path
+    - name: _t
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: ' T'
+    - name: Range
+      in: header
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Range
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/files/batch-download:
+  post:
+    tags:
+    - sandbox
+    summary: Batch Download Files
+    description: Download multiple files from the project as a zip archive with concurrency
+      control.
+    operationId: batch_download_files_api_project__project_id__files_batch_download_post
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BatchDownloadRequest'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/files/preview/stream:
+  get:
+    tags:
+    - sandbox
+    summary: Preview Project File Stream
+    description: 'Stream preview of an HTML file from the project''s sandbox.
+
+
+      This endpoint uses a producer-consumer pattern with a heartbeat to maintain
+
+      a long-lived connection, even during long-running backend operations.'
+    operationId: preview_project_file_stream_api_project__project_id__files_preview_stream_get
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    - name: path
+      in: query
+      required: true
+      schema:
+        type: string
+        title: Path
+    - name: cachedPreviewUrl
+      in: header
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Cachedpreviewurl
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/files/preview:
+  get:
+    tags:
+    - sandbox
+    summary: Preview Project File
+    description: Preview an HTML file from the project's sandbox.
+    operationId: preview_project_file_api_project__project_id__files_preview_get
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    - name: path
+      in: query
+      required: true
+      schema:
+        type: string
+        title: Path
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/files/docx:
+  get:
+    tags:
+    - sandbox
+    summary: Get Docx File
+    description: Get Word document, using cached version if available or converting
+      from markdown.
+    operationId: get_docx_file_api_project__project_id__files_docx_get
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    - name: path
+      in: query
+      required: true
+      schema:
+        type: string
+        title: Path
+    - name: open_in_onedrive
+      in: query
+      required: false
+      schema:
+        type: boolean
+        description: Open in OneDrive instead of downloading
+        default: false
+        title: Open In Onedrive
+      description: Open in OneDrive instead of downloading
+    - name: user-token
+      in: header
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        description: Microsoft Graph API token for OneDrive upload
+        title: User-Token
+      description: Microsoft Graph API token for OneDrive upload
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/presentation:
+  get:
+    tags:
+    - sandbox
+    summary: Get Project Presentation
+    description: Read the presentation file from the project's sandbox and convert
+      to pptx.
+    operationId: get_project_presentation_api_project__project_id__presentation_get
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    - name: open_in_onedrive
+      in: query
+      required: false
+      schema:
+        type: boolean
+        description: Open in OneDrive instead of downloading
+        default: false
+        title: Open In Onedrive
+      description: Open in OneDrive instead of downloading
+    - name: user-token
+      in: header
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        description: Microsoft Graph API token for OneDrive upload
+        title: User-Token
+      description: Microsoft Graph API token for OneDrive upload
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/presentation/{sub_folder_path}:
+  get:
+    tags:
+    - sandbox
+    summary: Get Project Presentation Subfolder
+    description: Read the presentation file from a specific subfolder in the project's
+      sandbox and convert to pptx.
+    operationId: get_project_presentation_subfolder_api_project__project_id__presentation__sub_folder_path__get
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    - name: sub_folder_path
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Sub Folder Path
+    - name: open_in_onedrive
+      in: query
+      required: false
+      schema:
+        type: boolean
+        description: Open in OneDrive instead of downloading
+        default: false
+        title: Open In Onedrive
+      description: Open in OneDrive instead of downloading
+    - name: user-token
+      in: header
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        description: Microsoft Graph API token for OneDrive upload
+        title: User-Token
+      description: Microsoft Graph API token for OneDrive upload
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/webappfiles:
+  get:
+    tags:
+    - sandbox
+    summary: Get Project Webappfiles
+    description: Get the webapp files from the project's sandbox.
+    operationId: get_project_webappfiles_api_project__project_id__webappfiles_get
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/onedrive/export:
+  post:
+    tags:
+    - sandbox
+    summary: Export To Onedrive
+    description: Generic endpoint to export any file to OneDrive.
+    operationId: export_to_onedrive_api_project__project_id__onedrive_export_post
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    - name: user-token
+      in: header
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        description: Microsoft Graph API token for OneDrive upload
+        title: User-Token
+      description: Microsoft Graph API token for OneDrive upload
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/Body_export_to_onedrive_api_project__project_id__onedrive_export_post'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/sandbox/url:
+  get:
+    tags:
+    - sandbox
+    summary: Get Project Sandbox Url
+    description: 'Get sandbox URL for a specific port. Creates sandbox on-demand if
+      needed.
+
+      This endpoint is used by frontend components that need to display sandbox URLs.'
+    operationId: get_project_sandbox_url_api_project__project_id__sandbox_url_get
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    - name: port
+      in: query
+      required: false
+      schema:
+        type: integer
+        description: Port to get URL for (default 8080 for E2B sandbox HTTP)
+        default: 8080
+        title: Port
+      description: Port to get URL for (default 8080 for E2B sandbox HTTP)
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/project/{project_id}/files/url:
+  get:
+    tags:
+    - sandbox
+    summary: Get Project Files Url
+    description: 'Get files URL for a project. Returns Azure Storage URLs with SAS
+      tokens.
+
+      This endpoint provides access to project files via Azure Storage.'
+    operationId: get_project_files_url_api_project__project_id__files_url_get
+    parameters:
+    - name: project_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Project Id
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

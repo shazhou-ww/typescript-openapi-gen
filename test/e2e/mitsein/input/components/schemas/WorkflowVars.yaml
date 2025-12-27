@@ -1,0 +1,15 @@
+properties:
+  id:
+    type: string
+    title: Id
+  mapping:
+    additionalProperties:
+      type: string
+    type: object
+    title: Mapping
+    default: {}
+type: object
+required:
+- id
+title: WorkflowVars
+description: Workflow variables for quick start.

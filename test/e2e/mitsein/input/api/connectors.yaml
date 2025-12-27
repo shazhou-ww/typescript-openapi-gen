@@ -1,0 +1,362 @@
+/api/connectors/approve:
+  post:
+    tags:
+    - connectors
+    summary: Approve Write Operation
+    description: Update user's decision on a pending write approval.
+    operationId: approve_write_operation_api_connectors_approve_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApprovalDecisionRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/connectors/execute:
+  post:
+    tags:
+    - connectors
+    summary: Execute Approved Write
+    description: Execute an approved write operation and return the connector result.
+    operationId: execute_approved_write_api_connectors_execute_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExecuteWriteRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/connectors/disconnect:
+  post:
+    tags:
+    - connectors
+    summary: Disconnect Connector
+    description: Revoke a connector authorization for the current account.
+    operationId: disconnect_connector_api_connectors_disconnect_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DisconnectRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/connectors/activity:
+  get:
+    tags:
+    - connectors
+    summary: Get Write Activity
+    description: Return recent write activity for the current account.
+    operationId: get_write_activity_api_connectors_activity_get
+    parameters:
+    - name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 50
+        title: Limit
+    - name: offset
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 0
+        title: Offset
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/connectors/list:
+  get:
+    tags:
+    - connectors
+    summary: List User Connectors
+    description: List connector authorizations for the current account.
+    operationId: list_user_connectors_api_connectors_list_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/connectors/{connector_id}/authorize:
+  post:
+    tags:
+    - connectors
+    summary: Initiate Oauth
+    description: Start OAuth authorization flow for a connector.
+    operationId: initiate_oauth_api_connectors__connector_id__authorize_post
+    parameters:
+    - name: connector_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Connector Id
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthInitiateRequest'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuthInitiateResponse'
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/connectors/{connector_id}/callback:
+  get:
+    tags:
+    - connectors
+    summary: Handle Oauth Callback
+    description: Handle OAuth callback and persist authorization.
+    operationId: handle_oauth_callback_api_connectors__connector_id__callback_get
+    parameters:
+    - name: connector_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Connector Id
+    - name: code
+      in: query
+      required: true
+      schema:
+        type: string
+        title: Code
+    - name: state
+      in: query
+      required: true
+      schema:
+        type: string
+        title: State
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuthCallbackResponse'
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/connectors/{connector_id}/files:
+  get:
+    tags:
+    - connectors
+    summary: List Files
+    description: List files for a connector using the connector manager.
+    operationId: list_files_api_connectors__connector_id__files_get
+    parameters:
+    - name: connector_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Connector Id
+    - name: folder_id
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Folder Id
+    - name: page_size
+      in: query
+      required: false
+      schema:
+        type: integer
+        maximum: 1000
+        minimum: 1
+        default: 50
+        title: Page Size
+    - name: page_token
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Page Token
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileListResponse'
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+  post:
+    tags:
+    - connectors
+    summary: Upload File
+    description: Upload a file to the connector (e.g., Google Drive).
+    operationId: upload_file_api_connectors__connector_id__files_post
+    parameters:
+    - name: connector_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Connector Id
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FileUploadRequest'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileUploadResponse'
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/connectors/{connector_id}/files/search:
+  get:
+    tags:
+    - connectors
+    summary: Search Files
+    description: Search files for a connector.
+    operationId: search_files_api_connectors__connector_id__files_search_get
+    parameters:
+    - name: connector_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Connector Id
+    - name: query
+      in: query
+      required: true
+      schema:
+        type: string
+        description: Search query
+        title: Query
+      description: Search query
+    - name: page_size
+      in: query
+      required: false
+      schema:
+        type: integer
+        maximum: 1000
+        minimum: 1
+        default: 50
+        title: Page Size
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileListResponse'
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/connectors/{connector_id}/documents/{document_id}:
+  get:
+    tags:
+    - connectors
+    summary: Read Document
+    description: Read a single document from a connector.
+    operationId: read_document_api_connectors__connector_id__documents__document_id__get
+    parameters:
+    - name: connector_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Connector Id
+    - name: document_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Document Id
+    - name: include_raw
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: false
+        title: Include Raw
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentReadResponse'
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

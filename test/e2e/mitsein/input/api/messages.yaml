@@ -1,0 +1,98 @@
+/api/message/add:
+  post:
+    tags:
+    - messages
+    summary: Message Add
+    operationId: message_add_api_message_add_post
+    requestBody:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/MessageAddRequestBody'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/message/add-theme:
+  post:
+    tags:
+    - messages
+    summary: Message Add Theme
+    description: Add a theme message to a thread.
+    operationId: message_add_theme_api_message_add_theme_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AddThemeMessageRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/message/add-chart:
+  post:
+    tags:
+    - messages
+    summary: Message Add Chart
+    description: Add a chart message to a thread.
+    operationId: message_add_chart_api_message_add_chart_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AddChartMessageRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/message/list:
+  post:
+    tags:
+    - messages
+    summary: Message List
+    description: List messages for a thread.
+    operationId: message_list_api_message_list_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListMessagesRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

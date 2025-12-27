@@ -1,0 +1,11 @@
+properties:
+  file_paths:
+    items:
+      type: string
+    type: array
+    title: File Paths
+type: object
+required:
+- file_paths
+title: BatchDownloadRequest
+description: Model for batch download request

@@ -1,0 +1,8 @@
+properties:
+  enable_smart_summarization:
+    type: boolean
+    title: Enable Smart Summarization
+    default: false
+type: object
+title: FileSummarizationPreferences
+description: File summarization user preferences.

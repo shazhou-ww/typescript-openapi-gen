@@ -1,0 +1,56 @@
+properties:
+  speaker_id:
+    type: string
+    title: Speaker Id
+  instance_no:
+    type: string
+    title: Instance No
+  is_activatable:
+    type: boolean
+    title: Is Activatable
+  state:
+    type: string
+    title: State
+  demo_audio:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Demo Audio
+  version:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Version
+  create_time:
+    type: integer
+    title: Create Time
+  expire_time:
+    type: integer
+    title: Expire Time
+  order_time:
+    type: integer
+    title: Order Time
+  alias:
+    type: string
+    title: Alias
+  available_training_times:
+    type: integer
+    title: Available Training Times
+  resource_id:
+    type: string
+    title: Resource Id
+type: object
+required:
+- speaker_id
+- instance_no
+- is_activatable
+- state
+- create_time
+- expire_time
+- order_time
+- alias
+- available_training_times
+- resource_id
+title: VolcengineTrainingStatus
+description: Response model for individual voiceprint training status from Volcengine
+  BatchListMegaTTSTrainStatus API.

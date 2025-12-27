@@ -1,0 +1,9 @@
+type: object
+required:
+- project_id
+properties:
+  project_id:
+    type: string
+    title: Project Id
+    description: Project identifier (UUID)
+title: ProjectIdRequest

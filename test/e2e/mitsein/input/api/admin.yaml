@@ -1,0 +1,154 @@
+/api/admin/projects/list:
+  get:
+    tags:
+    - admin-projects
+    summary: List All Projects
+    description: "List all projects across all accounts (admin only).\n\nReturns paginated\
+      \ list of all projects in the system.\nOnly non-encrypted fields are returned\
+      \ since we cannot decrypt\nother users' data.\n\nArgs:\n    page: Page number\
+      \ (1-based)\n    page_size: Number of items per page (1-200)\n    order_by:\
+      \ Field to order by (default: updated_at)\n    desc: Order descending if True\n\
+      \    account_id: The authenticated user's account ID\n\nReturns:\n    Dict with\
+      \ items (list of projects), page, page_size, and total count"
+    operationId: list_all_projects_api_admin_projects_list_get
+    parameters:
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        description: Page number (1-based)
+        default: 1
+        title: Page
+      description: Page number (1-based)
+    - name: page_size
+      in: query
+      required: false
+      schema:
+        type: integer
+        maximum: 200
+        minimum: 1
+        description: Items per page
+        default: 50
+        title: Page Size
+      description: Items per page
+    - name: order_by
+      in: query
+      required: false
+      schema:
+        type: string
+        description: Field to order by
+        default: updated_at
+        title: Order By
+      description: Field to order by
+    - name: desc
+      in: query
+      required: false
+      schema:
+        type: boolean
+        description: Order descending
+        default: true
+        title: Desc
+      description: Order descending
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/admin/projects/count:
+  get:
+    tags:
+    - admin-projects
+    summary: Get Projects Count
+    description: "Get total count of all projects (admin only).\n\nReturns:\n    Dict\
+      \ with total count of projects"
+    operationId: get_projects_count_api_admin_projects_count_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/admin/projects/bulk-delete:
+  post:
+    tags:
+    - admin-projects
+    summary: Admin Bulk Delete Projects
+    description: "Bulk delete projects across all accounts (admin only).\n\nThis endpoint\
+      \ bypasses normal permission checks and can delete\nany project in the system.\
+      \ Use with caution.\n\nArgs:\n    body: Request body containing list of project_ids\
+      \ to delete\n    account_id: The authenticated user's account ID\n\nReturns:\n\
+      \    Dict with deleted count, failed items, and totals"
+    operationId: admin_bulk_delete_projects_api_admin_projects_bulk_delete_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AdminBulkDeleteRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/admin/usage/overview:
+  get:
+    tags:
+    - admin-usage
+    summary: Get Global Usage Overview
+    description: "Get global usage statistics aggregated across all accounts (admin\
+      \ only).\n\nArgs:\n    start_date: Start of date range (defaults to 30 days\
+      \ ago)\n    end_date: End of date range (defaults to today)\n    account_id:\
+      \ The authenticated user's account ID\n\nReturns:\n    Dict with summary containing\
+      \ aggregated usage metrics for the date range"
+    operationId: get_global_usage_overview_api_admin_usage_overview_get
+    parameters:
+    - name: start_date
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+          format: date
+        - type: 'null'
+        description: Start date (defaults to 30 days ago)
+        title: Start Date
+      description: Start date (defaults to 30 days ago)
+    - name: end_date
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+          format: date
+        - type: 'null'
+        description: End date (defaults to today)
+        title: End Date
+      description: End date (defaults to today)
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

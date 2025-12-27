@@ -1,0 +1,14 @@
+type: object
+required:
+- detail
+properties:
+  code:
+    type: string
+    description: Machine-readable error code
+  detail:
+    type: string
+    description: Human-readable error message
+  status_code:
+    type: integer
+    description: HTTP status code
+title: ErrorResponse

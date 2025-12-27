@@ -1,0 +1,35 @@
+properties:
+  prompt:
+    type: string
+    title: Prompt
+  files:
+    items:
+      additionalProperties: true
+      type: object
+    type: array
+    title: Files
+    default: []
+  metadata:
+    additionalProperties: true
+    type: object
+    title: Metadata
+    default: {}
+  project_name:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Project Name
+  project_description:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Project Description
+  workflow_vars:
+    anyOf:
+    - $ref: '#/components/schemas/WorkflowVars'
+    - type: 'null'
+type: object
+required:
+- prompt
+title: QuickStartRequest
+description: Request model for quick start endpoint.

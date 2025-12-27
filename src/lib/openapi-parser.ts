@@ -155,6 +155,111 @@ function jsonPointerDecode(token: string): string {
 }
 
 /**
+ * Resolve internal $ref references (e.g., #/components/schemas/...) in an object
+ * These references point to the main document's components
+ */
+async function resolveInternalRefs(
+  obj: any,
+  mainDoc: OpenAPIDocument,
+): Promise<any> {
+  if (obj === null || obj === undefined) {
+    return obj
+  }
+
+  if (Array.isArray(obj)) {
+    return Promise.all(obj.map(item => resolveInternalRefs(item, mainDoc)))
+  }
+
+  if (typeof obj === 'object' && '$ref' in obj) {
+    const ref = (obj as any).$ref
+    // Only resolve internal references (starting with #)
+    if (ref.startsWith('#')) {
+      const pathParts = ref.substring(1).split('/').filter(Boolean)
+      let current: any = mainDoc
+
+      for (const part of pathParts) {
+        if (current && typeof current === 'object') {
+          current = current[part]
+        } else {
+          return obj // Return original if path not found
+        }
+      }
+
+      // If the resolved value is itself a reference, resolve it recursively
+      if (current && typeof current === 'object' && '$ref' in current) {
+        return resolveInternalRefs(current, mainDoc)
+      }
+
+      return current
+    }
+    // External references are handled separately
+    return obj
+  }
+
+  // Recursively process object properties
+  if (typeof obj === 'object') {
+    const result: any = {}
+    for (const [key, value] of Object.entries(obj)) {
+      result[key] = await resolveInternalRefs(value, mainDoc)
+    }
+    return result
+  }
+
+  return obj
+}
+
+/**
+ * Resolve external $ref references in a components object
+ */
+async function resolveComponentsRefs(
+  components: any,
+  baseDir: string,
+  mainDoc: OpenAPIDocument,
+): Promise<any> {
+  if (!components || typeof components !== 'object' || Array.isArray(components)) {
+    return components
+  }
+
+  const resolved: any = {}
+
+  for (const [sectionKey, section] of Object.entries(components)) {
+    if (section && typeof section === 'object' && !Array.isArray(section)) {
+      resolved[sectionKey] = {}
+      for (const [name, value] of Object.entries(section as any)) {
+        if (value && typeof value === 'object' && !Array.isArray(value) && '$ref' in value) {
+          // Resolve external reference
+          const ref = (value as any).$ref
+          if (ref.startsWith('./') || ref.startsWith('../')) {
+            const resolvedValue = await resolveExternalRef(ref, baseDir, mainDoc)
+            if (resolvedValue !== undefined) {
+              // Recursively resolve any internal references in the resolved value
+              resolved[sectionKey][name] = await resolveInternalRefs(resolvedValue, mainDoc)
+            } else {
+              resolved[sectionKey][name] = value
+            }
+          } else if (ref.startsWith('#')) {
+            // Internal reference - resolve it
+            resolved[sectionKey][name] = await resolveInternalRefs(value, mainDoc)
+          } else {
+            resolved[sectionKey][name] = value
+          }
+        } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+          // Recursively process nested objects
+          resolved[sectionKey][name] = await resolveComponentsRefs(value, baseDir, mainDoc)
+        } else {
+          // Primitive values or arrays - just copy
+          resolved[sectionKey][name] = value
+        }
+      }
+    } else {
+      resolved[sectionKey] = section
+    }
+  }
+
+  return resolved
+}
+
+/**
  * Resolve external $ref references in OpenAPI document
  */
 async function resolveExternalRefs(
@@ -163,15 +268,26 @@ async function resolveExternalRefs(
 ): Promise<OpenAPIDocument> {
   const resolvedDoc = JSON.parse(JSON.stringify(doc)) // Deep clone
 
+  // First, resolve components references (including external file references)
+  if (resolvedDoc.components) {
+    resolvedDoc.components = await resolveComponentsRefs(resolvedDoc.components, baseDir, resolvedDoc)
+  }
+
+  // Then resolve paths references
   if (resolvedDoc.paths) {
     for (const [pathKey, pathItem] of Object.entries(resolvedDoc.paths)) {
       if (pathItem && typeof pathItem === 'object' && '$ref' in pathItem) {
         // Resolve external path reference
-        const resolvedPath = await resolveExternalRef((pathItem as any).$ref, baseDir)
+        const resolvedPath = await resolveExternalRef((pathItem as any).$ref, baseDir, resolvedDoc)
         if (resolvedPath !== undefined) {
-          resolvedDoc.paths[pathKey] = resolvedPath
+          // Resolve internal references in the resolved path
+          const fullyResolvedPath = await resolveInternalRefs(resolvedPath, resolvedDoc)
+          resolvedDoc.paths[pathKey] = fullyResolvedPath
         }
         // If resolution failed, keep the original $ref
+      } else if (pathItem) {
+        // Resolve internal references in path items that are not external refs
+        resolvedDoc.paths[pathKey] = await resolveInternalRefs(pathItem, resolvedDoc)
       }
     }
   }
@@ -180,11 +296,35 @@ async function resolveExternalRefs(
 }
 
 /**
+ * Parse a YAML/JSON file without OpenAPI validation
+ * Used for parsing fragment files that are not complete OpenAPI documents
+ */
+function parseFileFragment(filePath: string): any {
+  const absolutePath = path.resolve(filePath)
+  const content = fs.readFileSync(absolutePath, 'utf-8')
+  const ext = path.extname(filePath).toLowerCase()
+
+  if (ext === '.yaml' || ext === '.yml') {
+    return yaml.load(content)
+  } else if (ext === '.json') {
+    return JSON.parse(content)
+  } else {
+    // Try to parse as YAML first (it's a superset of JSON)
+    try {
+      return yaml.load(content)
+    } catch {
+      return JSON.parse(content)
+    }
+  }
+}
+
+/**
  * Resolve a single external $ref
  */
 async function resolveExternalRef(
   ref: string,
   baseDir: string,
+  mainDoc?: OpenAPIDocument,
 ): Promise<any> {
   try {
     // Parse ref like "./agent-runs/stop.yaml#/paths/~1agent-run~1{agentRunId}~1stop"
@@ -197,8 +337,14 @@ async function resolveExternalRef(
       return undefined
     }
 
-    // Parse the referenced file
-    const refDoc = await parseOpenAPIFile(fullPath)
+    // Try to parse as OpenAPI document first, fallback to fragment if it fails
+    let refDoc: any
+    try {
+      refDoc = await parseOpenAPIFile(fullPath)
+    } catch {
+      // If parsing as OpenAPI fails, try parsing as a fragment (e.g., path fragments)
+      refDoc = parseFileFragment(fullPath)
+    }
 
     if (!jsonPath) {
       return refDoc

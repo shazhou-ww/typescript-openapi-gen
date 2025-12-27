@@ -1,0 +1,334 @@
+/api/user/create:
+  post:
+    tags:
+    - user
+    summary: User Create
+    operationId: user_create_api_user_create_post
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/user/get:
+  post:
+    tags:
+    - user
+    summary: User Get
+    operationId: user_get_api_user_get_post
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/user/update-throttle-rule:
+  post:
+    tags:
+    - user
+    summary: Update Throttle Rule
+    description: "Update throttle rules for an account\n\nExample request body:\n\
+      {\n    \"daily_thread_limit\": {\n        \"enabled\": true,\n        \"max_threads\"\
+      : 50,\n        \"reset_timezone\": \"UTC\"\n    },\n    \"concurrent_agents_limit\"\
+      : {\n        \"enabled\": true,\n        \"max_concurrent\": 3\n    }\n}"
+    operationId: update_throttle_rule_api_user_update_throttle_rule_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateThrottleRuleRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/user/check-owner:
+  get:
+    tags:
+    - user
+    summary: Check Owner
+    description: Check if the current user has owner role in any account.
+    operationId: check_owner_api_user_check_owner_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/user/cred:
+  post:
+    tags:
+    - user
+    summary: Get User Credentials
+    description: Get user credentials including daily thread count and agent runs
+      for today.
+    operationId: get_user_credentials_api_user_cred_post
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/user/gdpr-consent:
+  get:
+    tags:
+    - user
+    summary: Get Gdpr Consent
+    description: Get GDPR consent status for the current user's account.
+    operationId: get_gdpr_consent_api_user_gdpr_consent_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+  post:
+    tags:
+    - user
+    summary: Update Gdpr Consent
+    description: "Update GDPR consent status for the current user's account.\n\nRequest\
+      \ body example:\n{\n    \"gdpr_consent\": true\n}"
+    operationId: update_gdpr_consent_api_user_gdpr_consent_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateGdprConsentRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/user/delete-personal-data:
+  post:
+    tags:
+    - user
+    summary: Delete Personal Data
+    description: 'Delete all personal data for the current user''s account.
+
+      This is a permanent action that cannot be undone and is intended for GDPR compliance.
+
+
+      Returns a summary of deleted data counts.'
+    operationId: delete_personal_data_api_user_delete_personal_data_post
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/user/export-personal-data:
+  get:
+    tags:
+    - user
+    summary: Export Personal Data
+    description: "Export all user-related data for GDPR compliance and data portability.\n\
+      \nThis endpoint calls the stored procedure to collect all data associated\n\
+      with the user's account including projects, threads, recordings, devices.\n\
+      And direct call db api to get messages.\n\nNote: This endpoint can only be called\
+      \ once per user at runtime to prevent\nconcurrent exports that could cause resource\
+      \ conflicts.\n\nReturns:\n    JSON response with S3 Storage URL where the exported\
+      \ data ZIP file is stored"
+    operationId: export_personal_data_api_user_export_personal_data_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/user/skills:
+  get:
+    tags:
+    - user
+    summary: Get User Skills
+    description: "Get all available skills and the current user's enabled skills.\n\
+      \nReturns:\n    {\n        \"available_skills\": [\n            {\n        \
+      \        \"name\": \"pdf\",\n                \"description\": \"PDF processing\
+      \ skill\",\n                \"version\": \"1.0.0\",\n                \"category\"\
+      : \"document\",\n                \"enabled\": true\n            },\n       \
+      \     ...\n        ]\n    }"
+    operationId: get_user_skills_api_user_skills_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/user/skills/toggle:
+  post:
+    tags:
+    - user
+    summary: Toggle Skill
+    description: "Toggle a skill's enabled status for the current user.\n\nRequest\
+      \ body:\n    {\n        \"skill_name\": \"pdf\",\n        \"enabled\": true\n\
+      \    }\n\nReturns:\n    {\n        \"status\": \"success\",\n        \"skill_name\"\
+      : \"pdf\",\n        \"enabled\": true\n    }"
+    operationId: toggle_skill_api_user_skills_toggle_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ToggleSkillRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/user/skills/{skill_name}:
+  get:
+    tags:
+    - user
+    summary: Get Skill Detail
+    description: "Get detailed information about a specific skill including all available\
+      \ operations.\n\nArgs:\n    skill_name: Name of the skill to get details for\n\
+      \nReturns:\n    {\n        \"name\": \"pdf\",\n        \"description\": \"PDF\
+      \ processing skill\",\n        \"version\": \"1.0.0\",\n        \"category\"\
+      : \"document\",\n        \"author\": \"Anthropic\",\n        \"operations\"\
+      : [\n            {\n                \"name\": \"check_fillable_fields\",\n \
+      \               \"parameters\": [\"file_path\"],\n                \"description\"\
+      : \"\"\n            },\n            ...\n        ]\n    }"
+    operationId: get_skill_detail_api_user_skills__skill_name__get
+    parameters:
+    - name: skill_name
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Skill Name
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+  delete:
+    tags:
+    - user
+    summary: Delete Uploaded Skill
+    description: "Delete an uploaded skill from S3 Storage.\n\nArgs:\n    skill_name:\
+      \ Name of the skill to delete\n\nReturns:\n    {\n        \"success\": true,\n\
+      \        \"message\": \"Skill deleted successfully\",\n        \"skill_name\"\
+      : \"name\"\n    }"
+    operationId: delete_uploaded_skill_api_user_skills__skill_name__delete
+    parameters:
+    - name: skill_name
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Skill Name
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/user/skills/upload:
+  post:
+    tags:
+    - user
+    summary: Upload Skill
+    description: "Upload a skill zip file to Azure Storage.\n\nArgs:\n    file: ZIP\
+      \ file containing the skill files\n\nReturns:\n    SkillMetadata object with\
+      \ skill information"
+    operationId: upload_skill_api_user_skills_upload_post
+    requestBody:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/Body_upload_skill_api_user_skills_upload_post'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/user/preferences/file-summarization:
+  get:
+    tags:
+    - user
+    summary: Get File Summarization Preferences Endpoint
+    description: "Get user's file summarization preferences.\n\nReturns:\n    {\n\
+      \        \"enable_smart_summarization\": true\n    }"
+    operationId: get_file_summarization_preferences_endpoint_api_user_preferences_file_summarization_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileSummarizationPreferences'
+  post:
+    tags:
+    - user
+    summary: Save File Summarization Preferences Endpoint
+    description: "Save user's file summarization preferences.\n\nArgs:\n    preferences:\
+      \ {\n        \"enable_smart_summarization\": true/false\n    }\n\nReturns:\n\
+      \    {\n        \"success\": true,\n        \"message\": \"Preferences saved\
+      \ successfully\"\n    }"
+    operationId: save_file_summarization_preferences_endpoint_api_user_preferences_file_summarization_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FileSummarizationPreferences'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Response Save File Summarization Preferences Endpoint Api User
+                Preferences File Summarization Post
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

@@ -1,0 +1,12 @@
+properties:
+  project_name:
+    type: string
+    title: Project Name
+    default: ''
+  project_description:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Project Description
+type: object
+title: CreateProjectRequest

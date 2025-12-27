@@ -1,0 +1,17 @@
+properties:
+  project_id:
+    type: string
+    title: Project Id
+  speaker_id:
+    type: string
+    title: Speaker Id
+  avatar_file:
+    type: string
+    format: binary
+    title: Avatar File
+type: object
+required:
+- project_id
+- speaker_id
+- avatar_file
+title: Body_upload_avatar_api_ai_presenter_avatar_post

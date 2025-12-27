@@ -1,0 +1,9 @@
+type: object
+required:
+- agent_run_id
+properties:
+  agent_run_id:
+    type: string
+    title: Agent Run Id
+    description: Agent run identifier (UUID)
+title: AgentRunIdRequest

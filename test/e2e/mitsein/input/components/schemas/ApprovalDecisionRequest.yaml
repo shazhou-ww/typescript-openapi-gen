@@ -1,0 +1,21 @@
+properties:
+  approval_id:
+    type: string
+    title: Approval Id
+    description: UUID of the approval record
+  decision:
+    type: string
+    title: Decision
+    description: 'User decision: ''approved'', ''denied'', or ''modified'''
+  modified_content:
+    anyOf:
+    - additionalProperties: true
+      type: object
+    - type: 'null'
+    title: Modified Content
+    description: Modified content if user edited the preview
+type: object
+required:
+- approval_id
+- decision
+title: ApprovalDecisionRequest

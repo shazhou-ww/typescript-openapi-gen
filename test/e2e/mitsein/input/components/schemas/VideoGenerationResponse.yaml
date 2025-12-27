@@ -1,0 +1,42 @@
+properties:
+  success:
+    type: boolean
+    title: Success
+  video_id:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Video Id
+  video_url:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Video Url
+  thumbnail_url:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Thumbnail Url
+  duration:
+    anyOf:
+    - type: number
+    - type: 'null'
+    title: Duration
+  status:
+    type: string
+    title: Status
+  error:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Error
+  message:
+    type: string
+    title: Message
+type: object
+required:
+- success
+- status
+- message
+title: VideoGenerationResponse
+description: Response model for HeyGen video generation.

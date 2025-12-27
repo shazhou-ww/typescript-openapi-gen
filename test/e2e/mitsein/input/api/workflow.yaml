@@ -1,0 +1,49 @@
+/api/workflow/list:
+  get:
+    tags:
+    - workflows
+    summary: Workflow List
+    description: 'List all available workflows.
+
+
+      Returns workflow metadata (id, name, desc) without actual content.
+
+      Requires authentication.'
+    operationId: workflow_list_api_workflow_list_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/workflow/{workflow_id}/details:
+  get:
+    tags:
+    - workflows
+    summary: Workflow Get Details
+    description: 'Get workflow details by ID.
+
+
+      Returns the workflow metadata and raw file content.
+
+      Requires authentication.'
+    operationId: workflow_get_details_api_workflow__workflow_id__details_get
+    parameters:
+    - name: workflow_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Workflow Id
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

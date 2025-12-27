@@ -1,0 +1,183 @@
+/api/memory/list:
+  post:
+    tags:
+    - memory
+    summary: List Memories Endpoint
+    description: List all memories for a user.
+    operationId: list_memories_endpoint_api_memory_list_post
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Response List Memories Endpoint Api Memory List Post
+/api/memory/add:
+  post:
+    tags:
+    - memory
+    summary: Add Memory Endpoint
+    description: Add a new memory for a user.
+    operationId: add_memory_endpoint_api_memory_add_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            additionalProperties: true
+            type: object
+            title: Request
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Response Add Memory Endpoint Api Memory Add Post
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/memory/update:
+  post:
+    tags:
+    - memory
+    summary: Update Memory Endpoint
+    description: Update an existing memory.
+    operationId: update_memory_endpoint_api_memory_update_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            additionalProperties: true
+            type: object
+            title: Request
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Response Update Memory Endpoint Api Memory Update Post
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/memory/delete:
+  post:
+    tags:
+    - memory
+    summary: Delete Memory Endpoint
+    description: Delete a memory.
+    operationId: delete_memory_endpoint_api_memory_delete_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            additionalProperties: true
+            type: object
+            title: Request
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Response Delete Memory Endpoint Api Memory Delete Post
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/memory/search:
+  post:
+    tags:
+    - memory
+    summary: Search Memories Endpoint
+    description: Search memories for a user.
+    operationId: search_memories_endpoint_api_memory_search_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            additionalProperties: true
+            type: object
+            title: Request
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Response Search Memories Endpoint Api Memory Search Post
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/memory/upload-document:
+  post:
+    tags:
+    - memory
+    summary: Upload Document Endpoint
+    description: Upload and process a document into memories.
+    operationId: upload_document_endpoint_api_memory_upload_document_post
+    parameters:
+    - name: document_name
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Document Name
+    - name: max_tokens
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: integer
+        - type: 'null'
+        default: 400
+        title: Max Tokens
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/Body_upload_document_endpoint_api_memory_upload_document_post'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Response Upload Document Endpoint Api Memory Upload Document
+                Post
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

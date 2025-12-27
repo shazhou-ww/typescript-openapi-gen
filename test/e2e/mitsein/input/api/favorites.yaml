@@ -1,0 +1,138 @@
+/api/favorites/add:
+  post:
+    tags:
+    - favorites
+    summary: Add Favorite
+    description: Add an entity to favorites.
+    operationId: add_favorite_api_favorites_add_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FavoriteAddRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/favorites/remove:
+  post:
+    tags:
+    - favorites
+    summary: Remove Favorite
+    description: 'Remove an entity from favorites.
+
+
+      Note: Does not require entity access check - user can always remove their own
+      favorites.'
+    operationId: remove_favorite_api_favorites_remove_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FavoriteRemoveRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/favorites/toggle:
+  post:
+    tags:
+    - favorites
+    summary: Toggle Favorite
+    description: Toggle favorite status for an entity.
+    operationId: toggle_favorite_api_favorites_toggle_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FavoriteToggleRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Response Toggle Favorite Api Favorites Toggle Post
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/favorites/list:
+  post:
+    tags:
+    - favorites
+    summary: List Favorites
+    description: List user's favorites with entity details.
+    operationId: list_favorites_api_favorites_list_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FavoriteListRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Response List Favorites Api Favorites List Post
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/favorites/count:
+  post:
+    tags:
+    - favorites
+    summary: Count Favorites
+    description: Get count of user's favorites.
+    operationId: count_favorites_api_favorites_count_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FavoriteListRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Response Count Favorites Api Favorites Count Post
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

@@ -1,0 +1,10 @@
+type: object
+properties:
+  data:
+    description: Response data (can be object, array, or null)
+  error:
+    anyOf:
+    - type: string
+    - type: 'null'
+    description: Error message if operation failed
+title: StandardResponse

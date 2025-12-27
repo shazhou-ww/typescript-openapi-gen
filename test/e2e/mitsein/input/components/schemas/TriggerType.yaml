@@ -1,0 +1,6 @@
+type: string
+enum:
+- schedule
+- teams
+title: TriggerType
+description: Trigger type enumeration

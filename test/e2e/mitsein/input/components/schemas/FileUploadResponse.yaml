@@ -1,0 +1,21 @@
+properties:
+  id:
+    type: string
+    title: Id
+  name:
+    type: string
+    title: Name
+  mimeType:
+    type: string
+    title: Mimetype
+  webViewLink:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Webviewlink
+type: object
+required:
+- id
+- name
+- mimeType
+title: FileUploadResponse

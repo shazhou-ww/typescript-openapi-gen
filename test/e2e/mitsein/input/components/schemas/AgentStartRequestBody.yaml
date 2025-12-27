@@ -1,0 +1,74 @@
+type: object
+properties:
+  enable_thinking:
+    anyOf:
+    - type: boolean
+    - type: 'null'
+    title: Enable Thinking
+    default: false
+    description: Enable thinking mode for the agent
+  reasoning_effort:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Reasoning Effort
+    default: low
+    description: Reasoning effort level (low, medium, high)
+    enum:
+    - low
+    - medium
+    - high
+  stream:
+    anyOf:
+    - type: boolean
+    - type: 'null'
+    title: Stream
+    default: true
+    description: Whether to stream responses
+  enable_context_manager:
+    anyOf:
+    - type: boolean
+    - type: 'null'
+    title: Enable Context Manager
+    default: true
+    description: Enable context manager for the agent
+  enable_tracing:
+    anyOf:
+    - type: boolean
+    - type: 'null'
+    title: Enable Tracing
+    default: false
+    description: Enable component-level execution tracing
+  mcp_servers:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Mcp Servers
+    description: JSON string of MCP server configurations
+  role:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Role
+    description: Optional role override for the agent
+  temperature:
+    anyOf:
+    - type: number
+    - type: 'null'
+    title: Temperature
+    description: LLM temperature parameter (0.0-2.0)
+    minimum: 0
+    maximum: 2
+  max_tokens:
+    anyOf:
+    - type: integer
+    - type: 'null'
+    title: Max Tokens
+    description: Maximum number of tokens to generate
+    minimum: 1
+title: AgentStartRequestBody
+description: 'Request body for starting an agent run.
+
+  Note: thread_id is provided as a path parameter.
+
+  '

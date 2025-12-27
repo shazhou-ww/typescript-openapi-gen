@@ -1,0 +1,82 @@
+properties:
+  id:
+    type: string
+    title: Id
+    description: Client-generated UUID for idempotency
+  threadId:
+    type: string
+    title: Threadid
+    description: Thread ID
+  agentRunId:
+    type: string
+    title: Agentrunid
+    description: Agent run ID
+  eventType:
+    type: string
+    title: Eventtype
+    description: Event type
+  eventName:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Eventname
+    description: Event name/description
+  timestamp:
+    type: string
+    title: Timestamp
+    description: ISO timestamp when event occurred
+  payload:
+    anyOf:
+    - additionalProperties: true
+      type: object
+    - type: 'null'
+    title: Payload
+    description: Event-specific payload (truncated if >5KB)
+  url:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Url
+    description: URL for API calls
+  success:
+    anyOf:
+    - type: boolean
+    - type: 'null'
+    title: Success
+    description: Success indicator
+  durationMs:
+    anyOf:
+    - type: number
+    - type: 'null'
+    title: Durationms
+    description: Duration in milliseconds
+  clientTimestamp:
+    anyOf:
+    - type: integer
+    - type: 'null'
+    title: Clienttimestamp
+    description: Client timestamp for dedup
+  messageId:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Messageid
+    description: Message ID for receipt tracking
+  sequenceNumber:
+    anyOf:
+    - type: integer
+    - type: 'null'
+    title: Sequencenumber
+    description: Sequence number
+type: object
+required:
+- id
+- threadId
+- agentRunId
+- eventType
+- timestamp
+title: FrontendEvent
+description: 'Frontend event model for ingestion.
+
+
+  Uses camelCase aliases for frontend compatibility.'

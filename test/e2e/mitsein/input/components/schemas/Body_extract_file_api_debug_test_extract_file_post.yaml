@@ -1,0 +1,10 @@
+properties:
+  file:
+    type: string
+    format: binary
+    title: File
+    description: File to extract content from
+type: object
+required:
+- file
+title: Body_extract_file_api_debug_test_extract_file_post

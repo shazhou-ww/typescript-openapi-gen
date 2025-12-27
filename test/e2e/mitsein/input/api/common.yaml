@@ -1,0 +1,129 @@
+/health:
+  get:
+    summary: Health Check
+    description: 'Health check endpoint for monitoring.
+
+
+      In production, returns minimal information.
+
+      In development/local, returns detailed status.'
+    operationId: health_check_health_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/share/project/get:
+  post:
+    tags:
+    - sharing
+    summary: Share Project Get
+    operationId: share_project_get_api_share_project_get_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetProjectRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/agent/quick-start:
+  post:
+    tags:
+    - quick-start
+    summary: Quick Start
+    description: 'Create a project, thread, message, and start agent in a single atomic
+      operation.
+
+
+      This endpoint reduces the number of round trips required to start an agent conversation
+
+      from 4 separate calls to 1, significantly improving startup latency.'
+    operationId: quick_start_api_agent_quick_start_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/QuickStartRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuickStartResponse'
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/share/thread/get:
+  post:
+    tags:
+    - threads
+    summary: Share Thread Get
+    operationId: share_thread_get_api_share_thread_get_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ThreadGetRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/version:
+  get:
+    summary: Get Version
+    description: Get build version information.
+    operationId: get_version_api_version_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VersionInfo'
+/api/health-check:
+  get:
+    summary: Api Health Check
+    description: Legacy health check endpoint for backward compatibility.
+    operationId: api_health_check_api_health_check_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+  head:
+    summary: Api Health Check
+    description: Legacy health check endpoint for backward compatibility.
+    operationId: api_health_check_api_health_check_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}

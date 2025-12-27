@@ -1,0 +1,26 @@
+properties:
+  message:
+    type: string
+    title: Message
+  stream:
+    type: boolean
+    title: Stream
+    default: true
+  include_context:
+    type: boolean
+    title: Include Context
+    default: true
+  page_context:
+    type: string
+    title: Page Context
+    default: dashboard
+  thread_id:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Thread Id
+type: object
+required:
+- message
+title: ChatRequest
+description: Request model for AI chat.

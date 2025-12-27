@@ -1,0 +1,25 @@
+properties:
+  name:
+    type: string
+    title: Name
+    description: File name
+  content:
+    type: string
+    title: Content
+    description: Base64-encoded file content
+  mimeType:
+    type: string
+    title: Mimetype
+    description: MIME type of the file
+  folder_id:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Folder Id
+    description: Optional folder ID to upload to
+type: object
+required:
+- name
+- content
+- mimeType
+title: FileUploadRequest

@@ -1,0 +1,57 @@
+/api/auth/google/initiate:
+  post:
+    tags:
+    - auth
+    summary: Initiate Google Auth
+    description: 'Initiate Google OAuth flow.
+
+
+      Returns authorization URL for frontend to redirect to.'
+    operationId: initiate_google_auth_api_auth_google_initiate_post
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoogleAuthInitiateResponse'
+/api/auth/google/callback:
+  get:
+    tags:
+    - auth
+    summary: Handle Google Callback
+    description: 'Handle Google OAuth callback.
+
+
+      Exchange authorization code for access token and get user info.'
+    operationId: handle_google_callback_api_auth_google_callback_get
+    parameters:
+    - name: code
+      in: query
+      required: true
+      schema:
+        type: string
+        description: Authorization code from Google
+        title: Code
+      description: Authorization code from Google
+    - name: state
+      in: query
+      required: true
+      schema:
+        type: string
+        description: State parameter for CSRF protection
+        title: State
+      description: State parameter for CSRF protection
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoogleAuthCallbackResponse'
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

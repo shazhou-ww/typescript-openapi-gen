@@ -1,0 +1,7 @@
+properties:
+  thread_id:
+    type: string
+    title: Thread Id
+    default: ''
+type: object
+title: ListMessagesRequest

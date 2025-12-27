@@ -1,0 +1,23 @@
+properties:
+  thread_id:
+    type: string
+    title: Thread Id
+    default: ''
+  type:
+    type: string
+    title: Type
+    default: ''
+  is_llm_message:
+    type: boolean
+    title: Is Llm Message
+    default: false
+  chart_type:
+    type: string
+    title: Chart Type
+    default: ''
+  format_type:
+    type: string
+    title: Format Type
+    default: excel
+type: object
+title: AddChartMessageRequest

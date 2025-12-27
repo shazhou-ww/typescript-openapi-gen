@@ -1,0 +1,9 @@
+properties:
+  project_ids:
+    items:
+      type: string
+    type: array
+    title: Project Ids
+    default: []
+type: object
+title: BulkDeleteRequest

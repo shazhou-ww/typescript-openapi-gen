@@ -1,0 +1,11 @@
+properties:
+  offset:
+    type: integer
+    title: Offset
+    default: 0
+  limit:
+    type: integer
+    title: Limit
+    default: 20
+type: object
+title: ThreadListRequest

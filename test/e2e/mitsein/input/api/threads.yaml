@@ -1,0 +1,153 @@
+/api/thread/{thread_id}/agent/start:
+  post:
+    tags:
+    - agent-runs
+    summary: Start Agent
+    description: Start an agent for a specific thread in the background.
+    operationId: start_agent_api_thread__thread_id__agent_start_post
+    parameters:
+    - name: thread_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Thread Id
+    requestBody:
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            $ref: '#/components/schemas/AgentStartRequestBody'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/thread/{thread_id}/agent-runs:
+  post:
+    tags:
+    - agent-runs
+    summary: Get Agent Runs
+    description: Get all agent runs for a thread.
+    operationId: get_agent_runs_api_thread__thread_id__agent_runs_post
+    parameters:
+    - name: thread_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Thread Id
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/thread/list:
+  post:
+    tags:
+    - threads
+    summary: Thread List
+    operationId: thread_list_api_thread_list_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ThreadListRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/thread/search:
+  post:
+    tags:
+    - threads
+    summary: Thread Search
+    operationId: thread_search_api_thread_search_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ThreadSearchRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/thread/get:
+  post:
+    tags:
+    - threads
+    summary: Thread Get
+    operationId: thread_get_api_thread_get_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ThreadGetRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/thread/create:
+  post:
+    tags:
+    - threads
+    summary: Thread Create
+    operationId: thread_create_api_thread_create_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ThreadCreateRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

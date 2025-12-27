@@ -1,0 +1,24 @@
+properties:
+  name:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Name
+  description:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Description
+  config:
+    anyOf:
+    - additionalProperties: true
+      type: object
+    - type: 'null'
+    title: Config
+  is_active:
+    anyOf:
+    - type: boolean
+    - type: 'null'
+    title: Is Active
+type: object
+title: UpdateTriggerRequest

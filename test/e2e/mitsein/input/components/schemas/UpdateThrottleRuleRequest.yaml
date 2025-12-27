@@ -1,0 +1,13 @@
+properties:
+  user_id:
+    type: string
+    title: User Id
+  throttle_rule:
+    additionalProperties: true
+    type: object
+    title: Throttle Rule
+type: object
+required:
+- user_id
+- throttle_rule
+title: UpdateThrottleRuleRequest

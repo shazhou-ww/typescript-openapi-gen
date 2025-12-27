@@ -1,0 +1,10 @@
+properties:
+  logs:
+    items:
+      $ref: '#/components/schemas/LogEntry'
+    type: array
+    title: Logs
+type: object
+required:
+- logs
+title: FrontendLogsRequest

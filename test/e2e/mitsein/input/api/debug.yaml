@@ -1,0 +1,860 @@
+/api/debug/environment:
+  get:
+    tags:
+    - debug
+    summary: Get Environment
+    description: 'The environment variable keys are sourced from the `backend.env`
+      section
+
+      of /workspaces/mitsein-agent/deployment/kubernetes/configs/common/aks.yaml.
+
+      The value is the actual environment variable value, or ''n/a'' if not set.'
+    operationId: get_environment_api_debug_environment_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/debug/frontend-logs:
+  post:
+    tags:
+    - debug
+    summary: Receive Frontend Logs
+    description: Receive frontend logs and print them to the backend logger with [Frontend]
+      tag.
+    operationId: receive_frontend_logs_api_debug_frontend_logs_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FrontendLogsRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/debug/config/llm:
+  get:
+    tags:
+    - debug
+    summary: Get Llm Config
+    description: "Get LLM configuration and parameter limits.\n\nThis endpoint returns:\n\
+      - Parameter limits (temperature, max_tokens, etc.)\n- Available models\n- Default\
+      \ values\n\nWARNING: This endpoint is for development/testing only.\n\nReturns:\n\
+      \    LLMConfigResponse: LLM configuration details"
+    operationId: get_llm_config_api_debug_config_llm_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LLMConfigResponse'
+/debug:
+  get:
+    summary: Debug Endpoint
+    description: API endpoint returning JSON metrics.
+    operationId: debug_endpoint_debug_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/debug/chat:
+  post:
+    summary: Chat Endpoint
+    description: AI chat endpoint.
+    operationId: chat_endpoint_debug_chat_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ChatRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/debug/chat/suggestions:
+  get:
+    summary: Get Suggestions
+    description: Get AI suggestions.
+    operationId: get_suggestions_debug_chat_suggestions_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/debug/errors:
+  get:
+    summary: Get Error Details
+    description: Get detailed error information for debugging.
+    operationId: get_error_details_debug_errors_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/debug/threads:
+  get:
+    summary: Get Threads
+    description: Get all active threads.
+    operationId: get_threads_debug_threads_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/debug/threads/register:
+  post:
+    summary: Register Thread
+    description: Manually register a thread (for frontend agents).
+    operationId: register_thread_debug_threads_register_post
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/debug/timeline/{thread_id}:
+  get:
+    summary: Get Timeline
+    description: 'Get unified timeline for a thread (JSON only).
+
+
+      Returns combined frontend and backend events for the thread.'
+    operationId: get_timeline_debug_timeline__thread_id__get
+    parameters:
+    - name: thread_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Thread Id
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/debug/frontend-logs:
+  post:
+    summary: Receive Frontend Logs
+    description: Receive frontend logs from development mode logger.
+    operationId: receive_frontend_logs_debug_frontend_logs_post
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/debug/frontend-telemetry:
+  post:
+    summary: Receive Frontend Telemetry
+    description: Receive frontend telemetry events and track them as thread events.
+    operationId: receive_frontend_telemetry_debug_frontend_telemetry_post
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+  get:
+    summary: Get Frontend Telemetry
+    description: Get frontend telemetry data.
+    operationId: get_frontend_telemetry_debug_frontend_telemetry_get
+    parameters:
+    - name: thread_id
+      in: query
+      required: false
+      schema:
+        type: string
+        title: Thread Id
+    - name: minutes
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 5
+        title: Minutes
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/debug/critical-issues:
+  get:
+    summary: Get Critical Issues Endpoint
+    description: Get current critical system issues.
+    operationId: get_critical_issues_endpoint_debug_critical_issues_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/debug/events:
+  post:
+    summary: Ingest Frontend Events
+    description: 'Ingest frontend events with event-type dispatch.
+
+
+      Handles two types of events:
+
+      1. message_received - Routes to record_message_received for trace updates
+
+      2. Other events - Routes to record_frontend_event for general logging
+
+
+      Rate limited to 200 requests/minute per IP.
+
+      Requires: User must own all agent_run_ids in the batch.'
+    operationId: ingest_frontend_events_debug_events_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EventBatchRequest'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/debug/agent-runs/{agent_run_id}/traces:
+  get:
+    summary: Get Agent Run Traces
+    description: "Get message traces for an agent run.\n\nArgs:\n    agent_run_id:\
+      \ The agent run to query\n    include_payloads: Whether to enrich with Redis\
+      \ payloads.\n        If agent run is older than payload TTL (24h), payloads\n\
+      \        will be marked as expired."
+    operationId: get_agent_run_traces_debug_agent_runs__agent_run_id__traces_get
+    parameters:
+    - name: agent_run_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Agent Run Id
+    - name: include_payloads
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: false
+        title: Include Payloads
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/debug/agent-runs/{agent_run_id}/events:
+  get:
+    summary: Get Agent Run Events
+    description: Get frontend events for an agent run.
+    operationId: get_agent_run_events_debug_agent_runs__agent_run_id__events_get
+    parameters:
+    - name: agent_run_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Agent Run Id
+    - name: event_type
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Event Type
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/debug/agent-runs/{agent_run_id}/analysis:
+  get:
+    summary: Get Agent Run Analysis
+    description: Get cached analysis for an agent run.
+    operationId: get_agent_run_analysis_debug_agent_runs__agent_run_id__analysis_get
+    parameters:
+    - name: agent_run_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Agent Run Id
+    - name: analysis_type
+      in: query
+      required: false
+      schema:
+        type: string
+        default: comprehensive
+        title: Analysis Type
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/debug/threads/{thread_id}/agent-runs:
+  get:
+    summary: Get Thread Agent Runs
+    description: Get agent runs for a thread (for debug UI listing).
+    operationId: get_thread_agent_runs_debug_threads__thread_id__agent_runs_get
+    parameters:
+    - name: thread_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Thread Id
+    - name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 50
+        title: Limit
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/debug/threads/{thread_id}/traces:
+  get:
+    summary: Get Thread Traces
+    description: Get traces for all agent runs in a thread.
+    operationId: get_thread_traces_debug_threads__thread_id__traces_get
+    parameters:
+    - name: thread_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Thread Id
+    - name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+        title: Limit
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/debug/threads/{thread_id}/events:
+  get:
+    summary: Get Thread Events
+    description: Get events for all agent runs in a thread.
+    operationId: get_thread_events_debug_threads__thread_id__events_get
+    parameters:
+    - name: thread_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Thread Id
+    - name: event_type
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: string
+        - type: 'null'
+        title: Event Type
+    - name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+        title: Limit
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/debug/test/agent-run:
+  post:
+    tags:
+    - debug
+    - test
+    summary: Create Local Test Agent Run
+    description: 'Create an agent run for local testing without authentication.
+
+
+      This endpoint is for local testing only and bypasses authentication.
+
+      Use with curl:
+
+      curl -X POST http://localhost:8000/api/test/agent-run       -H "Content-Type:
+      application/json"       -d ''{"account_id": "your-account-id", "prompt": "Your
+      prompt here"}'''
+    operationId: create_local_test_agent_run_api_debug_test_agent_run_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Body_create_local_test_agent_run_api_debug_test_agent_run_post'
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/debug/test/extractors:
+  get:
+    tags:
+    - debug
+    - test
+    summary: List Extractors
+    description: 'List all available file extractors.
+
+
+      Returns information about each registered extractor including
+
+      its name, priority, and availability status.'
+    operationId: list_extractors_api_debug_test_extractors_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/debug/test/extract-file:
+  post:
+    tags:
+    - debug
+    - test
+    summary: Extract File
+    description: 'Extract content from an uploaded file using the appropriate extractor.
+
+
+      This endpoint is for testing file extraction locally.
+
+      Upload a file and see the extracted content.
+
+
+      Use with curl:
+
+      curl -X POST http://localhost:8000/api/test/extract-file       -F "file=@document.docx"'
+    operationId: extract_file_api_debug_test_extract_file_post
+    parameters:
+    - name: summarize
+      in: query
+      required: false
+      schema:
+        type: boolean
+        default: false
+        title: Summarize
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/Body_extract_file_api_debug_test_extract_file_post'
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/debug/contracts/status:
+  get:
+    tags:
+    - debug
+    - contracts
+    summary: Get Contract Validation Status
+    description: "Get current contract validation status.\n\nReturns:\n    Contract\
+      \ validation status including:\n    - enabled: Whether validation is currently\
+      \ active\n    - runtime_toggle: The runtime toggle state\n    - env_mode: Current\
+      \ environment mode\n    - last_toggled_at: When the toggle was last changed"
+    operationId: get_contract_validation_status_api_debug_contracts_status_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/debug/contracts/schemas:
+  get:
+    tags:
+    - debug
+    - contracts
+    summary: Get Contract Schemas
+    description: "Get list of all available contract schemas.\n\nReturns:\n    List\
+      \ of schemas grouped by category (api, entities, client-tools)"
+    operationId: get_contract_schemas_api_debug_contracts_schemas_get
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+/api/debug/contracts/schemas/{schema_path}:
+  get:
+    tags:
+    - debug
+    - contracts
+    summary: Get Schema Content
+    description: "Get the content of a specific schema file.\n\nArgs:\n    schema_path:\
+      \ Path to the schema file relative to contracts directory\n\nReturns:\n    Schema\
+      \ content as JSON"
+    operationId: get_schema_content_api_debug_contracts_schemas__schema_path__get
+    parameters:
+    - name: schema_path
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Schema Path
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/debug/contracts/toggle:
+  post:
+    tags:
+    - debug
+    - contracts
+    summary: Toggle Contract Validation
+    description: "Toggle contract validation on/off.\n\nOnly works in non-production\
+      \ environments.\n\nArgs:\n    toggled_by: Identifier of who is toggling (for\
+      \ audit)\n\nReturns:\n    New contract validation status"
+    operationId: toggle_contract_validation_api_debug_contracts_toggle_post
+    parameters:
+    - name: toggled_by
+      in: query
+      required: false
+      schema:
+        type: string
+        default: admin
+        title: Toggled By
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/debug/contracts/enable:
+  post:
+    tags:
+    - debug
+    - contracts
+    summary: Enable Contract Validation
+    description: 'Enable contract validation.
+
+
+      Only works in non-production environments.'
+    operationId: enable_contract_validation_api_debug_contracts_enable_post
+    parameters:
+    - name: toggled_by
+      in: query
+      required: false
+      schema:
+        type: string
+        default: admin
+        title: Toggled By
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/debug/contracts/disable:
+  post:
+    tags:
+    - debug
+    - contracts
+    summary: Disable Contract Validation
+    description: 'Disable contract validation.
+
+
+      Only works in non-production environments.'
+    operationId: disable_contract_validation_api_debug_contracts_disable_post
+    parameters:
+    - name: toggled_by
+      in: query
+      required: false
+      schema:
+        type: string
+        default: admin
+        title: Toggled By
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/debug/contracts/validate/tool-call:
+  post:
+    tags:
+    - debug
+    - contracts
+    summary: Validate Tool Call Message
+    description: "Validate a tool call message against the contract schema.\n\nUseful\
+      \ for testing if a message conforms to the contract.\n\nArgs:\n    message:\
+      \ The tool call message to validate\n\nReturns:\n    Validation result with\
+      \ is_valid and error if any"
+    operationId: validate_tool_call_message_api_debug_contracts_validate_tool_call_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            additionalProperties: true
+            type: object
+            title: Message
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/debug/contracts/validate/tool-result:
+  post:
+    tags:
+    - debug
+    - contracts
+    summary: Validate Tool Result Message
+    description: "Validate a tool result message against the contract schema.\n\n\
+      Useful for testing if a message conforms to the contract.\n\nArgs:\n    message:\
+      \ The tool result message to validate\n\nReturns:\n    Validation result with\
+      \ is_valid and error if any"
+    operationId: validate_tool_result_message_api_debug_contracts_validate_tool_result_post
+    requestBody:
+      content:
+        application/json:
+          schema:
+            additionalProperties: true
+            type: object
+            title: Message
+      required: true
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/debug/contracts/validate/api/{domain}/{operation}:
+  post:
+    tags:
+    - debug
+    - contracts
+    summary: Validate Api Response
+    description: "Validate any API response against its contract schema.\n\nArgs:\n\
+      \    domain: The API domain (threads, messages, runs)\n    operation: The operation\
+      \ (list, create, get, start, stop, etc.)\n    data: The response data to validate\n\
+      \nReturns:\n    Validation result with is_valid and error if any\n\nExample:\n\
+      \    POST /api/debug/contracts/validate/api/threads/list\n    {\"threads\":\
+      \ [...], \"has_more\": false, \"error\": null}"
+    operationId: validate_api_response_api_debug_contracts_validate_api__domain___operation__post
+    parameters:
+    - name: domain
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Domain
+    - name: operation
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Operation
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: true
+            title: Data
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/debug/contracts/validate/entity/{entity_type}:
+  post:
+    tags:
+    - debug
+    - contracts
+    summary: Validate Entity
+    description: "Validate an entity against its contract schema.\n\nArgs:\n    entity_type:\
+      \ The entity type (thread, message, project, agent-run)\n    data: The entity\
+      \ data to validate\n\nReturns:\n    Validation result with is_valid and error\
+      \ if any\n\nExample:\n    POST /api/debug/contracts/validate/entity/thread\n\
+      \    {\"thread_id\": \"...\", \"is_public\": false, ...}"
+    operationId: validate_entity_api_debug_contracts_validate_entity__entity_type__post
+    parameters:
+    - name: entity_type
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Entity Type
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: true
+            title: Data
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

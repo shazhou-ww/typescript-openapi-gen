@@ -1,0 +1,13 @@
+properties:
+  skill_name:
+    type: string
+    title: Skill Name
+  enabled:
+    type: boolean
+    title: Enabled
+type: object
+required:
+- skill_name
+- enabled
+title: ToggleSkillRequest
+description: Request model for toggling skill status.

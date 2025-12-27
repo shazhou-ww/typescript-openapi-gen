@@ -78,11 +78,15 @@ function generateSchemaFile(
 }
 
 function collectSchemaRefs(
-  schema: SchemaObject | ReferenceObject,
+  schema: SchemaObject | ReferenceObject | undefined,
   allSchemas: Record<string, SchemaObject | ReferenceObject>,
   visited: Set<string> = new Set(),
 ): Set<string> {
   const refs = new Set<string>()
+
+  if (!schema) {
+    return refs
+  }
 
   if (isReferenceObject(schema)) {
     const refName = getRefName(schema.$ref)

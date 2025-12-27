@@ -1,0 +1,9 @@
+properties:
+  approval_id:
+    type: string
+    title: Approval Id
+    description: UUID of the approved operation
+type: object
+required:
+- approval_id
+title: ExecuteWriteRequest

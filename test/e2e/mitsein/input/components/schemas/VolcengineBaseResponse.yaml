@@ -1,0 +1,14 @@
+properties:
+  success:
+    type: boolean
+    title: Success
+  error:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Error
+type: object
+required:
+- success
+title: VolcengineBaseResponse
+description: Base response model for Volcengine API operations.

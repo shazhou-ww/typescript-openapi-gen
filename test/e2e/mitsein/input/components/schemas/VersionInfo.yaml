@@ -1,0 +1,17 @@
+properties:
+  commit_hash:
+    type: string
+    title: Commit Hash
+  branch_name:
+    type: string
+    title: Branch Name
+  build_time:
+    type: string
+    title: Build Time
+type: object
+required:
+- commit_hash
+- branch_name
+- build_time
+title: VersionInfo
+description: Version information model

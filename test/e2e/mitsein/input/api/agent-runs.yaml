@@ -1,0 +1,79 @@
+/api/agent-run/{agent_run_id}/stop:
+  post:
+    tags:
+    - agent-runs
+    summary: Stop Agent
+    description: Stop a running agent.
+    operationId: stop_agent_api_agent_run__agent_run_id__stop_post
+    parameters:
+    - name: agent_run_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Agent Run Id
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/agent-run/{agent_run_id}:
+  post:
+    tags:
+    - agent-runs
+    summary: Get Agent Run
+    description: Get agent run status and responses.
+    operationId: get_agent_run_api_agent_run__agent_run_id__post
+    parameters:
+    - name: agent_run_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Agent Run Id
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'
+/api/agent-run/{agent_run_id}/stream:
+  get:
+    tags:
+    - agent-runs
+    summary: Stream Agent Run
+    description: Stream the responses of an agent run from Redis storage or reconnect
+      to ongoing run.
+    operationId: stream_agent_run_api_agent_run__agent_run_id__stream_get
+    parameters:
+    - name: agent_run_id
+      in: path
+      required: true
+      schema:
+        type: string
+        title: Agent Run Id
+    responses:
+      '200':
+        description: Successful Response
+        content:
+          application/json:
+            schema: {}
+      '422':
+        description: Validation Error
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPValidationError'

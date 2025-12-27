@@ -1,0 +1,20 @@
+properties:
+  success:
+    type: boolean
+    title: Success
+  error:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Error
+  data:
+    items:
+      $ref: '#/components/schemas/VolcengineTrainingStatus'
+    type: array
+    title: Data
+    default: []
+type: object
+required:
+- success
+title: VolcengineTrainingListResponse
+description: Response model for batch training status query.

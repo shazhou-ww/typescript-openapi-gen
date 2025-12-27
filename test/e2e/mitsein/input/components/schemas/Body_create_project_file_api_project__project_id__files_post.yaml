@@ -1,0 +1,13 @@
+properties:
+  path:
+    type: string
+    title: Path
+  file:
+    type: string
+    format: binary
+    title: File
+type: object
+required:
+- path
+- file
+title: Body_create_project_file_api_project__project_id__files_post

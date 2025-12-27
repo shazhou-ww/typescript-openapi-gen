@@ -1,0 +1,9 @@
+type: object
+required:
+- thread_id
+properties:
+  thread_id:
+    type: string
+    title: Thread Id
+    description: Thread identifier (UUID)
+title: ThreadIdRequest

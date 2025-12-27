@@ -1,0 +1,11 @@
+properties:
+  thread_id:
+    type: string
+    title: Thread Id
+    default: ''
+  limit:
+    type: integer
+    title: Limit
+    default: 3
+type: object
+title: GenerateSuggestionsRequest

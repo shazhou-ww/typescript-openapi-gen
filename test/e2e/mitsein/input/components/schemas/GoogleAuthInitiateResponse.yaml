@@ -1,0 +1,13 @@
+properties:
+  authorization_url:
+    type: string
+    title: Authorization Url
+  state:
+    type: string
+    title: State
+type: object
+required:
+- authorization_url
+- state
+title: GoogleAuthInitiateResponse
+description: Response for initiating Google OAuth.

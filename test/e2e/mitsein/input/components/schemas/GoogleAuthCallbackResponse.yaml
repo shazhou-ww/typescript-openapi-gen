@@ -1,0 +1,35 @@
+properties:
+  success:
+    type: boolean
+    title: Success
+  user_info:
+    anyOf:
+    - additionalProperties: true
+      type: object
+    - type: 'null'
+    title: User Info
+  access_token:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Access Token
+  id_token:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Id Token
+  expires_in:
+    anyOf:
+    - type: integer
+    - type: 'null'
+    title: Expires In
+  error:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Error
+type: object
+required:
+- success
+title: GoogleAuthCallbackResponse
+description: Response for Google OAuth callback.

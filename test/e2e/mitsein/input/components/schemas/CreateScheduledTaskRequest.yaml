@@ -1,0 +1,8 @@
+properties:
+  prompt:
+    type: string
+    title: Prompt
+type: object
+required:
+- prompt
+title: CreateScheduledTaskRequest

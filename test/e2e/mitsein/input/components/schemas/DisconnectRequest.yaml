@@ -1,0 +1,9 @@
+properties:
+  authorization_id:
+    type: string
+    title: Authorization Id
+    description: UUID of the connector authorization to revoke
+type: object
+required:
+- authorization_id
+title: DisconnectRequest

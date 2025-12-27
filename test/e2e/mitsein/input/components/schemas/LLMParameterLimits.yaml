@@ -1,0 +1,66 @@
+properties:
+  temperature_min:
+    type: number
+    title: Temperature Min
+    default: 0
+  temperature_max:
+    type: number
+    title: Temperature Max
+    default: 1
+  temperature_default:
+    type: number
+    title: Temperature Default
+    default: 0
+  max_tokens_min:
+    type: integer
+    title: Max Tokens Min
+    default: 1
+  max_tokens_max:
+    type: integer
+    title: Max Tokens Max
+    default: 128000
+  max_tokens_default:
+    type: integer
+    title: Max Tokens Default
+    default: 32000
+  reasoning_efforts:
+    items:
+      type: string
+    type: array
+    title: Reasoning Efforts
+    default:
+    - low
+    - medium
+    - high
+  reasoning_effort_default:
+    type: string
+    title: Reasoning Effort Default
+    default: low
+  enable_context_manager_default:
+    type: boolean
+    title: Enable Context Manager Default
+    default: true
+  enable_thinking_default:
+    type: boolean
+    title: Enable Thinking Default
+    default: false
+  max_iterations_min:
+    type: integer
+    title: Max Iterations Min
+    default: 1
+  max_iterations_max:
+    type: integer
+    title: Max Iterations Max
+    default: 500
+  max_iterations_default:
+    type: integer
+    title: Max Iterations Default
+    default: 150
+type: object
+title: LLMParameterLimits
+description: 'LLM parameter limits and defaults.
+
+
+  All values are sourced from mitsein_base_core.config.llm_defaults.LLMDefaults
+
+  to ensure consistency across the codebase.'

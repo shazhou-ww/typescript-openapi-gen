@@ -1,0 +1,21 @@
+properties:
+  name:
+    type: string
+    title: Name
+  label:
+    type: string
+    title: Label
+  is_default:
+    type: boolean
+    title: Is Default
+    default: false
+  is_fallback:
+    type: boolean
+    title: Is Fallback
+    default: false
+type: object
+required:
+- name
+- label
+title: ModelInfo
+description: Information about an available model.

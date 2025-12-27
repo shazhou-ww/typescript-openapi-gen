@@ -1,0 +1,22 @@
+properties:
+  video_title:
+    anyOf:
+    - type: string
+    - type: 'null'
+    title: Video Title
+    description: Optional video title
+  image_file:
+    type: string
+    format: binary
+    title: Image File
+    description: Avatar image file (PNG, JPG, JPEG, WebP)
+  audio_file:
+    type: string
+    format: binary
+    title: Audio File
+    description: Audio file (MP3, WAV)
+type: object
+required:
+- image_file
+- audio_file
+title: Body_generate_video_from_assets_api_ai_presenter_generate_video_post

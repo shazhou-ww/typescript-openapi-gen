@@ -1,0 +1,13 @@
+properties:
+  file_content:
+    type: string
+    format: binary
+    title: File Content
+  filename:
+    type: string
+    title: Filename
+type: object
+required:
+- file_content
+- filename
+title: Body_export_to_onedrive_api_project__project_id__onedrive_export_post

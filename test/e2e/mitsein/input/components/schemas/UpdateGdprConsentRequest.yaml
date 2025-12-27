@@ -1,0 +1,8 @@
+properties:
+  gdpr_consent:
+    type: boolean
+    title: Gdpr Consent
+type: object
+required:
+- gdpr_consent
+title: UpdateGdprConsentRequest

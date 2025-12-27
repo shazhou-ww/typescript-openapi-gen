@@ -1,0 +1,16 @@
+properties:
+  file:
+    type: string
+    format: binary
+    title: File
+  file_path:
+    type: string
+    title: File Path
+  thread_id:
+    type: string
+    title: Thread Id
+type: object
+required:
+- file
+- file_path
+title: Body_upload_project_file_api_projects__project_id__files_upload_post

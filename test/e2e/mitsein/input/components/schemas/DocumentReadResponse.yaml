@@ -1,0 +1,20 @@
+properties:
+  document_id:
+    type: string
+    title: Document Id
+  title:
+    type: string
+    title: Title
+  content:
+    type: string
+    title: Content
+  metadata:
+    additionalProperties: true
+    type: object
+    title: Metadata
+type: object
+required:
+- document_id
+- title
+- content
+title: DocumentReadResponse
