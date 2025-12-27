@@ -26,26 +26,38 @@ export function generateMethodsFile(
   lines.push('')
 
   // Import types and schemas
-  lines.push("import type {")
   const typeImports: string[] = []
   const schemaImports: string[] = []
   for (const [method, operation] of info.methods) {
     const methodName = capitalize(method)
     const isSSE = isSSEOperation(operation)
     const outputTypeName = getOutputTypeName(methodName, isSSE)
-    typeImports.push(`  ${outputTypeName}`)
-    schemaImports.push(`  ${methodName}InputSchema`)
+    typeImports.push(outputTypeName)
+    schemaImports.push(`${methodName}InputSchema`)
     const bodySchema = getBodySchema(operation)
     if (bodySchema) {
-      schemaImports.push(`  ${methodName}BodySchema`)
+      schemaImports.push(`${methodName}BodySchema`)
     }
   }
-  lines.push(typeImports.join(',\n'))
-  lines.push("} from './types.gen'")
+  
+  // Format type imports - single line if only one, multi-line if multiple
+  if (typeImports.length === 1) {
+    lines.push(`import type { ${typeImports[0]} } from './types.gen'`)
+  } else {
+    lines.push("import type {")
+    lines.push(typeImports.map(t => `  ${t}`).join(',\n'))
+    lines.push("} from './types.gen'")
+  }
   lines.push('')
-  lines.push('import {')
-  lines.push(schemaImports.join(',\n'))
-  lines.push("} from './types.gen'")
+  
+  // Format schema imports - single line if only one, multi-line if multiple
+  if (schemaImports.length === 1) {
+    lines.push(`import { ${schemaImports[0]} } from './types.gen'`)
+  } else {
+    lines.push('import {')
+    lines.push(schemaImports.map(s => `  ${s}`).join(',\n'))
+    lines.push("} from './types.gen'")
+  }
   lines.push('')
 
   // Generate wrapper functions
