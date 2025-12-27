@@ -332,8 +332,8 @@ async function resolveComponentsRefs(
             resolved[sectionKey][name] = value
           }
         } else if (value && typeof value === 'object' && !Array.isArray(value)) {
-          // Recursively process nested objects
-          resolved[sectionKey][name] = await resolveComponentsRefs(value, baseDir, mainDoc)
+          // Recursively process nested objects, converting internal refs to type names
+          resolved[sectionKey][name] = await resolveInternalRefs(value, mainDoc, baseDir)
         } else {
           // Primitive values or arrays - just copy
           resolved[sectionKey][name] = value
