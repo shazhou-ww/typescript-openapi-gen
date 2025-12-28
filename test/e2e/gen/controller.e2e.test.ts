@@ -2,8 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parseOpenAPIFile } from '../../../src/lib/openapi-parser'
-import { ControllerGenerator } from '../../../src/lib/controller-generator/index'
+import { runCommand } from './cli-helper'
 
 // Get all test case directories (directories with input/expected subdirs)
 function getTestCases(e2eDir: string): string[] {
@@ -156,13 +155,16 @@ describe('Controller Generator E2E Tests', () => {
           throw new Error(`No OpenAPI file found in ${inputDir}`)
         }
 
-        // Parse and generate
+        // Call CLI command to generate controllers
         const openapiPath = path.join(inputDir, openapiFile)
-        const openApiDoc = await parseOpenAPIFile(openapiPath)
-        const generator = new ControllerGenerator(openApiDoc, tempOutputDir, {
-          prettierConfig,
-        })
-        await generator.generate()
+        const flags: Record<string, any> = {
+          outputDir: tempOutputDir,
+        }
+        if (prettierConfig) {
+          flags.prettier = prettierConfig
+        }
+
+        await runCommand('gen controller', [openapiPath], flags)
       })
 
       afterAll(() => {

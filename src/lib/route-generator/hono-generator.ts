@@ -44,7 +44,9 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
     lines.push('export function decorate<T extends Hono>(app: T): T {')
 
     for (const route of routes) {
-      lines.push(this.generateRoute(route))
+      const routeLine = this.generateRoute(route)
+      // Add indentation for routes inside the function
+      lines.push('  ' + routeLine)
       this.result.routesGenerated++
     }
 
@@ -58,7 +60,7 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
   }
 
   protected generateRoute(route: FlatRoute): string {
-    const controllerPath = route.controllerImportPath.join('.')
+    const controllerPath = this.buildControllerPath(route.controllerImportPath)
     const handlerCall = `${controllerPath}.${route.handlerName}`
 
     const honoPath = this.convertPath(route.path)
@@ -155,6 +157,13 @@ export class HonoRouteGenerator extends BaseRouteGenerator {
   protected convertPath(routePath: string): string {
     // Hono uses :paramName format
     return routePath.replace(/\{([^}]+)\}/g, ':$1')
+  }
+
+  private buildControllerPath(importPath: string[]): string {
+    if (importPath.length === 0) return ''
+    // Convert all segments to valid JavaScript identifiers
+    const validSegments = importPath.map(segment => segment.replace(/[^a-zA-Z0-9_$]/g, '_'))
+    return validSegments.join('.')
   }
 }
 

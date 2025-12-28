@@ -2,13 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parseOpenAPIFile } from '../../../src/lib/openapi-parser'
-import {
-  ElysiaRouteGenerator,
-  ExpressRouteGenerator,
-  FastifyRouteGenerator,
-  HonoRouteGenerator,
-} from '../../../src/lib/route-generator/index'
+import { runCommand } from './cli-helper'
 
 // Read file content with normalized line endings
 function readFileNormalized(filePath: string): string {
@@ -111,22 +105,22 @@ function getTestCases(): string[] {
 const frameworks = [
   {
     name: 'elysia',
-    generator: ElysiaRouteGenerator,
+    command: 'gen router elysia',
     routeFile: 'elysia-router.gen.ts',
   },
   {
     name: 'express',
-    generator: ExpressRouteGenerator,
+    command: 'gen router express',
     routeFile: 'express-router.gen.ts',
   },
   {
     name: 'fastify',
-    generator: FastifyRouteGenerator,
+    command: 'gen router fastify',
     routeFile: 'fastify-router.gen.ts',
   },
   {
     name: 'hono',
-    generator: HonoRouteGenerator,
+    command: 'gen router hono',
     routeFile: 'hono-router.gen.ts',
   },
 ] as const
@@ -144,12 +138,14 @@ describe('Route Generator E2E Tests (All Frameworks)', () => {
         let outputFilePath: string
 
         beforeAll(async () => {
-          // Create temp directory in system temp folder
-          const os = await import('node:os')
+          // Create temp directory in project folder
+          const projectRoot = path.resolve(e2eDir, '../../')
+          const tmpTestDir = path.join(projectRoot, '.tmp-test')
+          fs.mkdirSync(tmpTestDir, { recursive: true })
           tempOutputDir = fs.mkdtempSync(
             path.join(
-              os.tmpdir(),
-              `typescript-openapi-gen-route-${framework.name}-${testCase}-`,
+              tmpTestDir,
+              `route-${framework.name}-${testCase}-`,
             ),
           )
 
@@ -171,18 +167,20 @@ describe('Route Generator E2E Tests (All Frameworks)', () => {
             recursive: true,
           })
 
-          // Parse and generate routes
+          // Call CLI command to generate routes
           const openapiPath = path.join(inputDir, openapiFile)
           outputFilePath = path.join(tempOutputDir, framework.routeFile)
 
-          const openApiDoc = await parseOpenAPIFile(openapiPath)
-          const generator = new framework.generator(
-            openApiDoc,
-            tempControllerDir,
-            outputFilePath,
-            { prettierConfig },
-          )
-          generator.generate()
+          const flags: Record<string, any> = {
+            outputDir: tempOutputDir,
+            controllerFolder: 'controller',
+            routerFile: framework.routeFile,
+          }
+          if (prettierConfig) {
+            flags.prettier = prettierConfig
+          }
+
+          await runCommand(framework.command, [openapiPath], flags)
         })
 
         afterAll(() => {

@@ -70,7 +70,10 @@ export abstract class BaseRouteGenerator {
     const modules = new Set<string>()
     for (const route of routes) {
       if (route.controllerImportPath.length > 0) {
-        modules.add(route.controllerImportPath[0])
+        // Convert to valid JavaScript identifier (same as controller generator)
+        const originalName = route.controllerImportPath[0]
+        const fsName = originalName.replace(/[^a-zA-Z0-9_$]/g, '_')
+        modules.add(fsName)
       }
     }
     return Array.from(modules).sort()

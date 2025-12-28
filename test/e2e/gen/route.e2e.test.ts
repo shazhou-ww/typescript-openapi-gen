@@ -2,9 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parseOpenAPIFile } from '../../../src/lib/openapi-parser'
-import { ElysiaRouteGenerator } from '../../../src/lib/route-generator/index'
-import { formatFileWithPrettier } from '../../../src/lib/shared/formatter'
+import { runCommand } from './cli-helper'
 
 // This test file is kept for backward compatibility
 // New tests should use route-all-frameworks.e2e.test.ts
@@ -95,10 +93,12 @@ describe('Route Generator E2E Tests', () => {
       let outputFilePath: string
 
       beforeAll(async () => {
-        // Create temp directory in system temp folder
-        const os = await import('node:os')
+        // Create temp directory in project folder
+        const projectRoot = path.resolve(e2eDir, '../../')
+        const tmpTestDir = path.join(projectRoot, '.tmp-test')
+        fs.mkdirSync(tmpTestDir, { recursive: true })
         tempOutputDir = fs.mkdtempSync(
-          path.join(os.tmpdir(), `typescript-openapi-gen-route-${testCase}-`),
+          path.join(tmpTestDir, `route-${testCase}-`),
         )
 
         // Find OpenAPI file in input directory
@@ -117,20 +117,22 @@ describe('Route Generator E2E Tests', () => {
         const tempControllerDir = path.join(tempOutputDir, 'controller')
         fs.cpSync(expectedControllerDir, tempControllerDir, { recursive: true })
 
-        // Parse and generate routes
+        // Call CLI command to generate routes
         const openapiPath = path.join(inputDir, openapiFile)
         outputFilePath = path.join(tempOutputDir, 'elysia-router.gen.ts')
 
-        const openApiDoc = await parseOpenAPIFile(openapiPath)
-        const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..')
+        // Find prettier config
         const prettierConfig = path.join(projectRoot, '.prettierrc')
-        const generator = new ElysiaRouteGenerator(
-          openApiDoc,
-          tempControllerDir,
-          outputFilePath,
-          { prettierConfig },
-        )
-        generator.generate()
+        const flags: Record<string, any> = {
+          outputDir: tempOutputDir,
+          controllerFolder: 'controller',
+          routerFile: 'elysia-router.gen.ts',
+        }
+        if (fs.existsSync(prettierConfig)) {
+          flags.prettier = prettierConfig
+        }
+
+        await runCommand('gen router elysia', [openapiPath], flags)
       })
 
       afterAll(() => {

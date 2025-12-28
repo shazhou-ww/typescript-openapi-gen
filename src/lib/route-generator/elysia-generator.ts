@@ -129,6 +129,8 @@ export class ElysiaRouteGenerator {
 
     lines.push('')
     lines.push('export default routerPlugin')
+    lines.push('')
+    lines.push('')
 
     return lines
   }
