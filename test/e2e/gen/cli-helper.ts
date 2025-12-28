@@ -3,8 +3,8 @@ import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../')
-// Use dev.js to run from source (no build required for tests)
-const binPath = path.join(projectRoot, 'bin', 'dev.js')
+// Use run.js to run from built files
+const binPath = path.join(projectRoot, 'bin', 'run.js')
 
 /**
  * Run a CLI command by spawning a subprocess
