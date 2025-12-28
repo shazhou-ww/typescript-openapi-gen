@@ -32,3 +32,4 @@ oclif.manifest.json
 
 # Test temp directories
 .tmp-test/
+.tmp-regenerate/
