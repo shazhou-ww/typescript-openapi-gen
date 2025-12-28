@@ -3,7 +3,7 @@ import type {
   OperationObject,
   ResponseObject,
 } from '../shared/openapi-types'
-import { schemaToTypeScript } from '../type-generator/index'
+import { schemaToTypeScript } from '../type-generator'
 
 /**
  * Generate output type for an operation

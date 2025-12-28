@@ -5,7 +5,7 @@ import type {
   ParameterObject,
   RequestBodyObject,
 } from '../shared/openapi-types'
-import { schemaToTypeScript } from '../type-generator/index'
+import { schemaToTypeScript } from '../type-generator'
 
 /**
  * Generate input type for an operation

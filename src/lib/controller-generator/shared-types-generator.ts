@@ -1,7 +1,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import type { SchemaObject, ReferenceObject } from '../shared/openapi-types'
-import { generateSharedTypes } from '../type-generator/index'
+import { generateSharedTypes } from '../type-generator'
 import type { GenerationResult } from './types'
 
 /**

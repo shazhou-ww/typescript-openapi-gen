@@ -5,7 +5,7 @@ import type {
   RequestBodyObject,
   ResponseObject,
 } from '../shared/openapi-types'
-import { extractSchemaRefs } from '../type-generator/index'
+import { extractSchemaRefs } from '../type-generator'
 
 /**
  * Collect all referenced type names from an operation

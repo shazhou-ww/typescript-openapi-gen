@@ -1,8 +1,8 @@
 import { Command } from 'commander'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import { parseOpenAPIFile } from '../../lib/openapi-parser/index'
-import { ControllerGenerator } from '../../lib/controller-generator/index'
+import { parseOpenAPIFile } from '../../lib/openapi-parser'
+import { ControllerGenerator } from '../../lib/controller-generator'
 
 function registerControllerCommand(program: Command) {
   program
