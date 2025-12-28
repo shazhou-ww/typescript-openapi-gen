@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsx src/cli.ts",
+    "dev": "bun run src/cli.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "postinstall": "chmod +x src/cli.ts"
   },
   "keywords": [
     "openapi",
@@ -17,9 +18,10 @@
   ],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.26.2",
+  "packageManager": "bun@1.2.7",
+  "type": "module",
   "bin": {
-    "tsoapi": "./dist/cli.js"
+    "tsoapi": "./src/cli.ts"
   },
   "dependencies": {
     "commander": "^14.0.2",
@@ -39,8 +41,6 @@
     "hono": "^4.6.11",
     "markdownlint-cli": "^0.47.0",
     "prettier": "^3.7.4",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.21.0",
     "typescript": "^5.7.2",
     "vitest": "^4.0.16",
     "zod": "^4.0.0"

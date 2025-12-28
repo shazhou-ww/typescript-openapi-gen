@@ -103,5 +103,5 @@ function registerFastifyCommand(program: Command) {
     })
 }
 
-module.exports = registerFastifyCommand
+export default registerFastifyCommand
 

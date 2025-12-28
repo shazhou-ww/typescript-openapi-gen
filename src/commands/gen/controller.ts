@@ -77,4 +77,4 @@ function registerControllerCommand(program: Command) {
     })
 }
 
-module.exports = registerControllerCommand
+export default registerControllerCommand

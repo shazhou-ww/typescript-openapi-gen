@@ -53,4 +53,4 @@ function registerIrCommand(program: Command) {
     })
 }
 
-module.exports = registerIrCommand
+export default registerIrCommand

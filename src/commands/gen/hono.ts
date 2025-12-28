@@ -103,5 +103,5 @@ function registerHonoCommand(program: Command) {
     })
 }
 
-module.exports = registerHonoCommand
+export default registerHonoCommand
 

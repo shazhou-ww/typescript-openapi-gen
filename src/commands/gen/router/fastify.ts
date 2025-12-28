@@ -83,5 +83,5 @@ function registerRouterFastifyCommand(program: Command) {
     })
 }
 
-module.exports = registerRouterFastifyCommand
+export default registerRouterFastifyCommand
 

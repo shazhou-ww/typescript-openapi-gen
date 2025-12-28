@@ -406,5 +406,5 @@ function collectRefsFromSchema(schema: any, schemas: Set<string>): void {
   }
 }
 
-module.exports = registerOpenapiCommand
+export default registerOpenapiCommand
 

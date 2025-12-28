@@ -83,5 +83,5 @@ function registerRouterExpressCommand(program: Command) {
     })
 }
 
-module.exports = registerRouterExpressCommand
+export default registerRouterExpressCommand
 

@@ -103,5 +103,5 @@ function registerElysiaCommand(program: Command) {
     })
 }
 
-module.exports = registerElysiaCommand
+export default registerElysiaCommand
 

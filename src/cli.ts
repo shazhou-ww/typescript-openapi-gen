@@ -1,18 +1,18 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 import { Command } from 'commander'
 
-const registerIrCommand = require('./commands/ir')
-const registerControllerCommand = require('./commands/gen/controller')
-const registerOpenapiCommand = require('./commands/gen/openapi')
-const registerElysiaCommand = require('./commands/gen/elysia')
-const registerExpressCommand = require('./commands/gen/express')
-const registerFastifyCommand = require('./commands/gen/fastify')
-const registerHonoCommand = require('./commands/gen/hono')
-const registerRouterElysiaCommand = require('./commands/gen/router/elysia')
-const registerRouterExpressCommand = require('./commands/gen/router/express')
-const registerRouterFastifyCommand = require('./commands/gen/router/fastify')
-const registerRouterHonoCommand = require('./commands/gen/router/hono')
+import registerIrCommand from './commands/ir'
+import registerControllerCommand from './commands/gen/controller'
+import registerOpenapiCommand from './commands/gen/openapi'
+import registerElysiaCommand from './commands/gen/elysia'
+import registerExpressCommand from './commands/gen/express'
+import registerFastifyCommand from './commands/gen/fastify'
+import registerHonoCommand from './commands/gen/hono'
+import registerRouterElysiaCommand from './commands/gen/router/elysia'
+import registerRouterExpressCommand from './commands/gen/router/express'
+import registerRouterFastifyCommand from './commands/gen/router/fastify'
+import registerRouterHonoCommand from './commands/gen/router/hono'
 
 const program = new Command()
 

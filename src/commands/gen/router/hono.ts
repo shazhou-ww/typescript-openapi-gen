@@ -83,5 +83,5 @@ function registerRouterHonoCommand(program: Command) {
     })
 }
 
-module.exports = registerRouterHonoCommand
+export default registerRouterHonoCommand
 

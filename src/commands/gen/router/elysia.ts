@@ -83,5 +83,5 @@ function registerRouterElysiaCommand(program: Command) {
     })
 }
 
-module.exports = registerRouterElysiaCommand
+export default registerRouterElysiaCommand
 

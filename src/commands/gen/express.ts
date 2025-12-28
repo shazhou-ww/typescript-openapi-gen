@@ -103,5 +103,5 @@ function registerExpressCommand(program: Command) {
     })
 }
 
-module.exports = registerExpressCommand
+export default registerExpressCommand
 
