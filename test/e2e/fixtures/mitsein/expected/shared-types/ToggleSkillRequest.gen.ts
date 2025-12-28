@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 export const ToggleSkillRequestSchema = z.object({
   skill_name: z.string(),
-  enabled: z.boolean()
+  enabled: z.boolean(),
 })
 
 export type ToggleSkillRequest = z.infer<typeof ToggleSkillRequestSchema>

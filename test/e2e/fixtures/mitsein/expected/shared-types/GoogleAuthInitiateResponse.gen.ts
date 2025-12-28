@@ -5,7 +5,9 @@ import { z } from 'zod'
 
 export const GoogleAuthInitiateResponseSchema = z.object({
   authorization_url: z.string(),
-  state: z.string()
+  state: z.string(),
 })
 
-export type GoogleAuthInitiateResponse = z.infer<typeof GoogleAuthInitiateResponseSchema>
+export type GoogleAuthInitiateResponse = z.infer<
+  typeof GoogleAuthInitiateResponseSchema
+>

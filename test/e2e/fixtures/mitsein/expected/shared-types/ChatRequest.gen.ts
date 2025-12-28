@@ -8,7 +8,7 @@ export const ChatRequestSchema = z.object({
   stream: z.boolean().optional(),
   include_context: z.boolean().optional(),
   page_context: z.string().optional(),
-  thread_id: z.union([z.string(), z.unknown()]).optional()
+  thread_id: z.union([z.string(), z.unknown()]).optional(),
 })
 
 export type ChatRequest = z.infer<typeof ChatRequestSchema>

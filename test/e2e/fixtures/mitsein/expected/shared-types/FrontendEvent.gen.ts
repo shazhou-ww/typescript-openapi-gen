@@ -16,7 +16,7 @@ export const FrontendEventSchema = z.object({
   durationMs: z.union([z.number(), z.unknown()]).optional(),
   clientTimestamp: z.union([z.number().int(), z.unknown()]).optional(),
   messageId: z.union([z.string(), z.unknown()]).optional(),
-  sequenceNumber: z.union([z.number().int(), z.unknown()]).optional()
+  sequenceNumber: z.union([z.number().int(), z.unknown()]).optional(),
 })
 
 export type FrontendEvent = z.infer<typeof FrontendEventSchema>

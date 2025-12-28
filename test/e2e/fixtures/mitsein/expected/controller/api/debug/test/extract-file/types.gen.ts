@@ -11,7 +11,7 @@ export interface PostQuery {
 }
 
 export const PostQuerySchema = z.object({
-    summarize: z.boolean().optional()
+  summarize: z.boolean().optional(),
 })
 
 export interface PostInput {
@@ -19,7 +19,7 @@ export interface PostInput {
 }
 
 export const PostInputSchema = z.object({
-  query: PostQuerySchema
+  query: PostQuerySchema,
 })
 
 export type PostOutput = unknown

@@ -15,7 +15,9 @@ export const VolcengineTrainingStatusSchema = z.object({
   order_time: z.number().int(),
   alias: z.string(),
   available_training_times: z.number().int(),
-  resource_id: z.string()
+  resource_id: z.string(),
 })
 
-export type VolcengineTrainingStatus = z.infer<typeof VolcengineTrainingStatusSchema>
+export type VolcengineTrainingStatus = z.infer<
+  typeof VolcengineTrainingStatusSchema
+>

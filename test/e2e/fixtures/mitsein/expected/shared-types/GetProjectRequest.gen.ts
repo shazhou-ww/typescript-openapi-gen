@@ -4,7 +4,7 @@
 import { z } from 'zod'
 
 export const GetProjectRequestSchema = z.object({
-  project_id: z.string().optional()
+  project_id: z.string().optional(),
 })
 
 export type GetProjectRequest = z.infer<typeof GetProjectRequestSchema>

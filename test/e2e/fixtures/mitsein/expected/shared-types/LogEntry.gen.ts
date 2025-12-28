@@ -7,7 +7,7 @@ export const LogEntrySchema = z.object({
   timestamp: z.string(),
   level: z.string(),
   message: z.string(),
-  data: z.record(z.unknown())
+  data: z.record(z.unknown()),
 })
 
 export type LogEntry = z.infer<typeof LogEntrySchema>

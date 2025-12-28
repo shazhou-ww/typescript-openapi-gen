@@ -159,7 +159,7 @@ describe('Route Generator E2E Tests', () => {
 
         if (expectedContent !== actualContent) {
           const diff = generateDiff(expectedContent, actualContent)
-          expect.fail(`\nContent differences found:\n${diff}`)
+          throw new Error(`\nContent differences found:\n${diff}`)
         }
       })
     })

@@ -7,7 +7,7 @@ export const DocumentReadResponseSchema = z.object({
   document_id: z.string(),
   title: z.string(),
   content: z.string(),
-  metadata: z.record(z.unknown()).optional()
+  metadata: z.record(z.unknown()).optional(),
 })
 
 export type DocumentReadResponse = z.infer<typeof DocumentReadResponseSchema>

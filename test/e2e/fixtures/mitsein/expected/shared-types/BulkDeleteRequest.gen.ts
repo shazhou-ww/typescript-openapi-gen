@@ -4,7 +4,7 @@
 import { z } from 'zod'
 
 export const BulkDeleteRequestSchema = z.object({
-  project_ids: z.array(z.string()).optional()
+  project_ids: z.array(z.string()).optional(),
 })
 
 export type BulkDeleteRequest = z.infer<typeof BulkDeleteRequestSchema>

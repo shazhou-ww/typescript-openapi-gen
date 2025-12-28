@@ -22,8 +22,8 @@ export type PostBody = unknown
 
 export const PostParamsSchema = z.object({
   params: z.object({
-    project_id: z.string()
-  })
+    project_id: z.string(),
+  }),
 })
 
 export const PostBodySchema = BatchDownloadRequestSchema
@@ -35,7 +35,7 @@ export interface PostInput {
 
 export const PostInputSchema = z.object({
   params: PostParamsSchema,
-  body: z.unknown()
+  body: z.unknown(),
 })
 
 export type PostOutput = unknown

@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 export const FavoriteToggleRequestSchema = z.object({
   entity_type: z.string(),
-  entity_id: z.string()
+  entity_id: z.string(),
 })
 
 export type FavoriteToggleRequest = z.infer<typeof FavoriteToggleRequestSchema>

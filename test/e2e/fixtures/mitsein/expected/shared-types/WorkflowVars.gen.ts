@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 export const WorkflowVarsSchema = z.object({
   id: z.string(),
-  mapping: z.record(z.string()).optional()
+  mapping: z.record(z.string()).optional(),
 })
 
 export type WorkflowVars = z.infer<typeof WorkflowVarsSchema>

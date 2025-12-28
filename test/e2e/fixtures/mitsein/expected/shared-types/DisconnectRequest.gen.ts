@@ -4,7 +4,7 @@
 import { z } from 'zod'
 
 export const DisconnectRequestSchema = z.object({
-  authorization_id: z.string()
+  authorization_id: z.string(),
 })
 
 export type DisconnectRequest = z.infer<typeof DisconnectRequestSchema>

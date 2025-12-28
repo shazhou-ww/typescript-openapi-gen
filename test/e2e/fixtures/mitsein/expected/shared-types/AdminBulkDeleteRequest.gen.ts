@@ -4,7 +4,9 @@
 import { z } from 'zod'
 
 export const AdminBulkDeleteRequestSchema = z.object({
-  project_ids: z.array(z.string())
+  project_ids: z.array(z.string()),
 })
 
-export type AdminBulkDeleteRequest = z.infer<typeof AdminBulkDeleteRequestSchema>
+export type AdminBulkDeleteRequest = z.infer<
+  typeof AdminBulkDeleteRequestSchema
+>

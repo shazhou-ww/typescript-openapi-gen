@@ -14,10 +14,10 @@ export interface GetQuery {
 }
 
 export const GetQuerySchema = z.object({
-    page: z.number().int().min(1).optional(),
-    page_size: z.number().int().min(1).max(200).optional(),
-    order_by: z.string().optional(),
-    desc: z.boolean().optional()
+  page: z.number().int().min(1).optional(),
+  page_size: z.number().int().min(1).max(200).optional(),
+  order_by: z.string().optional(),
+  desc: z.boolean().optional(),
 })
 
 export interface GetInput {
@@ -25,7 +25,7 @@ export interface GetInput {
 }
 
 export const GetInputSchema = z.object({
-  query: GetQuerySchema
+  query: GetQuerySchema,
 })
 
 export type GetOutput = unknown

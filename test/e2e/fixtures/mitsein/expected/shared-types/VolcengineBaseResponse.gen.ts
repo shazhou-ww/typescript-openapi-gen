@@ -5,7 +5,9 @@ import { z } from 'zod'
 
 export const VolcengineBaseResponseSchema = z.object({
   success: z.boolean(),
-  error: z.union([z.string(), z.unknown()]).optional()
+  error: z.union([z.string(), z.unknown()]).optional(),
 })
 
-export type VolcengineBaseResponse = z.infer<typeof VolcengineBaseResponseSchema>
+export type VolcengineBaseResponse = z.infer<
+  typeof VolcengineBaseResponseSchema
+>

@@ -18,8 +18,8 @@ export interface GetQuery {
 }
 
 export const GetQuerySchema = z.object({
-    code: z.string(),
-    state: z.string()
+  code: z.string(),
+  state: z.string(),
 })
 
 export interface GetInput {
@@ -27,7 +27,7 @@ export interface GetInput {
 }
 
 export const GetInputSchema = z.object({
-  query: GetQuerySchema
+  query: GetQuerySchema,
 })
 
 export type GetOutput = GoogleAuthCallbackResponse

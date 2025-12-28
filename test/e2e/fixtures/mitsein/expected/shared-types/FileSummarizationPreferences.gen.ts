@@ -4,7 +4,9 @@
 import { z } from 'zod'
 
 export const FileSummarizationPreferencesSchema = z.object({
-  enable_smart_summarization: z.boolean().optional()
+  enable_smart_summarization: z.boolean().optional(),
 })
 
-export type FileSummarizationPreferences = z.infer<typeof FileSummarizationPreferencesSchema>
+export type FileSummarizationPreferences = z.infer<
+  typeof FileSummarizationPreferencesSchema
+>

@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 export const StandardResponseSchema = z.object({
   data: z.unknown().optional(),
-  error: z.union([z.string(), z.unknown()]).optional()
+  error: z.union([z.string(), z.unknown()]).optional(),
 })
 
 export type StandardResponse = z.infer<typeof StandardResponseSchema>

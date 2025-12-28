@@ -22,8 +22,8 @@ export type PostBody = unknown
 
 export const PostParamsSchema = z.object({
   params: z.object({
-    trigger_id: z.string()
-  })
+    trigger_id: z.string(),
+  }),
 })
 
 export const PostBodySchema = ToggleTriggerRequestSchema
@@ -35,7 +35,7 @@ export interface PostInput {
 
 export const PostInputSchema = z.object({
   params: PostParamsSchema,
-  body: z.unknown()
+  body: z.unknown(),
 })
 
 export type PostOutput = unknown

@@ -11,7 +11,9 @@ export const VideoGenerationResponseSchema = z.object({
   duration: z.union([z.number(), z.unknown()]).optional(),
   status: z.string(),
   error: z.union([z.string(), z.unknown()]).optional(),
-  message: z.string()
+  message: z.string(),
 })
 
-export type VideoGenerationResponse = z.infer<typeof VideoGenerationResponseSchema>
+export type VideoGenerationResponse = z.infer<
+  typeof VideoGenerationResponseSchema
+>

@@ -1,10 +1,7 @@
 // Auto-generated types from OpenAPI specification
 // DO NOT EDIT - This file is regenerated on each run
 
-import type {
-  ChatRequest,
-  HTTPValidationError,
-} from '../../../shared-types'
+import type { ChatRequest, HTTPValidationError } from '../../../shared-types'
 import {
   ChatRequestSchema,
   HTTPValidationErrorSchema,
@@ -21,7 +18,7 @@ export interface PostInput {
 }
 
 export const PostInputSchema = z.object({
-  body: z.unknown()
+  body: z.unknown(),
 })
 
 export type PostOutput = unknown

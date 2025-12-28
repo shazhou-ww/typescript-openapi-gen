@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { FrontendEventSchema } from './FrontendEvent.gen'
 
 export const EventBatchRequestSchema = z.object({
-  events: z.array(FrontendEventSchema).max(100)
+  events: z.array(FrontendEventSchema).max(100),
 })
 
 export type EventBatchRequest = z.infer<typeof EventBatchRequestSchema>

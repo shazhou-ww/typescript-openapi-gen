@@ -8,7 +8,9 @@ import { VolcengineTrainingStatusSchema } from './VolcengineTrainingStatus.gen'
 export const VolcengineTrainingListResponseSchema = z.object({
   success: z.boolean(),
   error: z.union([z.string(), z.unknown()]).optional(),
-  data: z.array(VolcengineTrainingStatusSchema).optional()
+  data: z.array(VolcengineTrainingStatusSchema).optional(),
 })
 
-export type VolcengineTrainingListResponse = z.infer<typeof VolcengineTrainingListResponseSchema>
+export type VolcengineTrainingListResponse = z.infer<
+  typeof VolcengineTrainingListResponseSchema
+>

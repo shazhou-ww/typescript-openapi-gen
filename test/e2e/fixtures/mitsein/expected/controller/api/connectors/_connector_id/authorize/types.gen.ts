@@ -24,8 +24,8 @@ export type PostBody = unknown
 
 export const PostParamsSchema = z.object({
   params: z.object({
-    connector_id: z.string()
-  })
+    connector_id: z.string(),
+  }),
 })
 
 export const PostBodySchema = OAuthInitiateRequestSchema
@@ -37,7 +37,7 @@ export interface PostInput {
 
 export const PostInputSchema = z.object({
   params: PostParamsSchema,
-  body: z.unknown()
+  body: z.unknown(),
 })
 
 export type PostOutput = OAuthInitiateResponse

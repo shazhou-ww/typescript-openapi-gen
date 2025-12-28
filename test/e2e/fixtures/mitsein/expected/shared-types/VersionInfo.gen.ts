@@ -6,7 +6,7 @@ import { z } from 'zod'
 export const VersionInfoSchema = z.object({
   commit_hash: z.string(),
   branch_name: z.string(),
-  build_time: z.string()
+  build_time: z.string(),
 })
 
 export type VersionInfo = z.infer<typeof VersionInfoSchema>

@@ -6,7 +6,7 @@ import { z } from 'zod'
 export const ErrorResponseSchema = z.object({
   code: z.string().optional(),
   detail: z.string(),
-  status_code: z.number().int().optional()
+  status_code: z.number().int().optional(),
 })
 
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>

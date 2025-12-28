@@ -8,7 +8,9 @@ export const AddChartMessageRequestSchema = z.object({
   type: z.string().optional(),
   is_llm_message: z.boolean().optional(),
   chart_type: z.string().optional(),
-  format_type: z.string().optional()
+  format_type: z.string().optional(),
 })
 
-export type AddChartMessageRequest = z.infer<typeof AddChartMessageRequestSchema>
+export type AddChartMessageRequest = z.infer<
+  typeof AddChartMessageRequestSchema
+>

@@ -8,7 +8,7 @@ export const TTSRequestSchema = z.object({
   script_text: z.string(),
   slide_filename: z.string(),
   project_id: z.string(),
-  language: z.union([z.string(), z.unknown()]).optional()
+  language: z.union([z.string(), z.unknown()]).optional(),
 })
 
 export type TTSRequest = z.infer<typeof TTSRequestSchema>

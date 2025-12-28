@@ -7,7 +7,7 @@ export const FileUploadResponseSchema = z.object({
   id: z.string(),
   name: z.string(),
   mimeType: z.string(),
-  webViewLink: z.union([z.string(), z.unknown()]).optional()
+  webViewLink: z.union([z.string(), z.unknown()]).optional(),
 })
 
 export type FileUploadResponse = z.infer<typeof FileUploadResponseSchema>

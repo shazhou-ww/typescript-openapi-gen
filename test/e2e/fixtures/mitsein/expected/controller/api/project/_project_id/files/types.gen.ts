@@ -18,12 +18,12 @@ export interface GetQuery {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    project_id: z.string()
-  })
+    project_id: z.string(),
+  }),
 })
 
 export const GetQuerySchema = z.object({
-    path: z.string()
+  path: z.string(),
 })
 
 export interface GetInput {
@@ -33,7 +33,7 @@ export interface GetInput {
 
 export const GetInputSchema = z.object({
   params: GetParamsSchema,
-  query: GetQuerySchema
+  query: GetQuerySchema,
 })
 
 export type GetOutput = unknown
@@ -46,8 +46,8 @@ export interface PostParams {
 
 export const PostParamsSchema = z.object({
   params: z.object({
-    project_id: z.string()
-  })
+    project_id: z.string(),
+  }),
 })
 
 export interface PostInput {
@@ -55,7 +55,7 @@ export interface PostInput {
 }
 
 export const PostInputSchema = z.object({
-  params: PostParamsSchema
+  params: PostParamsSchema,
 })
 
 export type PostOutput = unknown
@@ -72,12 +72,12 @@ export interface DeleteQuery {
 
 export const DeleteParamsSchema = z.object({
   params: z.object({
-    project_id: z.string()
-  })
+    project_id: z.string(),
+  }),
 })
 
 export const DeleteQuerySchema = z.object({
-    path: z.string()
+  path: z.string(),
 })
 
 export interface DeleteInput {
@@ -87,7 +87,7 @@ export interface DeleteInput {
 
 export const DeleteInputSchema = z.object({
   params: DeleteParamsSchema,
-  query: DeleteQuerySchema
+  query: DeleteQuerySchema,
 })
 
 export type DeleteOutput = unknown

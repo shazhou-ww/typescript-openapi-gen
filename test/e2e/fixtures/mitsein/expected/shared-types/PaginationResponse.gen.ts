@@ -6,7 +6,7 @@ import { z } from 'zod'
 export const PaginationResponseSchema = z.object({
   data: z.unknown().optional(),
   has_more: z.boolean().optional(),
-  error: z.union([z.string(), z.unknown()]).optional()
+  error: z.union([z.string(), z.unknown()]).optional(),
 })
 
 export type PaginationResponse = z.infer<typeof PaginationResponseSchema>

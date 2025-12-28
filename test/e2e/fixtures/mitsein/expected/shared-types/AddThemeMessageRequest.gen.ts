@@ -8,7 +8,9 @@ export const AddThemeMessageRequestSchema = z.object({
   type: z.string().optional(),
   is_llm_message: z.boolean().optional(),
   theme_name: z.string().optional(),
-  format_type: z.string().optional()
+  format_type: z.string().optional(),
 })
 
-export type AddThemeMessageRequest = z.infer<typeof AddThemeMessageRequestSchema>
+export type AddThemeMessageRequest = z.infer<
+  typeof AddThemeMessageRequestSchema
+>

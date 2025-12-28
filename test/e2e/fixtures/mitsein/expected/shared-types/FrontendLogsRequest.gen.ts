@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { LogEntrySchema } from './LogEntry.gen'
 
 export const FrontendLogsRequestSchema = z.object({
-  logs: z.array(LogEntrySchema)
+  logs: z.array(LogEntrySchema),
 })
 
 export type FrontendLogsRequest = z.infer<typeof FrontendLogsRequestSchema>

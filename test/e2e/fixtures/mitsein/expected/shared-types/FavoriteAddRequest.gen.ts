@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 export const FavoriteAddRequestSchema = z.object({
   entity_type: z.string(),
-  entity_id: z.string()
+  entity_id: z.string(),
 })
 
 export type FavoriteAddRequest = z.infer<typeof FavoriteAddRequestSchema>

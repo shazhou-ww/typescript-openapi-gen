@@ -16,7 +16,7 @@ export const LLMParameterLimitsSchema = z.object({
   enable_thinking_default: z.boolean().optional(),
   max_iterations_min: z.number().int().optional(),
   max_iterations_max: z.number().int().optional(),
-  max_iterations_default: z.number().int().optional()
+  max_iterations_default: z.number().int().optional(),
 })
 
 export type LLMParameterLimits = z.infer<typeof LLMParameterLimitsSchema>

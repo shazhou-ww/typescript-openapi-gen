@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * Script to regenerate expected route files for all test cases
  * This updates the expected files to match the current generator output
@@ -7,13 +7,13 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parseOpenAPIFile } from '../dist/lib/openapi-parser/index.js'
+import { parseOpenAPIFile } from '../src/lib/openapi-parser'
 import {
   ElysiaRouteGenerator,
   ExpressRouteGenerator,
   FastifyRouteGenerator,
   HonoRouteGenerator,
-} from '../dist/lib/route-generator/index.js'
+} from '../src/lib/route-generator'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -80,32 +80,26 @@ async function regenerateExpectedRoutes() {
       continue
     }
 
-    // Copy controller structure to temp location
+    // Use expected controller directory directly (same as test does)
     const expectedControllerDir = path.join(expectedDir, 'controller')
     if (!fs.existsSync(expectedControllerDir)) {
       console.error(`  ⚠️  Controller directory not found: ${expectedControllerDir}`)
       continue
     }
 
-    const tempControllerDir = path.join(projectRoot, '.tmp-test', `controller-${testCase}`)
-    fs.mkdirSync(path.dirname(tempControllerDir), { recursive: true })
-    if (fs.existsSync(tempControllerDir)) {
-      fs.rmSync(tempControllerDir, { recursive: true, force: true })
-    }
-    fs.cpSync(expectedControllerDir, tempControllerDir, { recursive: true })
-
     // Parse OpenAPI
     const openapiPath = path.join(inputDir, openapiFile)
     const openApiDoc = await parseOpenAPIFile(openapiPath)
 
     // Generate routes for each framework
+    // Use expectedDir as outputDir so that relative imports resolve correctly
     for (const framework of frameworks) {
       const outputPath = path.join(expectedDir, framework.routeFile)
       console.log(`  Generating ${framework.name} routes...`)
 
       const generator = new framework.generator(
         openApiDoc,
-        tempControllerDir,
+        expectedControllerDir, // Use expected controller dir directly
         outputPath,
         { prettierConfig },
       )
@@ -116,11 +110,6 @@ async function regenerateExpectedRoutes() {
       } else {
         console.error(`    ❌ Failed to generate ${framework.routeFile}`)
       }
-    }
-
-    // Cleanup temp controller directory
-    if (fs.existsSync(tempControllerDir)) {
-      fs.rmSync(tempControllerDir, { recursive: true, force: true })
     }
   }
 

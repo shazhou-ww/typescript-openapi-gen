@@ -4,7 +4,7 @@
 import { z } from 'zod'
 
 export const ThreadIdRequestSchema = z.object({
-  thread_id: z.string()
+  thread_id: z.string(),
 })
 
 export type ThreadIdRequest = z.infer<typeof ThreadIdRequestSchema>

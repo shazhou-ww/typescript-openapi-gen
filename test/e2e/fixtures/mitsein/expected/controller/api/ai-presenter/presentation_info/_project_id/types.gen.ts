@@ -14,8 +14,8 @@ export interface GetParams {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    project_id: z.string()
-  })
+    project_id: z.string(),
+  }),
 })
 
 export interface GetInput {
@@ -23,7 +23,7 @@ export interface GetInput {
 }
 
 export const GetInputSchema = z.object({
-  params: GetParamsSchema
+  params: GetParamsSchema,
 })
 
 export type GetOutput = Record<string, unknown>

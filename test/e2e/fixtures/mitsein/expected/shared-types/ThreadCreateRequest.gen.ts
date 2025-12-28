@@ -4,7 +4,7 @@
 import { z } from 'zod'
 
 export const ThreadCreateRequestSchema = z.object({
-  project_id: z.string().optional()
+  project_id: z.string().optional(),
 })
 
 export type ThreadCreateRequest = z.infer<typeof ThreadCreateRequestSchema>

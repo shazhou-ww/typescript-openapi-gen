@@ -4,7 +4,9 @@
 import { z } from 'zod'
 
 export const UpdateGdprConsentRequestSchema = z.object({
-  gdpr_consent: z.boolean()
+  gdpr_consent: z.boolean(),
 })
 
-export type UpdateGdprConsentRequest = z.infer<typeof UpdateGdprConsentRequestSchema>
+export type UpdateGdprConsentRequest = z.infer<
+  typeof UpdateGdprConsentRequestSchema
+>

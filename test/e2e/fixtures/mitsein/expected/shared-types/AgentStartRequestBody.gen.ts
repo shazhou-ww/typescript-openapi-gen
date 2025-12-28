@@ -12,7 +12,7 @@ export const AgentStartRequestBodySchema = z.object({
   mcp_servers: z.union([z.string(), z.unknown()]).optional(),
   role: z.union([z.string(), z.unknown()]).optional(),
   temperature: z.union([z.number(), z.unknown()]).optional(),
-  max_tokens: z.union([z.number().int(), z.unknown()]).optional()
+  max_tokens: z.union([z.number().int(), z.unknown()]).optional(),
 })
 
 export type AgentStartRequestBody = z.infer<typeof AgentStartRequestBodySchema>

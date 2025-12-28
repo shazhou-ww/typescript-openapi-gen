@@ -4,7 +4,7 @@
 import { z } from 'zod'
 
 export const ToggleTriggerRequestSchema = z.object({
-  is_active: z.boolean()
+  is_active: z.boolean(),
 })
 
 export type ToggleTriggerRequest = z.infer<typeof ToggleTriggerRequestSchema>

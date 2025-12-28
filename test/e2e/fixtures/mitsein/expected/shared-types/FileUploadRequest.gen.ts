@@ -7,7 +7,7 @@ export const FileUploadRequestSchema = z.object({
   name: z.string(),
   content: z.string(),
   mimeType: z.string(),
-  folder_id: z.union([z.string(), z.unknown()]).optional()
+  folder_id: z.union([z.string(), z.unknown()]).optional(),
 })
 
 export type FileUploadRequest = z.infer<typeof FileUploadRequestSchema>

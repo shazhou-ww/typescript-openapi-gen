@@ -3,8 +3,8 @@ import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../')
-// Use run.js to run from built files
-const binPath = path.join(projectRoot, 'bin', 'run.js')
+// Use bun to run TypeScript directly
+const cliPath = path.join(projectRoot, 'src', 'cli.ts')
 
 /**
  * Run a CLI command by spawning a subprocess
@@ -15,8 +15,8 @@ export async function runCommand(
   args: string[],
   flags: Record<string, any> = {},
 ): Promise<void> {
-  // Build command arguments
-  const commandArgs: string[] = [commandId]
+  // Build command arguments - split commandId by spaces to handle nested commands
+  const commandArgs: string[] = commandId.split(' ')
 
   // Add flags (convert camelCase to kebab-case)
   for (const [key, value] of Object.entries(flags)) {
@@ -37,7 +37,7 @@ export async function runCommand(
   commandArgs.push(...args)
 
   return new Promise((resolve, reject) => {
-    const child = spawn('node', [binPath, ...commandArgs], {
+    const child = spawn('bun', [cliPath, ...commandArgs], {
       cwd: projectRoot,
       stdio: 'pipe',
     })

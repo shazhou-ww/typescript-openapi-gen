@@ -10,7 +10,7 @@ export const LLMConfigResponseSchema = z.object({
   limits: LLMParameterLimitsSchema,
   models: z.array(ModelInfoSchema),
   default_model: z.union([z.string(), z.unknown()]),
-  env_mode: z.string()
+  env_mode: z.string(),
 })
 
 export type LLMConfigResponse = z.infer<typeof LLMConfigResponseSchema>

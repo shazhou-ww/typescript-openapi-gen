@@ -8,7 +8,7 @@ export const UpdateProjectRequestSchema = z.object({
   name: z.union([z.string(), z.unknown()]).optional(),
   description: z.union([z.string(), z.unknown()]).optional(),
   is_public: z.union([z.boolean(), z.unknown()]).optional(),
-  access_token: z.string().optional()
+  access_token: z.string().optional(),
 })
 
 export type UpdateProjectRequest = z.infer<typeof UpdateProjectRequestSchema>

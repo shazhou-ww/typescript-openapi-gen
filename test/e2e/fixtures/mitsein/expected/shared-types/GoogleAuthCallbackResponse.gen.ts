@@ -9,7 +9,9 @@ export const GoogleAuthCallbackResponseSchema = z.object({
   access_token: z.union([z.string(), z.unknown()]).optional(),
   id_token: z.union([z.string(), z.unknown()]).optional(),
   expires_in: z.union([z.number().int(), z.unknown()]).optional(),
-  error: z.union([z.string(), z.unknown()]).optional()
+  error: z.union([z.string(), z.unknown()]).optional(),
 })
 
-export type GoogleAuthCallbackResponse = z.infer<typeof GoogleAuthCallbackResponseSchema>
+export type GoogleAuthCallbackResponse = z.infer<
+  typeof GoogleAuthCallbackResponseSchema
+>

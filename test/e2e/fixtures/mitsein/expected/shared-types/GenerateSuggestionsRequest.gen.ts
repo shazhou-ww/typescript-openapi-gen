@@ -5,7 +5,9 @@ import { z } from 'zod'
 
 export const GenerateSuggestionsRequestSchema = z.object({
   thread_id: z.string().optional(),
-  limit: z.number().int().optional()
+  limit: z.number().int().optional(),
 })
 
-export type GenerateSuggestionsRequest = z.infer<typeof GenerateSuggestionsRequestSchema>
+export type GenerateSuggestionsRequest = z.infer<
+  typeof GenerateSuggestionsRequestSchema
+>

@@ -20,8 +20,8 @@ export interface GetParams {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    video_id: z.string()
-  })
+    video_id: z.string(),
+  }),
 })
 
 export interface GetInput {
@@ -29,7 +29,7 @@ export interface GetInput {
 }
 
 export const GetInputSchema = z.object({
-  params: GetParamsSchema
+  params: GetParamsSchema,
 })
 
 export type GetOutput = VideoGenerationResponse

@@ -18,12 +18,12 @@ export interface GetQuery {
 
 export const GetParamsSchema = z.object({
   params: z.object({
-    agent_run_id: z.string()
-  })
+    agent_run_id: z.string(),
+  }),
 })
 
 export const GetQuerySchema = z.object({
-    event_type: z.union([z.string(), z.unknown()]).optional()
+  event_type: z.union([z.string(), z.unknown()]).optional(),
 })
 
 export interface GetInput {
@@ -33,7 +33,7 @@ export interface GetInput {
 
 export const GetInputSchema = z.object({
   params: GetParamsSchema,
-  query: GetQuerySchema
+  query: GetQuerySchema,
 })
 
 export type GetOutput = unknown

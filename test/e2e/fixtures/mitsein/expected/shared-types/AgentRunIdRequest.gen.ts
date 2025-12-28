@@ -4,7 +4,7 @@
 import { z } from 'zod'
 
 export const AgentRunIdRequestSchema = z.object({
-  agent_run_id: z.string()
+  agent_run_id: z.string(),
 })
 
 export type AgentRunIdRequest = z.infer<typeof AgentRunIdRequestSchema>

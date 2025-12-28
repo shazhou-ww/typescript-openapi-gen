@@ -9,7 +9,7 @@ export const MessageAddRequestBodySchema = z.object({
   is_llm_message: z.boolean().optional(),
   content: z.string(),
   metadata: z.string().optional(),
-  files: z.array(z.string()).optional()
+  files: z.array(z.string()).optional(),
 })
 
 export type MessageAddRequestBody = z.infer<typeof MessageAddRequestBodySchema>

@@ -4,7 +4,9 @@
 import { z } from 'zod'
 
 export const CreateScheduledTaskRequestSchema = z.object({
-  prompt: z.string()
+  prompt: z.string(),
 })
 
-export type CreateScheduledTaskRequest = z.infer<typeof CreateScheduledTaskRequestSchema>
+export type CreateScheduledTaskRequest = z.infer<
+  typeof CreateScheduledTaskRequestSchema
+>
