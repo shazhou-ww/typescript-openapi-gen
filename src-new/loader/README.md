@@ -4,6 +4,8 @@
 
 加载 OpenAPI 文档并转换为规范化的 OpenApiDocument (IR)。
 
+使用 `@apidevtools/swagger-parser` 自动解析所有 `$ref`（包括跨文件引用）。
+
 ## 聚合入口
 
 ```typescript
@@ -15,10 +17,7 @@ load(path: string): Promise<OpenApiDocument>
 
 ## 内部实现
 
-- `loader.ts` - 主加载函数
-- `file-reader.ts` - 读取文件内容
-- `document-parser.ts` - 解析 YAML/JSON
-- `document-validator.ts` - 验证文档结构
+- `loader.ts` - 主加载函数（使用 swagger-parser）
 - `to-document.ts` - 转换为 OpenApiDocument
 - `to-path-item.ts` - 转换 PathItem
 - `to-operation.ts` - 转换 Operation

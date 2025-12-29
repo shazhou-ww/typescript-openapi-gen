@@ -4,15 +4,12 @@
  * - 返回: 规范化的 OpenApiDocument (IR)
  */
 
+import SwaggerParser from '@apidevtools/swagger-parser';
 import type { OpenApiDocument } from '../types';
-import { readFileContent } from './file-reader';
-import { parseDocumentContent } from './document-parser';
-import { validateOpenApiDocument } from './document-validator';
 import { toDocument } from './to-document';
 
 export async function load(filePath: string): Promise<OpenApiDocument> {
-  const content = readFileContent(filePath);
-  const rawDoc = parseDocumentContent(content, filePath);
-  validateOpenApiDocument(rawDoc);
+  // swagger-parser 会自动解析所有 $ref（包括跨文件引用）
+  const rawDoc = await SwaggerParser.dereference(filePath);
   return toDocument(rawDoc);
 }
