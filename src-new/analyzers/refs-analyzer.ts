@@ -4,7 +4,7 @@
  * - 返回: 引用分析的诊断结果
  */
 
-import type { OpenApiDocument, Diagnostic, JSONSchema, Ref } from '../../types';
+import type { OpenApiDocument, Diagnostic, JSONSchema, Ref } from '../types';
 
 export function analyzeRefs(doc: OpenApiDocument): Diagnostic[] {
   const diagnostics: Diagnostic[] = [];

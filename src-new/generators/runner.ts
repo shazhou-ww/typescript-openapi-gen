@@ -6,7 +6,7 @@
  */
 
 import { Volume } from 'memfs';
-import type { OpenApiDocument, GenerationTask, GenerationResult, Diagnostic, Volume as VolumeType } from '../../types';
+import type { OpenApiDocument, GenerationTask, GenerationResult, Diagnostic, Volume as VolumeType } from '../types';
 import { generateController } from './controller-generator';
 import { generateOpenApi } from './openapi-generator';
 import { generateIr } from './ir-generator';

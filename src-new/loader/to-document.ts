@@ -4,7 +4,7 @@
  * - 返回: 规范化的 OpenApiDocument (IR)
  */
 
-import type { OpenApiDocument, JSONSchema } from '../../types';
+import type { OpenApiDocument, JSONSchema } from '../types';
 import { toPathItem } from './to-path-item';
 import { toJSONSchema } from './to-json-schema';
 

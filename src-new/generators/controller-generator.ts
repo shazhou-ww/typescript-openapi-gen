@@ -5,7 +5,7 @@
  * - 返回: 更新后的 Volume
  */
 
-import type { OpenApiDocument, Volume } from '../../types';
+import type { OpenApiDocument, Volume } from '../types';
 
 export function generateController(doc: OpenApiDocument, volume: Volume): Volume {
   // TODO: 实现控制器生成逻辑

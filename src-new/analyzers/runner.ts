@@ -5,7 +5,7 @@
  * - 返回: 分析结果
  */
 
-import type { OpenApiDocument, AnalysisTask, AnalysisResult, Diagnostic } from '../../types';
+import type { OpenApiDocument, AnalysisTask, AnalysisResult, Diagnostic } from '../types';
 import { analyzeStructure } from './structure-analyzer';
 import { analyzeRefs } from './refs-analyzer';
 

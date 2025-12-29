@@ -5,4 +5,4 @@
  * - 返回: 分析结果
  */
 
-export { runAnalysis } from './impl/runner';
+export { runAnalysis } from './runner';

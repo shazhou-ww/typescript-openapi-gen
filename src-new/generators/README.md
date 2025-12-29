@@ -22,8 +22,8 @@ runGeneration(doc: OpenApiDocument, task: GenerationTask): Promise<GenerationRes
 
 ## 内部实现
 
-- `impl/runner.ts` - 主运行函数
-- `impl/controller-generator.ts` - 控制器生成器
-- `impl/openapi-generator.ts` - OpenAPI 生成器
-- `impl/ir-generator.ts` - IR 生成器
-- `impl/file-writer.ts` - 文件写入工具
+- `runner.ts` - 主运行函数
+- `controller-generator.ts` - 控制器生成器
+- `openapi-generator.ts` - OpenAPI 生成器
+- `ir-generator.ts` - IR 生成器
+- `file-writer.ts` - 文件写入工具

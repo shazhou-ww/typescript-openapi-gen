@@ -5,7 +5,7 @@
  * - 返回: 更新后的 Volume
  */
 
-import type { OpenApiDocument, Volume } from '../../types';
+import type { OpenApiDocument, Volume } from '../types';
 
 export function generateIr(doc: OpenApiDocument, volume: Volume): Volume {
   const content = JSON.stringify(doc, null, 2);

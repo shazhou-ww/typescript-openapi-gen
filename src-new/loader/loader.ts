@@ -4,7 +4,7 @@
  * - 返回: 规范化的 OpenApiDocument (IR)
  */
 
-import type { OpenApiDocument } from '../../types';
+import type { OpenApiDocument } from '../types';
 import { readFileContent } from './file-reader';
 import { parseDocumentContent } from './document-parser';
 import { validateOpenApiDocument } from './document-validator';

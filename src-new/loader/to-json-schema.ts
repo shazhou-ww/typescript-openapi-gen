@@ -4,7 +4,7 @@
  * - 返回: 规范化的 JSONSchema
  */
 
-import type { JSONSchema, Ref } from '../../types';
+import type { JSONSchema, Ref } from '../types';
 
 export function toJSONSchema(raw: unknown): JSONSchema {
   if (!raw || typeof raw !== 'object') {

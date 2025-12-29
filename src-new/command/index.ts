@@ -4,5 +4,5 @@
  * - 返回: 配置好的 Commander 程序实例
  */
 
-export { createProgram } from './impl/program';
-export type { ProgramDeps } from './impl/deps';
+export { createProgram } from './program';
+export type { ProgramDeps } from './deps';

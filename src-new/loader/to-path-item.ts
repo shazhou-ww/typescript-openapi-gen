@@ -4,7 +4,7 @@
  * - 返回: 规范化的 PathItem
  */
 
-import type { PathItem, Method, Parameters, Descriptions } from '../../types';
+import type { PathItem, Method, Parameters, Descriptions } from '../types';
 import { toOperation } from './to-operation';
 import { toJSONSchema, toRef, isRef } from './to-json-schema';
 

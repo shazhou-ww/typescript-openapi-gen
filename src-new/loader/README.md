@@ -15,11 +15,11 @@ load(path: string): Promise<OpenApiDocument>
 
 ## 内部实现
 
-- `impl/loader.ts` - 主加载函数
-- `impl/file-reader.ts` - 读取文件内容
-- `impl/document-parser.ts` - 解析 YAML/JSON
-- `impl/document-validator.ts` - 验证文档结构
-- `impl/to-document.ts` - 转换为 OpenApiDocument
-- `impl/to-path-item.ts` - 转换 PathItem
-- `impl/to-operation.ts` - 转换 Operation
-- `impl/to-json-schema.ts` - 转换 JSONSchema
+- `loader.ts` - 主加载函数
+- `file-reader.ts` - 读取文件内容
+- `document-parser.ts` - 解析 YAML/JSON
+- `document-validator.ts` - 验证文档结构
+- `to-document.ts` - 转换为 OpenApiDocument
+- `to-path-item.ts` - 转换 PathItem
+- `to-operation.ts` - 转换 Operation
+- `to-json-schema.ts` - 转换 JSONSchema

@@ -21,6 +21,6 @@ runAnalysis(doc: OpenApiDocument, task: AnalysisTask): Promise<AnalysisResult>
 
 ## 内部实现
 
-- `impl/runner.ts` - 主运行函数
-- `impl/structure-analyzer.ts` - 结构分析器
-- `impl/refs-analyzer.ts` - 引用分析器
+- `runner.ts` - 主运行函数
+- `structure-analyzer.ts` - 结构分析器
+- `refs-analyzer.ts` - 引用分析器

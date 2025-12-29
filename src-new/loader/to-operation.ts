@@ -4,7 +4,7 @@
  * - 返回: 规范化的 Operation
  */
 
-import type { Operation, Parameters, ResponseItem, Descriptions } from '../../types';
+import type { Operation, Parameters, ResponseItem, Descriptions } from '../types';
 import { toJSONSchema, toRef, isRef } from './to-json-schema';
 
 export function toOperation(raw: unknown): Operation {

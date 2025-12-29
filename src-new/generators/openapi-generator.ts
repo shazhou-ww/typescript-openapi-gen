@@ -5,7 +5,7 @@
  * - 返回: 更新后的 Volume
  */
 
-import type { OpenApiDocument, Volume } from '../../types';
+import type { OpenApiDocument, Volume } from '../types';
 import * as yaml from 'js-yaml';
 
 export function generateOpenApi(doc: OpenApiDocument, volume: Volume): Volume {

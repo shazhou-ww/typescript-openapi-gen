@@ -18,7 +18,7 @@ createProgram(deps: ProgramDeps): Command
 
 ## 内部实现
 
-- `impl/program.ts` - 创建程序
-- `impl/ir-command.ts` - IR 命令
-- `impl/gen-command.ts` - 生成命令
-- `impl/deps.ts` - 依赖类型定义
+- `program.ts` - 创建程序
+- `ir-command.ts` - IR 命令
+- `gen-command.ts` - 生成命令
+- `deps.ts` - 依赖类型定义

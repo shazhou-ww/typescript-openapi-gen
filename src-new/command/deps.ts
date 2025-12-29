@@ -4,7 +4,7 @@
  * 导出: ProgramDeps
  */
 
-import type { OpenApiDocument, AnalysisTask, GenerationTask, AnalysisResult, GenerationResult } from '../../types';
+import type { OpenApiDocument, AnalysisTask, GenerationTask, AnalysisResult, GenerationResult } from '../types';
 
 export type ProgramDeps = {
   load: (path: string) => Promise<OpenApiDocument>;

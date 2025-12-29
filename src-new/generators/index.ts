@@ -5,4 +5,4 @@
  * - 返回: 生成结果
  */
 
-export { runGeneration } from './impl/runner';
+export { runGeneration } from './runner';

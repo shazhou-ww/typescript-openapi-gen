@@ -4,7 +4,7 @@
  * - 返回: 结构分析的诊断结果
  */
 
-import type { OpenApiDocument, Diagnostic } from '../../types';
+import type { OpenApiDocument, Diagnostic } from '../types';
 
 export function analyzeStructure(doc: OpenApiDocument): Diagnostic[] {
   const diagnostics: Diagnostic[] = [];
