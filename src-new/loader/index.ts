@@ -1,5 +1,7 @@
-// 导出类型
-export type { Loader, LoaderAPI } from './types';
+/**
+ * load(path: string): Promise<OpenApiDocument>
+ * - path: OpenAPI 文件路径
+ * - 返回: 规范化的 OpenApiDocument (IR)
+ */
 
-// 导出实现
-export { createLoader } from './impl/loader';
+export { load } from './impl/loader';

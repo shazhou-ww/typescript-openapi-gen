@@ -1,11 +1,13 @@
-# Types (多模块文件夹)
+# Types (类型模块)
 
-## 共同点
+## 职责
 
-所有模块都定义项目的类型系统和接口规范。
+定义项目共享类型，按语义组织，无单一职责要求。
 
-## 包含模块
+## 包含文件
 
-- **core.ts**: 核心类型定义
-- **index.ts**: 类型导出
-- **openapi.ts**: OpenAPI 相关类型
+- **json-schema.ts**: JSONSchema, Ref 类型定义
+- **document.ts**: OpenApiDocument (IR) 类型定义
+- **task.ts**: Task 类型定义
+- **result.ts**: Result, Diagnostic 类型定义
+- **index.ts**: 统一导出

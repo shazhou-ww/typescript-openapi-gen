@@ -2,12 +2,24 @@
 
 ## 职责
 
-createLoader(): LoaderAPI
+加载 OpenAPI 文档并转换为规范化的 OpenApiDocument (IR)。
 
-- 返回: 包含加载和转换功能的完整 Loader API
+## 聚合入口
 
-## 主要功能
+```typescript
+load(path: string): Promise<OpenApiDocument>
+```
 
-- load(filePath: string): Promise&lt;OpenApiDocument&gt; - 加载并解析 OpenAPI 文档
+- **path**: OpenAPI 文件路径（支持 YAML/JSON）
+- **返回**: 规范化的 OpenApiDocument
 
-- toIR(document: OpenApiDocument): IR - 将文档转换为中间表示
+## 内部实现
+
+- `impl/loader.ts` - 主加载函数
+- `impl/file-reader.ts` - 读取文件内容
+- `impl/document-parser.ts` - 解析 YAML/JSON
+- `impl/document-validator.ts` - 验证文档结构
+- `impl/to-document.ts` - 转换为 OpenApiDocument
+- `impl/to-path-item.ts` - 转换 PathItem
+- `impl/to-operation.ts` - 转换 Operation
+- `impl/to-json-schema.ts` - 转换 JSONSchema

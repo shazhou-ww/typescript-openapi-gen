@@ -1,9 +1,19 @@
 #!/usr/bin/env bun
 
 /**
- * 主 CLI 入口点，负责配置和启动应用程序
- * - createDefaultRunnerConfig(): RunnerConfig - 创建默认运行器配置
- * - commandHandler(task: Task): Promise<void> - 处理命令行任务
+ * CLI 入口文件
+ * 组装依赖并启动程序
  */
 
-// ... existing code ...
+import { load } from './loader';
+import { runAnalysis } from './analyzers';
+import { runGeneration } from './generators';
+import { createProgram } from './command';
+
+const program = createProgram({
+  load,
+  runAnalysis,
+  runGeneration,
+});
+
+program.parse(process.argv);

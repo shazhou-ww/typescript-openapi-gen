@@ -1,9 +1,8 @@
-// 导出类型
-export type { Task, AnalysisTask, GenerationTask, CommandHandler } from '../types';
+/**
+ * createProgram(deps: ProgramDeps): Command
+ * - deps: 依赖（load, runAnalysis, runGeneration）
+ * - 返回: 配置好的 Commander 程序实例
+ */
 
-// 导出程序创建函数
-export { createProgram } from './program';
-
-// 导出命令注册函数
-export { registerIrCommand } from './ir';
-export { registerGenCommands } from './gen';
+export { createProgram } from './impl/program';
+export type { ProgramDeps } from './impl/deps';

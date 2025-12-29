@@ -1,11 +1,24 @@
-# Command (多模块文件夹)
+# Command (单模块文件夹)
 
-## 共同点
+## 职责
 
-所有模块都负责处理命令行接口，提供任务创建和命令注册功能。
+创建 CLI 程序，注册所有命令。
 
-## 包含模块
+## 聚合入口
 
-- **program/**: 程序创建和配置
-- **ir.ts**: IR 命令注册
-- **gen.ts**: 生成命令注册
+```typescript
+createProgram(deps: ProgramDeps): Command
+```
+
+- **deps**: 依赖对象
+  - `load`: 加载 OpenAPI 文档
+  - `runAnalysis`: 运行分析
+  - `runGeneration`: 运行生成
+- **返回**: Commander Program 实例
+
+## 内部实现
+
+- `impl/program.ts` - 创建程序
+- `impl/ir-command.ts` - IR 命令
+- `impl/gen-command.ts` - 生成命令
+- `impl/deps.ts` - 依赖类型定义

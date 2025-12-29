@@ -1,15 +1,29 @@
-# Generators (多模块文件夹)
+# Generators (单模块文件夹)
 
-## 共同点
+## 职责
 
-所有模块都负责从 OpenAPI 文档生成各种类型的代码文件和配置。
+从 OpenApiDocument 生成代码，返回生成结果。
 
-## 包含模块
+## 聚合入口
 
-- **registry/**: 生成器注册表管理
-- **composite/**: 组合生成器
-- **controller/**: 控制器代码生成
-- **openapi/**: OpenAPI 规范生成
-- **ir/**: 中间表示生成
-- **formatter/**: 代码格式化
-- **defaults/**: 默认生成器配置
+```typescript
+runGeneration(doc: OpenApiDocument, task: GenerationTask): Promise<GenerationResult>
+```
+
+- **doc**: OpenApiDocument
+- **task**: 生成任务，包含要运行的 generator 名称列表、输出目录等
+- **返回**: GenerationResult，包含 success、diagnostics、files、volume
+
+## 可用的 Generators
+
+- `controller` - 生成控制器代码
+- `openapi` - 生成 OpenAPI 规范文件
+- `ir` - 生成 IR JSON 文件
+
+## 内部实现
+
+- `impl/runner.ts` - 主运行函数
+- `impl/controller-generator.ts` - 控制器生成器
+- `impl/openapi-generator.ts` - OpenAPI 生成器
+- `impl/ir-generator.ts` - IR 生成器
+- `impl/file-writer.ts` - 文件写入工具

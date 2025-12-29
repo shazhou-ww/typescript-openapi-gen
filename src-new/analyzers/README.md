@@ -1,11 +1,26 @@
-# Analyzers (多模块文件夹)
+# Analyzers (单模块文件夹)
 
-## 共同点
+## 职责
 
-所有模块都负责对 OpenAPI 文档进行分析和验证，提供诊断信息和分析结果。
+分析 OpenApiDocument，返回诊断结果。
 
-## 包含模块
+## 聚合入口
 
-- **registry/**: 分析器注册表管理
-- **validator/**: OpenAPI 文档验证器
-- **defaults.ts**: 默认分析器配置
+```typescript
+runAnalysis(doc: OpenApiDocument, task: AnalysisTask): Promise<AnalysisResult>
+```
+
+- **doc**: OpenApiDocument
+- **task**: 分析任务，包含要运行的 analyzer 名称列表
+- **返回**: AnalysisResult，包含 success 和 diagnostics
+
+## 可用的 Analyzers
+
+- `structure` - 检查文档结构（路径、操作是否存在）
+- `refs` - 检查引用是否有效
+
+## 内部实现
+
+- `impl/runner.ts` - 主运行函数
+- `impl/structure-analyzer.ts` - 结构分析器
+- `impl/refs-analyzer.ts` - 引用分析器
