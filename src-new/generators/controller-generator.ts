@@ -6,10 +6,21 @@
  */
 
 import type { OpenApiDocument, Volume } from '../types';
+import { buildRouteTree } from './route-tree';
+import { generateControllersRecursive } from './controller-recursive';
+import { generateSharedTypes } from './shared-types-generator';
+
+const CONTROLLER_FOLDER = 'controller';
+const SHARED_TYPES_FOLDER = 'shared-types';
 
 export function generateController(doc: OpenApiDocument, volume: Volume): Volume {
-  // TODO: 实现控制器生成逻辑
-  // 这里应该基于现有 src/lib/controller-generator 实现
-  console.log('Generating controllers...');
+  volume.mkdirSync('/', { recursive: true });
+  volume.mkdirSync(`/${CONTROLLER_FOLDER}`, { recursive: true });
+  volume.mkdirSync(`/${SHARED_TYPES_FOLDER}`, { recursive: true });
+
+  const routeTree = buildRouteTree(doc);
+  generateSharedTypes(volume, doc, `/${SHARED_TYPES_FOLDER}`);
+  generateControllersRecursive(volume, routeTree, `/${CONTROLLER_FOLDER}`, `/${SHARED_TYPES_FOLDER}`);
+
   return volume;
 }

@@ -10,6 +10,10 @@ import type { OpenApiDocument, GenerationTask, GenerationResult, Diagnostic, Vol
 import { generateController } from './controller-generator';
 import { generateOpenApi } from './openapi-generator';
 import { generateIr } from './ir-generator';
+import { generateExpressRouter } from './express-router-generator';
+import { generateElysiaRouter } from './elysia-router-generator';
+import { generateFastifyRouter } from './fastify-router-generator';
+import { generateHonoRouter } from './hono-router-generator';
 import { writeVolumeToDisk } from './file-writer';
 
 type GeneratorFn = (doc: OpenApiDocument, volume: VolumeType) => VolumeType;
@@ -18,6 +22,10 @@ const GENERATORS: Record<string, GeneratorFn> = {
   'controller': generateController,
   'openapi': generateOpenApi,
   'ir': generateIr,
+  'express-router': generateExpressRouter,
+  'elysia-router': generateElysiaRouter,
+  'fastify-router': generateFastifyRouter,
+  'hono-router': generateHonoRouter,
 };
 
 type GenerationState = { volume: VolumeType; diagnostics: Diagnostic[] };
