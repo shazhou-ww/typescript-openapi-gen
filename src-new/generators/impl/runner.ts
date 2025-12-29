@@ -20,54 +20,56 @@ const GENERATORS: Record<string, GeneratorFn> = {
   'ir': generateIr,
 };
 
+type GenerationState = { volume: VolumeType; diagnostics: Diagnostic[] };
+
 export async function runGeneration(
   doc: OpenApiDocument,
   task: GenerationTask
 ): Promise<GenerationResult> {
-  const diagnostics: Diagnostic[] = [];
-  let volume: VolumeType = new Volume();
+  const initial: GenerationState = { volume: new Volume(), diagnostics: [] };
 
-  for (const generatorName of task.generators) {
-    const generator = GENERATORS[generatorName];
-    if (!generator) {
-      diagnostics.push({
-        type: 'error',
-        message: `Unknown generator: ${generatorName}`,
-        location: null,
-        code: 'UNKNOWN_GENERATOR',
-      });
-      continue;
-    }
-
-    try {
-      volume = generator(doc, volume);
-    } catch (error) {
-      diagnostics.push({
-        type: 'error',
-        message: `Generator '${generatorName}' failed: ${error instanceof Error ? error.message : String(error)}`,
-        location: null,
-        code: 'GENERATOR_ERROR',
-      });
-    }
-  }
+  const { volume, diagnostics } = task.generators.reduce(
+    (state, name) => applyGenerator(doc, state, name),
+    initial
+  );
 
   if (task.outputDir) {
-    try {
-      await writeVolumeToDisk(volume, task.outputDir);
-    } catch (error) {
-      diagnostics.push({
-        type: 'error',
-        message: `Failed to write files: ${error instanceof Error ? error.message : String(error)}`,
-        location: null,
-        code: 'WRITE_ERROR',
-      });
-    }
+    await writeVolumeToDisk(volume, task.outputDir).catch(error => {
+      diagnostics.push(createDiagnostic('WRITE_ERROR', `Failed to write files: ${formatError(error)}`));
+    });
   }
 
   const files = getVolumeFiles(volume);
   const hasErrors = diagnostics.some(d => d.type === 'error');
 
   return { success: !hasErrors, diagnostics, files, volume };
+}
+
+function applyGenerator(doc: OpenApiDocument, state: GenerationState, name: string): GenerationState {
+  const generator = GENERATORS[name];
+  if (!generator) {
+    return {
+      ...state,
+      diagnostics: [...state.diagnostics, createDiagnostic('UNKNOWN_GENERATOR', `Unknown generator: ${name}`)],
+    };
+  }
+
+  try {
+    return { ...state, volume: generator(doc, state.volume) };
+  } catch (error) {
+    return {
+      ...state,
+      diagnostics: [...state.diagnostics, createDiagnostic('GENERATOR_ERROR', `Generator '${name}' failed: ${formatError(error)}`)],
+    };
+  }
+}
+
+function createDiagnostic(code: string, message: string): Diagnostic {
+  return { type: 'error', message, location: null, code };
+}
+
+function formatError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 function getVolumeFiles(volume: VolumeType): string[] {
