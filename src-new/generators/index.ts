@@ -1,13 +1,8 @@
 // 导出类型
-export type { GeneratorRegistry } from './registry';
+export type { GeneratorRegistry, GeneratorRegistryManager } from './registry';
 
-// 导出注册表函数
-export {
-  createGeneratorRegistry,
-  registerGenerator,
-  getGenerator,
-  getGeneratorNames,
-} from './registry';
+// 导出注册表管理器
+export { createRegistryManager } from './registry';
 
 // 导出组合 generator 函数
 export { createCompositeGenerator } from './composite';

@@ -1,41 +1,31 @@
+/**
+ * createRegistryManager(): AnalyzerRegistryManager
+ * - 返回: 分析器注册表管理器，提供注册和查询功能
+ */
 import { Analyzer } from '../../types';
 
-/**
- * Analyzer 注册表类型
- */
 export type AnalyzerRegistry = Map<string, Analyzer<any>>;
 
-/**
- * 创建 analyzer 注册表
- */
-export function createAnalyzerRegistry(): AnalyzerRegistry {
-  return new Map<string, Analyzer<any>>();
-}
+export type AnalyzerRegistryManager = {
+  register: (name: string, analyzer: Analyzer<any>) => void;
+  get: (name: string) => Analyzer<any> | undefined;
+  getNames: () => string[];
+};
 
-/**
- * 注册 analyzer
- */
-export function registerAnalyzer(
-  registry: AnalyzerRegistry,
-  name: string,
-  analyzer: Analyzer<any>
-): void {
-  registry.set(name, analyzer);
-}
+export function createRegistryManager(): AnalyzerRegistryManager {
+  const registry: AnalyzerRegistry = new Map();
 
-/**
- * 获取 analyzer
- */
-export function getAnalyzer(
-  registry: AnalyzerRegistry,
-  name: string
-): Analyzer<any> | undefined {
-  return registry.get(name);
-}
+  const register = (name: string, analyzer: Analyzer<any>): void => {
+    registry.set(name, analyzer);
+  };
 
-/**
- * 获取所有已注册的 analyzer 名称
- */
-export function getAnalyzerNames(registry: AnalyzerRegistry): string[] {
-  return Array.from(registry.keys());
+  const get = (name: string): Analyzer<any> | undefined => {
+    return registry.get(name);
+  };
+
+  const getNames = (): string[] => {
+    return Array.from(registry.keys());
+  };
+
+  return { register, get, getNames };
 }

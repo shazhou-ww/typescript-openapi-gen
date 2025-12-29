@@ -1,11 +1,12 @@
-import { createAnalyzerRegistry, registerAnalyzer } from './registry';
+/**
+ * createDefaultAnalyzerRegistry(): AnalyzerRegistry
+ * - 返回: 配置了默认分析器的注册表
+ */
+import { createRegistryManager } from './registry';
 import { createOpenApiValidator } from './validator';
 
-/**
- * 创建默认的 analyzer 注册表
- */
 export function createDefaultAnalyzerRegistry() {
-  const registry = createAnalyzerRegistry();
-  registerAnalyzer(registry, 'validator', createOpenApiValidator());
-  return registry;
+  const manager = createRegistryManager();
+  manager.register('validator', createOpenApiValidator());
+  return manager;
 }

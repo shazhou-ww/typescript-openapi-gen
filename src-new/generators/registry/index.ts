@@ -1,41 +1,31 @@
+/**
+ * createRegistryManager(): GeneratorRegistryManager
+ * - 返回: 生成器注册表管理器，提供注册和查询功能
+ */
 import { Generator } from '../../types';
 
-/**
- * Generator 注册表类型
- */
 export type GeneratorRegistry = Map<string, Generator>;
 
-/**
- * 创建 generator 注册表
- */
-export function createGeneratorRegistry(): GeneratorRegistry {
-  return new Map<string, Generator>();
-}
+export type GeneratorRegistryManager = {
+  register: (name: string, generator: Generator) => void;
+  get: (name: string) => Generator | undefined;
+  getNames: () => string[];
+};
 
-/**
- * 注册 generator
- */
-export function registerGenerator(
-  registry: GeneratorRegistry,
-  name: string,
-  generator: Generator
-): void {
-  registry.set(name, generator);
-}
+export function createRegistryManager(): GeneratorRegistryManager {
+  const registry: GeneratorRegistry = new Map();
 
-/**
- * 获取 generator
- */
-export function getGenerator(
-  registry: GeneratorRegistry,
-  name: string
-): Generator | undefined {
-  return registry.get(name);
-}
+  const register = (name: string, generator: Generator): void => {
+    registry.set(name, generator);
+  };
 
-/**
- * 获取所有已注册的 generator 名称
- */
-export function getGeneratorNames(registry: GeneratorRegistry): string[] {
-  return Array.from(registry.keys());
+  const get = (name: string): Generator | undefined => {
+    return registry.get(name);
+  };
+
+  const getNames = (): string[] => {
+    return Array.from(registry.keys());
+  };
+
+  return { register, get, getNames };
 }

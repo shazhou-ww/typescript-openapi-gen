@@ -1,5 +1,5 @@
 // 导出类型
-export type { Loader } from './types';
+export type { Loader, LoaderAPI } from './types';
 
 // 导出实现
-export { createOpenApiLoader, documentToIR } from './impl';
+export { createLoader } from './impl/loader';

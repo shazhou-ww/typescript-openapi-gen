@@ -1,10 +1,12 @@
+/**
+ * createProgram(handler: (task: any) => Promise<void>): Command
+ * - handler: 任务处理器函数
+ * - 返回: 配置好的 Commander 程序实例
+ */
 import { Command } from 'commander';
 import { registerIrCommand } from '../ir';
 import { registerGenCommands } from '../gen';
 
-/**
- * 创建并配置 Commander 程序
- */
 export function createProgram(handler: (task: any) => Promise<void>): Command {
   const program = new Command();
 

@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { AnalysisTask, CommandHandler } from './index';
+import { AnalysisTask, CommandHandler } from '../types';
 
 /**
  * 注册 IR 命令

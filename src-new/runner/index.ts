@@ -1,16 +1,16 @@
 import { Volume, createFsFromVolume } from 'memfs';
 import { Task, TaskResult, AnalysisTask, GenerationTask, Diagnostic } from '../types';
 import { Loader } from '../loader';
-import { AnalyzerRegistry, getAnalyzer } from '../analyzers';
-import { GeneratorRegistry, getGenerator } from '../generators';
+import { AnalyzerRegistryManager } from '../analyzers';
+import { GeneratorRegistryManager } from '../generators';
 
 /**
  * Runner 配置
  */
 export interface RunnerConfig {
   loader: Loader;
-  analyzerRegistry: AnalyzerRegistry;
-  generatorRegistry: GeneratorRegistry;
+  analyzerRegistry: AnalyzerRegistryManager;
+  generatorRegistry: GeneratorRegistryManager;
 }
 
 /**
@@ -78,7 +78,7 @@ async function runAnalyzers(
   const diagnostics: Diagnostic[] = [];
 
   for (const analyzerName of task.analyzers) {
-    const analyzer = getAnalyzer(config.analyzerRegistry, analyzerName);
+    const analyzer = config.analyzerRegistry.get(analyzerName);
     if (!analyzer) {
       diagnostics.push({
         type: 'error',
@@ -116,7 +116,7 @@ async function runGenerators(
   let currentVolume = volume;
 
   for (const generatorName of task.generators) {
-    const generator = getGenerator(config.generatorRegistry, generatorName);
+    const generator = config.generatorRegistry.get(generatorName);
     if (!generator) {
       diagnostics.push({
         type: 'error',

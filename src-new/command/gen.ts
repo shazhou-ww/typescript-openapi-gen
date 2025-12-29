@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { GenerationTask, CommandHandler } from './index';
+import { GenerationTask, CommandHandler } from '../types';
 
 /**
  * 生成器映射

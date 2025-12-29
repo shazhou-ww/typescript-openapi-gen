@@ -1,14 +1,9 @@
 // 导出类型
-export type { AnalyzerRegistry } from './registry';
+export type { AnalyzerRegistry, AnalyzerRegistryManager } from './registry';
 export type { ValidationDiagnostic } from './validator';
 
-// 导出注册表函数
-export {
-  createAnalyzerRegistry,
-  registerAnalyzer,
-  getAnalyzer,
-  getAnalyzerNames,
-} from './registry';
+// 导出注册表管理器
+export { createRegistryManager } from './registry';
 
 // 导出验证器函数
 export { createOpenApiValidator } from './validator';
