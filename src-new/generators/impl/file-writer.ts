@@ -18,7 +18,7 @@ export async function writeVolumeToDisk(volume: Volume, outputDir: string): Prom
 
     await fs.promises.mkdir(dir, { recursive: true });
 
-    const content = volume.readFileSync(filePath, 'utf-8');
+    const content = volume.readFileSync(filePath, 'utf-8') as string;
     await fs.promises.writeFile(fullPath, content);
   }
 }
@@ -27,7 +27,7 @@ function getAllFiles(volume: Volume, dir: string): string[] {
   const files: string[] = [];
 
   try {
-    const items = volume.readdirSync(dir);
+    const items = volume.readdirSync(dir) as string[];
     for (const item of items) {
       const fullPath = dir === '/' ? `/${item}` : `${dir}/${item}`;
       const stat = volume.statSync(fullPath);
@@ -35,7 +35,7 @@ function getAllFiles(volume: Volume, dir: string): string[] {
       if (stat.isFile()) {
         files.push(fullPath);
       } else if (stat.isDirectory()) {
-        files.push(...getAllFiles(volume, fullPath));
+        getAllFiles(volume, fullPath).forEach(f => files.push(f));
       }
     }
   } catch {
@@ -44,4 +44,3 @@ function getAllFiles(volume: Volume, dir: string): string[] {
 
   return files;
 }
-

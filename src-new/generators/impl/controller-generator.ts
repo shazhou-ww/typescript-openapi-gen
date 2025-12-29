@@ -13,4 +13,3 @@ export function generateController(doc: OpenApiDocument, volume: Volume): Volume
   console.log('Generating controllers...');
   return volume;
 }
-

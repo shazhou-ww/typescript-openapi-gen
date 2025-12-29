@@ -8,7 +8,6 @@
 import type { OpenApiDocument, Volume } from '../../types';
 
 export function generateIr(doc: OpenApiDocument, volume: Volume): Volume {
-  // 将 OpenApiDocument 序列化为 JSON 写入文件
   const content = JSON.stringify(doc, null, 2);
 
   volume.mkdirSync('/', { recursive: true });
@@ -16,4 +15,3 @@ export function generateIr(doc: OpenApiDocument, volume: Volume): Volume {
 
   return volume;
 }
-

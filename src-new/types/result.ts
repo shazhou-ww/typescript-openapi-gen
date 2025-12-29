@@ -6,15 +6,9 @@
  * 用于描述任务执行结果
  */
 
-/** Volume 类型，来自 memfs，用于内存文件系统操作 */
-export type Volume = {
-  writeFileSync: (path: string, content: string) => void;
-  readFileSync: (path: string, encoding: string) => string;
-  mkdirSync: (path: string, options?: { recursive?: boolean }) => void;
-  existsSync: (path: string) => boolean;
-  readdirSync: (path: string) => string[];
-  statSync: (path: string) => { isFile: () => boolean; isDirectory: () => boolean };
-};
+import type { Volume } from 'memfs';
+
+export type { Volume };
 
 export type Diagnostic = {
   type: 'error' | 'warning' | 'info';
@@ -38,4 +32,3 @@ export type GenerationResult = {
   files: string[];
   volume: Volume;
 };
-

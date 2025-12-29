@@ -25,7 +25,7 @@ export async function runGeneration(
   task: GenerationTask
 ): Promise<GenerationResult> {
   const diagnostics: Diagnostic[] = [];
-  let volume = new Volume() as unknown as VolumeType;
+  let volume: VolumeType = new Volume();
 
   for (const generatorName of task.generators) {
     const generator = GENERATORS[generatorName];
@@ -51,7 +51,6 @@ export async function runGeneration(
     }
   }
 
-  // 如果指定了输出目录，写入磁盘
   if (task.outputDir) {
     try {
       await writeVolumeToDisk(volume, task.outputDir);
@@ -76,7 +75,7 @@ function getVolumeFiles(volume: VolumeType): string[] {
 
   const traverse = (dir: string) => {
     try {
-      const items = volume.readdirSync(dir);
+      const items = volume.readdirSync(dir) as string[];
       for (const item of items) {
         const fullPath = dir === '/' ? `/${item}` : `${dir}/${item}`;
         const stat = volume.statSync(fullPath);
@@ -94,4 +93,3 @@ function getVolumeFiles(volume: VolumeType): string[] {
   traverse('/');
   return files;
 }
-

@@ -9,7 +9,6 @@ import type { OpenApiDocument, Volume } from '../../types';
 import * as yaml from 'js-yaml';
 
 export function generateOpenApi(doc: OpenApiDocument, volume: Volume): Volume {
-  // 将 OpenApiDocument 转回 OpenAPI 格式并写入文件
   const openApiDoc = toOpenApiFormat(doc);
   const content = yaml.dump(openApiDoc, { indent: 2, lineWidth: -1 });
 
@@ -28,4 +27,3 @@ function toOpenApiFormat(doc: OpenApiDocument): Record<string, unknown> {
     components: { schemas: doc.types },
   };
 }
-
