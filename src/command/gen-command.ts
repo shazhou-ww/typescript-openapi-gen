@@ -30,8 +30,16 @@ function registerControllerCommand(genCmd: Command, deps: ProgramDeps): void {
     .description('Generate controller skeleton code')
     .argument('<file>', 'OpenAPI specification file')
     .requiredOption('-o, --output-dir <path>', 'Output directory')
-    .action(async (file: string, options: { outputDir: string }) => {
-      await executeGeneration(file, options.outputDir, GENERATOR_MAP.controller, deps);
+    .option('--router <type>', 'Also generate router (elysia|express|fastify|hono)')
+    .action(async (file: string, options: { outputDir: string; router?: string }) => {
+      const generators = [...GENERATOR_MAP.controller];
+      if (options.router) {
+        const routerGenerator = `${options.router}-router`;
+        if (['elysia-router', 'express-router', 'fastify-router', 'hono-router'].includes(routerGenerator)) {
+          generators.push(routerGenerator);
+        }
+      }
+      await executeGeneration(file, options.outputDir, generators, deps);
     });
 }
 

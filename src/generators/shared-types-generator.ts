@@ -20,9 +20,8 @@ export function generateSharedTypes(
     const fileName = `${typeName}.ts`;
     const filePath = `${sharedTypesDir}/${fileName}`;
 
-    const content = `/**
- * ${typeName} type definition
- */
+    const content = `// Auto-generated type file
+// DO NOT EDIT - This file is regenerated on each run
 
 export type ${typeName} = ${typeDef};
 `;
@@ -32,7 +31,13 @@ export type ${typeName} = ${typeDef};
   }
 
   if (indexLines.length > 0) {
-    volume.writeFileSync(`${sharedTypesDir}/index.ts`, indexLines.join('\n'));
+    const indexContent = [
+      '// Auto-generated index file',
+      '// DO NOT EDIT - This file is regenerated on each run',
+      '',
+      ...indexLines,
+    ].join('\n');
+    volume.writeFileSync(`${sharedTypesDir}/index.ts`, indexContent);
   }
 }
 

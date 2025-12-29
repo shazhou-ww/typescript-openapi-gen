@@ -1,7 +1,7 @@
 /**
  * 工具函数
  * 
- * 导出: capitalize, segmentToFsName, routePathToFsPath
+ * 导出: capitalize, segmentToFsName, routePathToFsPath, extractPathParams
  */
 
 export function capitalize(str: string): string {
@@ -19,5 +19,23 @@ export function routePathToFsPath(routePath: string): string {
     .filter(Boolean)
     .map(segmentToFsName)
     .join('/');
+}
+
+export function extractPathParams(routePath: string): string[] {
+  const paramRegex = /\{([^}]+)\}/g;
+  const params: string[] = [];
+  let match: RegExpExecArray | null;
+
+  while ((match = paramRegex.exec(routePath)) !== null) {
+    params.push(match[1]);
+  }
+
+  return params;
+}
+
+export function segmentToExportName(segment: string): string {
+  // Convert segment to valid JavaScript identifier
+  // Replace all non-alphanumeric characters (except _ and $) with underscore
+  return segment.replace(/[^a-zA-Z0-9_$]/g, '_');
 }
 

@@ -17,12 +17,18 @@ export function generateMethodFile(
 ): void {
   const methodName = capitalize(method);
   const outputTypeName = `${methodName}Output`;
+  const filePath = `${controllerDir}/${method}.ts`;
+
+  // Don't overwrite if file already exists
+  if (volume.existsSync(filePath)) {
+    return;
+  }
 
   const content = `/**
  * ${methodName} handler
  */
 
-import type { ${methodName}Input, ${outputTypeName} } from './types.gen';
+import type { ${methodName}Input, ${outputTypeName} } from './types';
 
 export async function handle${methodName}(input: ${methodName}Input): Promise<${outputTypeName}> {
   // @ts-ignore - Implementation required
@@ -30,6 +36,6 @@ export async function handle${methodName}(input: ${methodName}Input): Promise<${
 }
 `;
 
-  volume.writeFileSync(`${controllerDir}/${method}.ts`, content);
+  volume.writeFileSync(filePath, content);
 }
 

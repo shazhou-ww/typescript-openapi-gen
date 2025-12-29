@@ -12,6 +12,7 @@ import { capitalize } from './utils';
 import { generateTypesFile } from './controller-types';
 import { generateMethodFile } from './controller-method';
 import { generateIndexFile } from './controller-index';
+import { generateMethodsFile } from './controller-methods';
 
 export function generateControllerFiles(
   volume: Volume,
@@ -25,6 +26,7 @@ export function generateControllerFiles(
     generateMethodFile(volume, method as Method, operation, controllerDir);
   }
 
+  generateMethodsFile(volume, info, controllerDir, sharedTypesDir);
   generateIndexFile(volume, info, controllerDir);
 }
 

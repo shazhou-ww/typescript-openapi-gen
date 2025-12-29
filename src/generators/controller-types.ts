@@ -8,8 +8,9 @@
 
 import type { Volume, Operation } from '../types';
 import type { RouteInfo } from './route-tree';
-import { capitalize } from './utils';
+import { capitalize, extractPathParams } from './utils';
 import { schemaToTypeScript } from './type-generator';
+import { schemaToZod } from './zod-schema-converter';
 
 export function generateTypesFile(
   volume: Volume,
@@ -18,9 +19,8 @@ export function generateTypesFile(
   sharedTypesDir: string
 ): void {
   const lines: string[] = [
-    '/**',
-    ' * Generated types from OpenAPI specification',
-    ' */',
+    '// Auto-generated types file',
+    '// DO NOT EDIT - This file is regenerated on each run',
     '',
     "import { z } from 'zod';",
     '',
@@ -29,55 +29,101 @@ export function generateTypesFile(
   const referencedTypes = new Set<string>();
 
   for (const [method, operation] of info.methods) {
-    addMethodTypes(lines, method, operation, referencedTypes);
+    addMethodTypes(lines, method, operation, info.path, referencedTypes, sharedTypesDir);
   }
 
   addImports(lines, referencedTypes, controllerDir, sharedTypesDir);
-  volume.writeFileSync(`${controllerDir}/types.gen.ts`, lines.join('\n'));
+  volume.writeFileSync(`${controllerDir}/types.ts`, lines.join('\n'));
 }
 
 function addMethodTypes(
   lines: string[],
   method: string,
   operation: Operation,
-  referencedTypes: Set<string>
+  routePath: string,
+  referencedTypes: Set<string>,
+  sharedTypesDir: string
 ): void {
   const methodName = capitalize(method);
+  const pathParams = extractPathParams(routePath);
+  const hasQuery = Object.keys(operation.query).length > 0;
+  const hasHeaders = Object.keys(operation.headers).length > 0;
+  const hasBody = operation.body !== null;
+  const inputParts: string[] = [];
 
-  lines.push(`export type ${methodName}Input = {`);
-
-  if (Object.keys(operation.query).length > 0) {
-    lines.push('  query: {');
-    for (const [key, schema] of Object.entries(operation.query)) {
-      const optional = schema && !('$ref' in schema) && schema.required?.includes(key) ? '' : '?';
-      const type = schema ? ('$ref' in schema ? schema.$ref : schemaToTypeScript(schema)) : 'unknown';
-      lines.push(`    ${key}${optional}: ${type};`);
-      if (schema && '$ref' in schema) {
-        referencedTypes.add(schema.$ref);
-      }
-    }
-    lines.push('  };');
+  // Generate params schema and type
+  if (pathParams.length > 0) {
+    const paramsSchema = generateParamsSchema(pathParams);
+    lines.push(`export const ${methodName}ParamsSchema = ${paramsSchema};`);
+    lines.push(`export type ${methodName}Params = z.infer<typeof ${methodName}ParamsSchema>;`);
+    lines.push('');
+    inputParts.push('params');
   }
 
-  if (operation.body) {
-    if ('$ref' in operation.body) {
-      lines.push(`  body: ${operation.body.$ref};`);
+  // Generate query schema and type
+  if (hasQuery) {
+    const querySchema = generateParametersSchema(operation.query, 'query', referencedTypes, sharedTypesDir);
+    lines.push(`export const ${methodName}QuerySchema = ${querySchema};`);
+    lines.push(`export type ${methodName}Query = z.infer<typeof ${methodName}QuerySchema>;`);
+    lines.push('');
+    inputParts.push('query');
+  }
+
+  // Generate headers schema and type
+  if (hasHeaders) {
+    const headersSchema = generateParametersSchema(operation.headers, 'headers', referencedTypes, sharedTypesDir);
+    lines.push(`export const ${methodName}HeadersSchema = ${headersSchema};`);
+    lines.push(`export type ${methodName}Headers = z.infer<typeof ${methodName}HeadersSchema>;`);
+    lines.push('');
+    inputParts.push('headers');
+  }
+
+  // Generate body schema and type
+  if (hasBody) {
+    if ('$ref' in operation.body!) {
+      lines.push(`export const ${methodName}BodySchema = ${operation.body.$ref}Schema;`);
+      lines.push(`export type ${methodName}Body = z.infer<typeof ${methodName}BodySchema>;`);
       referencedTypes.add(operation.body.$ref);
     } else {
-      const bodyType = schemaToTypeScript(operation.body);
-      const indentedBodyType = bodyType.includes('\n')
-        ? bodyType
-            .split('\n')
-            .map((line, i) => (i === 0 ? line : '  ' + line))
-            .join('\n')
-        : bodyType;
-      lines.push(`  body: ${indentedBodyType};`);
+      const bodySchema = schemaToZod(operation.body, sharedTypesDir);
+      lines.push(`export const ${methodName}BodySchema = ${bodySchema};`);
+      lines.push(`export type ${methodName}Body = z.infer<typeof ${methodName}BodySchema>;`);
     }
+    lines.push('');
+    inputParts.push('body');
   }
 
-  lines.push('};');
-  lines.push('');
+  // Generate Input type
+  if (inputParts.length > 0) {
+    const inputProps = inputParts.map(part => {
+      const typeName = `${methodName}${capitalize(part)}`;
+      return `  ${part}: ${typeName}`;
+    }).join(';\n');
+    lines.push(`export type ${methodName}Input = {`);
+    lines.push(inputProps);
+    lines.push('};');
+    lines.push('');
 
+    // Generate InputSchema for validation
+    // Body schema is validated separately, so use z.unknown() in InputSchema
+    const schemaProps = inputParts.map(part => {
+      if (part === 'body') {
+        return `  ${part}: z.unknown()`;
+      }
+      const schemaName = `${methodName}${capitalize(part)}Schema`;
+      return `  ${part}: ${schemaName}`;
+    }).join(',\n');
+    lines.push(`export const ${methodName}InputSchema = z.object({`);
+    lines.push(schemaProps);
+    lines.push('});');
+    lines.push('');
+  } else {
+    lines.push(`export type ${methodName}Input = {};`);
+    lines.push(`export const ${methodName}InputSchema = z.object({});`);
+    lines.push('');
+  }
+
+  // Generate Output type
   const response200 = operation.responses['200'] || operation.responses['201'];
   if (response200?.content) {
     const responseType = '$ref' in response200.content ? response200.content.$ref : schemaToTypeScript(response200.content);
@@ -91,6 +137,37 @@ function addMethodTypes(
   lines.push('');
 }
 
+function generateParamsSchema(pathParams: string[]): string {
+  if (pathParams.length === 0) return 'z.object({})';
+  const props = pathParams.map(p => `  ${p}: z.string()`).join(',\n');
+  return `z.object({\n${props}\n})`;
+}
+
+function generateParametersSchema(
+  parameters: Operation['query'],
+  paramType: 'query' | 'headers',
+  referencedTypes: Set<string>,
+  sharedTypesDir: string
+): string {
+  if (Object.keys(parameters).length === 0) return 'z.object({})';
+
+  const props: string[] = [];
+  for (const [key, schema] of Object.entries(parameters)) {
+    if ('$ref' in schema) {
+      props.push(`  ${key}: ${schema.$ref}Schema`);
+      referencedTypes.add(schema.$ref);
+    } else {
+      const zodSchema = schemaToZod(schema, sharedTypesDir);
+      const required = schema.required?.includes(key);
+      const propZod = required ? zodSchema : `${zodSchema}.optional()`;
+      props.push(`  ${key}: ${propZod}`);
+    }
+  }
+
+  if (props.length === 0) return 'z.object({})';
+  return `z.object({\n${props.join(',\n')}\n})`;
+}
+
 function addImports(
   lines: string[],
   referencedTypes: Set<string>,
@@ -102,8 +179,8 @@ function addImports(
   const relativePath = getRelativePath(controllerDir, sharedTypesDir);
   const typeList = Array.from(referencedTypes).sort().join(', ');
 
-  lines.splice(5, 0, `import type { ${typeList} } from '${relativePath}';`);
-  lines.splice(6, 0, `import { ${Array.from(referencedTypes).map(t => `${t}Schema`).join(', ')} } from '${relativePath}';`);
+  lines.splice(3, 0, `import type { ${typeList} } from '${relativePath}';`);
+  lines.splice(4, 0, `import { ${Array.from(referencedTypes).map(t => `${t}Schema`).join(', ')} } from '${relativePath}';`);
 }
 
 function getRelativePath(from: string, to: string): string {

@@ -9,6 +9,7 @@
 import type { Volume } from '../types';
 import type { RouteInfo } from './route-tree';
 import { generateControllerFiles } from './controller-files';
+import { generateIndexFile } from './controller-index';
 
 export function generateControllersRecursive(
   volume: Volume,
@@ -22,6 +23,9 @@ export function generateControllersRecursive(
 
     if (info.methods.size > 0) {
       generateControllerFiles(volume, info, currentDir, sharedTypesDir);
+    } else if (info.children.size > 0) {
+      // Even if no methods, generate index.ts to export children
+      generateIndexFile(volume, info, currentDir);
     }
 
     if (info.children.size > 0) {

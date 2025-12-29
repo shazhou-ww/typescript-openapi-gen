@@ -13,6 +13,7 @@ export type FlatRoute = {
   operation: Operation;
   handlerName: string;
   controllerPath: string;
+  controllerImportPath: string[];
 };
 
 const METHOD_ORDER: Method[] = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'];
@@ -26,6 +27,7 @@ export function collectRoutes(doc: OpenApiDocument): FlatRoute[] {
 
       const methodName = capitalize(method);
       const controllerPath = routePathToControllerPath(routePath);
+      const controllerImportPath = routePathToControllerImportPath(routePath);
 
       routes.push({
         path: routePath,
@@ -33,6 +35,7 @@ export function collectRoutes(doc: OpenApiDocument): FlatRoute[] {
         operation,
         handlerName: `handle${methodName}`,
         controllerPath,
+        controllerImportPath,
       });
     }
   }
@@ -50,5 +53,12 @@ function routePathToControllerPath(routePath: string): string {
     .filter(Boolean)
     .map(segment => segment.replace(/^\{(.+)\}$/, '_$1'))
     .join('/');
+}
+
+function routePathToControllerImportPath(routePath: string): string[] {
+  return routePath
+    .split('/')
+    .filter(Boolean)
+    .map(segment => segment.replace(/^\{(.+)\}$/, '_$1'));
 }
 
