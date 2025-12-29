@@ -28,23 +28,27 @@
 
 #### 单模块文件夹 (Single Module Folder)
 - **必须包含 `index.ts`**
-- **单一职责**：`index.ts` 中只 export 一个函数
-- 示例：`loader/` - 负责加载 OpenAPI 文档
+- **单一职责**：`index.ts` 中只 export 一个函数（types 可以多个）
+- **扁平结构**：所有实现文件直接放在模块目录下，不需要 `impl/` 子目录
+- 示例：
+  - `loader/` - 负责加载 OpenAPI 文档，export `load` 函数
+  - `analyzers/` - 负责分析文档，export `runAnalysis` 函数
+  - `generators/` - 负责生成代码，export `runGeneration` 函数
+  - `command/` - 负责 CLI 程序，export `createProgram` 函数
 
-#### 多模块文件夹 (Multi Module Folder)
-- **没有 `index.ts`**
-- 只是对多个相似类型模块的聚类
-- 示例：`generators/` - 包含各种代码生成器
+#### 类型模块文件夹 (Types Module Folder)
+- **可以有 `index.ts`** 统一导出
+- **无单一职责限制**：按语义组织相关类型
+- 示例：`types/` - 包含 `document.ts`、`task.ts`、`result.ts` 等
 
 ### 6. 导入规范
-- **禁止显示导入 `index.ts`**
-- 应该直接导入具体的文件：`import { func } from './impl'`
-- 保持导入路径清晰和明确
+- **禁止显式导入 `index.ts`**
+- 导入模块时直接导入文件夹：`import { load } from './loader'`
+- 内部文件间导入具体文件：`import { toDocument } from './to-document'`
 
 ### 7. 文件夹文档
 - **每个文件夹必须有 `README.md`**
-- 单模块文件夹：说明职责
-- 多模块文件夹：说明模块共同点
+- 说明模块职责、聚合入口函数、内部实现文件列表
 
 ### 8. 文件布局规范
 每个文件必须遵循统一的布局：
@@ -52,13 +56,15 @@
 ```typescript
 // 文件顶部职责说明注释
 /**
- * 此文件的职责是什么
+ * functionName(params): ReturnType
+ * - param1: 参数说明
+ * - 返回: 返回值说明
  */
 
 // imports 部分
 import statements...
 
-// types 部分
+// types 部分（如果需要）
 type definitions...
 
 // export function (只有一个)
@@ -76,8 +82,7 @@ function helperFunction(...) {
 - **每个文件顶部必须有职责说明注释**
 - 使用 `/** */` 格式
 - 格式要求：
-  - 输出函数名
-  - 函数的签名
+  - 输出函数名和签名
   - 输入参数代表什么
   - 输出结果代表什么
 
@@ -89,7 +94,7 @@ function helperFunction(...) {
 - [ ] 每个函数是否超过 20 行？
 - [ ] 每个文件是否超过 200 行？
 - [ ] 文件是否只 export 一个函数？
-- [ ] 文件夹结构是否正确（单模块 vs 多模块）？
+- [ ] 单模块文件夹是否有 index.ts 且只 export 一个函数？
 - [ ] 是否直接导入了 index.ts？
 - [ ] 每个文件夹是否有 README.md？
 - [ ] 文件布局是否符合规范？
@@ -100,14 +105,15 @@ function helperFunction(...) {
 ### 函数拆分技巧
 1. **提取纯函数**：将复杂逻辑提取为独立的纯函数
 2. **参数传递**：通过参数传递数据，避免闭包
-3. **组合函数**：使用函数组合来构建复杂行为
+3. **组合函数**：使用函数组合来构建复杂行为（如 reduce）
 
 ### 文件拆分技巧
 1. **职责分离**：每个文件只做一件事
-2. **类型分离**：将类型定义移到单独的文件
-3. **工具函数**：将通用工具函数提取到 utils 文件
+2. **类型分离**：将类型定义移到 `types/` 模块
+3. **工具函数**：将通用工具函数提取到独立文件
 
-### 文件夹重构
-1. **识别职责**：确定文件夹是单模块还是多模块
-2. **创建索引**：单模块文件夹需要 index.ts
-3. **文档化**：为每个文件夹创建 README.md
+### 文件夹组织
+1. **单模块文件夹**：有 index.ts，只 export 一个函数
+2. **类型模块**：types/ 按语义组织，无单一职责限制
+3. **扁平结构**：不需要 impl/ 子目录，文件直接放在模块目录下
+4. **文档化**：为每个文件夹创建 README.md
