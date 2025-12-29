@@ -5,6 +5,7 @@
  */
 
 import SwaggerParser from '@apidevtools/swagger-parser';
+import type { OpenAPI } from 'openapi-types';
 import type { OpenApiDocument } from '../types';
 import { toDocument } from './to-document';
 

@@ -24,8 +24,9 @@ export function generateElysiaRouter(doc: OpenApiDocument, volume: Volume): Volu
 
   for (const route of routes) {
     const importPath = `./controller/${route.controllerPath}`;
-    imports.push(`import { ${route.handlerName} } from '${importPath}';`);
-    routeHandlers.push(`  .${route.method}('${route.path}', ${route.handlerName})`);
+    const alias = route.handlerName + '_' + route.controllerPath.replace(/\//g, '_').replace(/[^a-zA-Z0-9_]/g, '_');
+    imports.push(`import { ${route.handlerName} as ${alias} } from '${importPath}';`);
+    routeHandlers.push(`  .${route.method}('${route.path}', ${alias})`);
   }
 
   lines.push(...imports);

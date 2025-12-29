@@ -1,18 +1,15 @@
 /**
- * toDocument(raw: unknown): OpenApiDocument
+ * toDocument(raw: OpenAPI.Document): OpenApiDocument
  * - raw: 原始的 OpenAPI 文档对象
  * - 返回: 规范化的 OpenApiDocument (IR)
  */
 
+import type { OpenAPI } from 'openapi-types';
 import type { OpenApiDocument, JSONSchema } from '../types';
 import { toPathItem } from './to-path-item';
 import { toJSONSchema } from './to-json-schema';
 
-export function toDocument(raw: unknown): OpenApiDocument {
-  if (!raw || typeof raw !== 'object') {
-    return { paths: {}, types: {} };
-  }
-
+export function toDocument(raw: OpenAPI.Document): OpenApiDocument {
   const doc = raw as Record<string, unknown>;
 
   return {

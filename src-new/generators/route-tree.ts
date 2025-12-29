@@ -34,13 +34,14 @@ function addRouteToTree(
 
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
+    const fsSegment = segmentToFsName(segment);
     const partialPath = '/' + segments.slice(0, i + 1).join('/');
 
-    if (!current.has(segment)) {
-      current.set(segment, createRouteInfo(partialPath));
+    if (!current.has(fsSegment)) {
+      current.set(fsSegment, createRouteInfo(partialPath));
     }
 
-    const node = current.get(segment)!;
+    const node = current.get(fsSegment)!;
 
     if (i === segments.length - 1) {
       addMethodsToNode(node, pathItem);

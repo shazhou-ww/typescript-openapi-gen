@@ -60,10 +60,18 @@ function addMethodTypes(
   }
 
   if (operation.body) {
-    const bodyType = '$ref' in operation.body ? operation.body.$ref : schemaToTypeScript(operation.body);
-    lines.push(`  body: ${bodyType};`);
     if ('$ref' in operation.body) {
+      lines.push(`  body: ${operation.body.$ref};`);
       referencedTypes.add(operation.body.$ref);
+    } else {
+      const bodyType = schemaToTypeScript(operation.body);
+      const indentedBodyType = bodyType.includes('\n')
+        ? bodyType
+            .split('\n')
+            .map((line, i) => (i === 0 ? line : '  ' + line))
+            .join('\n')
+        : bodyType;
+      lines.push(`  body: ${indentedBodyType};`);
     }
   }
 
