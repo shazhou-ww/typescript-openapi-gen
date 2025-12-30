@@ -7,7 +7,7 @@
 
 import type { Volume } from '../../types';
 import type { RouteInfo } from './route-tree';
-import { capitalize, segmentToExportName } from '../utils';
+import { capitalize, segmentToExportName } from '../common/utils';
 
 export function generateIndexFile(
   volume: Volume,

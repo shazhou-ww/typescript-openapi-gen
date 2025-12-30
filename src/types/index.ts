@@ -13,7 +13,7 @@ export type {
 } from './document';
 
 // Task 类型
-export type { Task, AnalysisTask, GenerationTask, ShouldOverwriteFn, GeneratorResult } from './task';
+export type { Task, AnalysisTask, GenerationTask, GenerationOptions, RouterType, RouterOptions, ControllerOptions, SharedTypeOptions, PrettierOptions } from './task';
 
 // Result 类型
 export type { Diagnostic, AnalysisResult, GenerationResult, Volume } from './result';

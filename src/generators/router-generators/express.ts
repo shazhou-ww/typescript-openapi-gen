@@ -1,22 +1,24 @@
 /**
- * generateHonoRouter(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult
+ * generateExpressRouter(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult
  * - doc: OpenApiDocument
+ * - options: 生成选项
  * - result: 之前的生成结果
  * - 返回: 修饰后的生成结果
  */
 
-import type { OpenApiDocument, GeneratorResult, ShouldOverwriteFn } from '../types';
-import { collectRoutes } from './route-collector';
-import { extractPathParams, segmentToExportName } from './utils';
+import type { OpenApiDocument, GenerationOptions } from '../../types';
+import type { GeneratorResult, ShouldOverwriteFn } from '../types';
+import { collectRoutes } from '../common/route-collector';
+import { extractPathParams, segmentToExportName } from '../common/utils';
 
-export function generateHonoRouter(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult {
+export function generateExpressRouter(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult {
   const { volume } = result;
   const routes = collectRoutes(doc);
   const lines: string[] = [
-    '// Auto-generated Hono routes from OpenAPI specification',
+    '// Auto-generated Express routes from OpenAPI specification',
     '// DO NOT EDIT - This file is regenerated on each run',
     '',
-    "import { Hono } from 'hono';",
+    "import { Router } from 'express';",
   ];
 
   // Get top-level modules
@@ -25,13 +27,8 @@ export function generateHonoRouter(doc: OpenApiDocument, result: GeneratorResult
     lines.push(`import { ${topLevelModules.join(', ')} } from './controller';`);
   }
   lines.push('');
-  lines.push('export const app = new Hono();');
+  lines.push('export const router = Router();');
   lines.push('');
-  lines.push('/**');
-  lines.push(' * Decorates a Hono app with generated routes.');
-  lines.push(' * Usage: const app = new Hono(); decorate(app);');
-  lines.push(' */');
-  lines.push('export function decorate<T extends Hono>(app: T): T {');
 
   // Generate routes
   for (const route of routes) {
@@ -39,15 +36,15 @@ export function generateHonoRouter(doc: OpenApiDocument, result: GeneratorResult
   }
 
   lines.push('');
-  lines.push('  return app');
-  lines.push('}');
-  lines.push('');
-  lines.push('export default decorate');
+  lines.push('export default router;');
+
+  const routerPath = options.routers.express.path;
+  const filePath = `/${routerPath}`;
 
   volume.mkdirSync('/', { recursive: true });
-  volume.writeFileSync('/hono-router.ts', lines.join('\n'));
+  volume.writeFileSync(filePath, lines.join('\n'));
 
-  const routerShouldOverwrite: ShouldOverwriteFn = (path: string) => path === '/hono-router.ts';
+  const routerShouldOverwrite: ShouldOverwriteFn = (path: string) => path === filePath;
   const shouldOverwrite = combineShouldOverwrite(result.shouldOverwrite, routerShouldOverwrite);
 
   return { volume, shouldOverwrite };
@@ -70,26 +67,26 @@ function getTopLevelModules(routes: ReturnType<typeof collectRoutes>): string[] 
 function generateRoute(route: ReturnType<typeof collectRoutes>[0]): string {
   const controllerPath = buildControllerPath(route.controllerImportPath);
   const handlerCall = `${controllerPath}.${route.handlerName}`;
-  const honoPath = convertToHonoPath(route.path);
+  const expressPath = convertToExpressPath(route.path);
   const inputParts = buildInputParts(route);
   const inputObject = buildInputObject(inputParts);
 
   const lines: string[] = [];
-  lines.push(`  app.${route.method}('${honoPath}', async (c) => {`);
+  lines.push(`router.${route.method}('${expressPath}', async (req, res, next) => {`);
   
   if (inputParts.includes('query')) {
-    lines.push('    const query = c.req.query()');
+    lines.push('  const query = req.query');
   }
   if (inputParts.includes('params')) {
-    lines.push('    const params = c.req.param()');
+    lines.push('  const params = req.params');
   }
   if (inputParts.includes('body')) {
-    lines.push('    const body = await c.req.json()');
+    lines.push('  const body = req.body');
   }
   
-  lines.push(`    const result = await ${handlerCall}(${inputObject})`);
-  lines.push('    return c.json(result)');
-  lines.push('  })');
+  lines.push(`  const result = await ${handlerCall}(${inputObject})`);
+  lines.push('  res.json(result)');
+  lines.push('})');
   
   return lines.join('\n');
 }
@@ -100,7 +97,7 @@ function buildControllerPath(importPath: string[]): string {
   return validSegments.join('.');
 }
 
-function convertToHonoPath(path: string): string {
+function convertToExpressPath(path: string): string {
   return path.replace(/\{([^}]+)\}/g, ':$1');
 }
 

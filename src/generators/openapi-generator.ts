@@ -1,14 +1,16 @@
 /**
- * generateOpenApi(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult
+ * generateOpenApi(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult
  * - doc: OpenApiDocument
+ * - options: 生成选项
  * - result: 之前的生成结果
  * - 返回: 修饰后的生成结果
  */
 
-import type { OpenApiDocument, GeneratorResult, ShouldOverwriteFn } from '../types';
+import type { OpenApiDocument, GenerationOptions } from '../types';
+import type { GeneratorResult, ShouldOverwriteFn } from './types';
 import * as yaml from 'js-yaml';
 
-export function generateOpenApi(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult {
+export function generateOpenApi(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult {
   const { volume } = result;
   const openApiDoc = toOpenApiFormat(doc);
   const content = yaml.dump(openApiDoc, { indent: 2, lineWidth: -1 });

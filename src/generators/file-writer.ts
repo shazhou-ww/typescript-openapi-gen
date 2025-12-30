@@ -6,7 +6,8 @@
  * - 返回: Promise<void>
  */
 
-import type { Volume, ShouldOverwriteFn } from '../types';
+import type { Volume } from '../types';
+import type { ShouldOverwriteFn } from './types';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 

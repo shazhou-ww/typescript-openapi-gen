@@ -1,7 +1,7 @@
 /**
  * 工具函数
  * 
- * 导出: capitalize, segmentToFsName, routePathToFsPath, extractPathParams
+ * 导出: capitalize, segmentToFsName, routePathToFsPath, extractPathParams, segmentToExportName
  */
 
 export function capitalize(str: string): string {

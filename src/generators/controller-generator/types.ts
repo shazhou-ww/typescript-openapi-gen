@@ -8,9 +8,9 @@
 
 import type { Volume, Operation } from '../../types';
 import type { RouteInfo } from './route-tree';
-import { capitalize, extractPathParams } from '../utils';
-import { schemaToTypeScript } from '../type-generator';
-import { schemaToZod } from '../zod-schema-converter';
+import { capitalize, extractPathParams } from '../common/utils';
+import { schemaToTypeScript } from '../common/type-generator';
+import { schemaToZod } from '../common/zod-schema-converter';
 
 export function generateTypesFile(
   volume: Volume,

@@ -1,15 +1,17 @@
 /**
- * generateElysiaRouter(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult
+ * generateElysiaRouter(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult
  * - doc: OpenApiDocument
+ * - options: 生成选项
  * - result: 之前的生成结果
  * - 返回: 修饰后的生成结果
  */
 
-import type { OpenApiDocument, GeneratorResult, ShouldOverwriteFn } from '../types';
-import { collectRoutes } from './route-collector';
-import { extractPathParams, segmentToExportName } from './utils';
+import type { OpenApiDocument, GenerationOptions } from '../../types';
+import type { GeneratorResult, ShouldOverwriteFn } from '../types';
+import { collectRoutes } from '../common/route-collector';
+import { extractPathParams, segmentToExportName } from '../common/utils';
 
-export function generateElysiaRouter(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult {
+export function generateElysiaRouter(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult {
   const { volume } = result;
   const routes = collectRoutes(doc);
   const lines: string[] = [
@@ -41,10 +43,13 @@ export function generateElysiaRouter(doc: OpenApiDocument, result: GeneratorResu
   lines.push('');
   lines.push('export default routerPlugin');
 
-  volume.mkdirSync('/', { recursive: true });
-  volume.writeFileSync('/elysia-router.ts', lines.join('\n'));
+  const routerPath = options.routers.elysia.path;
+  const filePath = `/${routerPath}`;
 
-  const routerShouldOverwrite: ShouldOverwriteFn = (path: string) => path === '/elysia-router.ts';
+  volume.mkdirSync('/', { recursive: true });
+  volume.writeFileSync(filePath, lines.join('\n'));
+
+  const routerShouldOverwrite: ShouldOverwriteFn = (path: string) => path === filePath;
   const shouldOverwrite = combineShouldOverwrite(result.shouldOverwrite, routerShouldOverwrite);
 
   return { volume, shouldOverwrite };

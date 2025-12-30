@@ -4,7 +4,7 @@
  * - 返回: 扁平化的路由列表
  */
 
-import type { OpenApiDocument, PathItem, Operation, Method } from '../types';
+import type { OpenApiDocument, PathItem, Operation, Method } from '../../types';
 import { capitalize } from './utils';
 
 export type FlatRoute = {

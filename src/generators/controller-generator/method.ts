@@ -7,7 +7,7 @@
  */
 
 import type { Volume, Operation, Method } from '../../types';
-import { capitalize } from '../utils';
+import { capitalize } from '../common/utils';
 
 export function generateMethodFile(
   volume: Volume,

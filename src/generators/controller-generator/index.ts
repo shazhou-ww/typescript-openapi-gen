@@ -1,46 +1,47 @@
 /**
- * generateController(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult
+ * generateController(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult
  * - doc: OpenApiDocument
+ * - options: 生成选项
  * - result: 之前的生成结果
  * - 返回: 修饰后的生成结果
  */
 
-import type { OpenApiDocument, GeneratorResult, ShouldOverwriteFn, Volume } from '../../types';
+import type { OpenApiDocument, Volume, GenerationOptions } from '../../types';
+import type { GeneratorResult, ShouldOverwriteFn } from '../types';
 import { buildRouteTree } from './route-tree';
 import { generateControllersRecursive } from './recursive';
-import { generateSharedTypes } from '../shared-types-generator';
-import { segmentToExportName } from '../utils';
-
-const CONTROLLER_FOLDER = 'controller';
-const SHARED_TYPES_FOLDER = 'shared-types';
+import { generateSharedTypes } from '../common/shared-types-generator';
+import { segmentToExportName } from '../common/utils';
 
 const HANDLER_METHODS = ['post', 'get', 'put', 'delete', 'patch', 'head', 'options'];
 
-export function generateController(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult {
+export function generateController(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult {
   const { volume } = result;
+  const controllerFolder = options.controller.path;
+  const sharedTypesFolder = options.sharedTypes.path;
   
   volume.mkdirSync('/', { recursive: true });
-  volume.mkdirSync(`/${CONTROLLER_FOLDER}`, { recursive: true });
-  volume.mkdirSync(`/${SHARED_TYPES_FOLDER}`, { recursive: true });
+  volume.mkdirSync(`/${controllerFolder}`, { recursive: true });
+  volume.mkdirSync(`/${sharedTypesFolder}`, { recursive: true });
 
   const routeTree = buildRouteTree(doc);
-  generateSharedTypes(volume, doc, `/${SHARED_TYPES_FOLDER}`);
-  generateControllersRecursive(volume, routeTree, `/${CONTROLLER_FOLDER}`, `/${SHARED_TYPES_FOLDER}`);
-  generateRootIndexFile(volume, routeTree, `/${CONTROLLER_FOLDER}`);
+  generateSharedTypes(volume, doc, `/${sharedTypesFolder}`);
+  generateControllersRecursive(volume, routeTree, `/${controllerFolder}`, `/${sharedTypesFolder}`);
+  generateRootIndexFile(volume, routeTree, `/${controllerFolder}`);
 
-  const controllerShouldOverwrite = createControllerShouldOverwrite();
+  const controllerShouldOverwrite = createControllerShouldOverwrite(controllerFolder, sharedTypesFolder);
   const shouldOverwrite = combineShouldOverwrite(result.shouldOverwrite, controllerShouldOverwrite);
 
   return { volume, shouldOverwrite };
 }
 
-function createControllerShouldOverwrite(): ShouldOverwriteFn {
+function createControllerShouldOverwrite(controllerFolder: string, sharedTypesFolder: string): ShouldOverwriteFn {
   return (path: string) => {
-    if (path.startsWith(`/${SHARED_TYPES_FOLDER}/`)) {
+    if (path.startsWith(`/${sharedTypesFolder}/`)) {
       return true;
     }
 
-    if (!path.startsWith(`/${CONTROLLER_FOLDER}/`)) {
+    if (!path.startsWith(`/${controllerFolder}/`)) {
       return false;
     }
 

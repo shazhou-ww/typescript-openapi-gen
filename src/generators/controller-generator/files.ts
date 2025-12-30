@@ -8,7 +8,7 @@
 
 import type { Volume, Operation, Method } from '../../types';
 import type { RouteInfo } from './route-tree';
-import { capitalize } from '../utils';
+import { capitalize } from '../common/utils';
 import { generateTypesFile } from './types';
 import { generateMethodFile } from './method';
 import { generateIndexFile } from './index-file';

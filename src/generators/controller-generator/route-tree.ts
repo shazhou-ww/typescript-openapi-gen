@@ -5,7 +5,7 @@
  */
 
 import type { OpenApiDocument, PathItem, Operation, Method } from '../../types';
-import { routePathToFsPath, segmentToFsName } from '../utils';
+import { routePathToFsPath, segmentToFsName } from '../common/utils';
 
 export type RouteInfo = {
   path: string;

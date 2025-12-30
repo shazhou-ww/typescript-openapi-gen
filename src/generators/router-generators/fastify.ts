@@ -1,22 +1,24 @@
 /**
- * generateExpressRouter(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult
+ * generateFastifyRouter(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult
  * - doc: OpenApiDocument
+ * - options: 生成选项
  * - result: 之前的生成结果
  * - 返回: 修饰后的生成结果
  */
 
-import type { OpenApiDocument, GeneratorResult, ShouldOverwriteFn } from '../types';
-import { collectRoutes } from './route-collector';
-import { extractPathParams, segmentToExportName } from './utils';
+import type { OpenApiDocument, GenerationOptions } from '../../types';
+import type { GeneratorResult, ShouldOverwriteFn } from '../types';
+import { collectRoutes } from '../common/route-collector';
+import { extractPathParams, segmentToExportName } from '../common/utils';
 
-export function generateExpressRouter(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult {
+export function generateFastifyRouter(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult {
   const { volume } = result;
   const routes = collectRoutes(doc);
   const lines: string[] = [
-    '// Auto-generated Express routes from OpenAPI specification',
+    '// Auto-generated Fastify routes from OpenAPI specification',
     '// DO NOT EDIT - This file is regenerated on each run',
     '',
-    "import { Router } from 'express';",
+    "import type { FastifyInstance } from 'fastify';",
   ];
 
   // Get top-level modules
@@ -25,21 +27,28 @@ export function generateExpressRouter(doc: OpenApiDocument, result: GeneratorRes
     lines.push(`import { ${topLevelModules.join(', ')} } from './controller';`);
   }
   lines.push('');
-  lines.push('export const router = Router();');
-  lines.push('');
+  lines.push('/**');
+  lines.push(' * Decorates a Fastify instance with generated routes.');
+  lines.push(' * Usage: await decorate(fastify)');
+  lines.push(' */');
+  lines.push('export async function decorate(fastify: FastifyInstance): Promise<void> {');
 
   // Generate routes
   for (const route of routes) {
     lines.push(generateRoute(route));
   }
 
+  lines.push('}');
   lines.push('');
-  lines.push('export default router;');
+  lines.push('export default decorate');
+
+  const routerPath = options.routers.fastify.path;
+  const filePath = `/${routerPath}`;
 
   volume.mkdirSync('/', { recursive: true });
-  volume.writeFileSync('/express-router.ts', lines.join('\n'));
+  volume.writeFileSync(filePath, lines.join('\n'));
 
-  const routerShouldOverwrite: ShouldOverwriteFn = (path: string) => path === '/express-router.ts';
+  const routerShouldOverwrite: ShouldOverwriteFn = (path: string) => path === filePath;
   const shouldOverwrite = combineShouldOverwrite(result.shouldOverwrite, routerShouldOverwrite);
 
   return { volume, shouldOverwrite };
@@ -62,26 +71,26 @@ function getTopLevelModules(routes: ReturnType<typeof collectRoutes>): string[] 
 function generateRoute(route: ReturnType<typeof collectRoutes>[0]): string {
   const controllerPath = buildControllerPath(route.controllerImportPath);
   const handlerCall = `${controllerPath}.${route.handlerName}`;
-  const expressPath = convertToExpressPath(route.path);
+  const fastifyPath = convertToFastifyPath(route.path);
   const inputParts = buildInputParts(route);
   const inputObject = buildInputObject(inputParts);
 
   const lines: string[] = [];
-  lines.push(`router.${route.method}('${expressPath}', async (req, res, next) => {`);
+  lines.push(`  fastify.${route.method}('${fastifyPath}', async (request, reply) => {`);
   
   if (inputParts.includes('query')) {
-    lines.push('  const query = req.query');
+    lines.push('    const query = request.query');
   }
   if (inputParts.includes('params')) {
-    lines.push('  const params = req.params');
+    lines.push('    const params = request.params');
   }
   if (inputParts.includes('body')) {
-    lines.push('  const body = req.body');
+    lines.push('    const body = request.body');
   }
   
-  lines.push(`  const result = await ${handlerCall}(${inputObject})`);
-  lines.push('  res.json(result)');
-  lines.push('})');
+  lines.push(`    const result = await ${handlerCall}(${inputObject})`);
+  lines.push('    return result');
+  lines.push('  })');
   
   return lines.join('\n');
 }
@@ -92,7 +101,7 @@ function buildControllerPath(importPath: string[]): string {
   return validSegments.join('.');
 }
 
-function convertToExpressPath(path: string): string {
+function convertToFastifyPath(path: string): string {
   return path.replace(/\{([^}]+)\}/g, ':$1');
 }
 

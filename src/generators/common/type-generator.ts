@@ -5,7 +5,7 @@
  * - 返回: TypeScript 类型字符串
  */
 
-import type { JSONSchema, Ref } from '../types';
+import type { JSONSchema, Ref } from '../../types';
 
 export function schemaToTypeScript(schema: JSONSchema | Ref, typeName?: string): string {
   if ('$ref' in schema) {

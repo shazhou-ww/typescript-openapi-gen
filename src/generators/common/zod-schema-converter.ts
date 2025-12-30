@@ -5,7 +5,7 @@
  * - 返回: Zod schema 代码字符串
  */
 
-import type { JSONSchema, Ref } from '../types';
+import type { JSONSchema, Ref } from '../../types';
 
 export function schemaToZod(schema: JSONSchema | Ref | null, sharedTypesDir: string): string {
   if (!schema) return 'z.unknown()';

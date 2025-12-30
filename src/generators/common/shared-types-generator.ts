@@ -5,7 +5,7 @@
  * - sharedTypesDir: 共享类型目录路径
  */
 
-import type { OpenApiDocument, Volume, JSONSchema, Ref } from '../types';
+import type { OpenApiDocument, Volume, JSONSchema, Ref } from '../../types';
 import { schemaToTypeScript } from './type-generator';
 
 export function generateSharedTypes(

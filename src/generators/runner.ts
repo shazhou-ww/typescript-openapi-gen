@@ -6,17 +6,16 @@
  */
 
 import { Volume } from 'memfs';
-import type { OpenApiDocument, GenerationTask, GenerationResult, Diagnostic, Volume as VolumeType, GeneratorResult, ShouldOverwriteFn } from '../types';
+import type { OpenApiDocument, GenerationTask, GenerationResult, Diagnostic, Volume as VolumeType, GenerationOptions } from '../types';
+import type { GeneratorFn, GeneratorResult } from './types';
 import { generateController } from './controller-generator';
 import { generateOpenApi } from './openapi-generator';
 import { generateIr } from './ir-generator';
-import { generateExpressRouter } from './express-router-generator';
-import { generateElysiaRouter } from './elysia-router-generator';
-import { generateFastifyRouter } from './fastify-router-generator';
-import { generateHonoRouter } from './hono-router-generator';
+import { generateExpressRouter } from './router-generators/express';
+import { generateElysiaRouter } from './router-generators/elysia';
+import { generateFastifyRouter } from './router-generators/fastify';
+import { generateHonoRouter } from './router-generators/hono';
 import { writeVolumeToDisk } from './file-writer';
-
-type GeneratorFn = (doc: OpenApiDocument, result: GeneratorResult) => GeneratorResult;
 
 const GENERATORS: Record<string, GeneratorFn> = {
   'controller': generateController,
@@ -44,24 +43,49 @@ export async function runGeneration(
     diagnostics: []
   };
 
-  const { result, diagnostics } = task.generators.reduce(
-    (state, name) => applyGenerator(doc, state, name),
+  const generatorsToRun = determineGenerators(task.options);
+  const { result, diagnostics } = generatorsToRun.reduce(
+    (state: GenerationState, name: string) => applyGenerator(doc, task.options, state, name),
     initial
   );
 
-  if (task.outputDir) {
-    await writeVolumeToDisk(result.volume, task.outputDir, result.shouldOverwrite).catch(error => {
-      diagnostics.push(createDiagnostic('WRITE_ERROR', `Failed to write files: ${formatError(error)}`));
-    });
-  }
+  await writeVolumeToDisk(result.volume, task.outputDir, result.shouldOverwrite).catch(error => {
+    diagnostics.push(createDiagnostic('WRITE_ERROR', `Failed to write files: ${formatError(error)}`));
+  });
 
   const files = getVolumeFiles(result.volume);
-  const hasErrors = diagnostics.some(d => d.type === 'error');
+  const hasErrors = diagnostics.some((d: Diagnostic) => d.type === 'error');
 
   return { success: !hasErrors, diagnostics, files, volume: result.volume };
 }
 
-function applyGenerator(doc: OpenApiDocument, state: GenerationState, name: string): GenerationState {
+function determineGenerators(options: GenerationOptions): string[] {
+  const generators: string[] = [];
+
+  if (options.controller && options.controller.path) {
+    generators.push('controller');
+  }
+
+  if (options.routers.elysia && options.routers.elysia.path) {
+    generators.push('elysia-router');
+  }
+
+  if (options.routers.express && options.routers.express.path) {
+    generators.push('express-router');
+  }
+
+  if (options.routers.fastify && options.routers.fastify.path) {
+    generators.push('fastify-router');
+  }
+
+  if (options.routers.hono && options.routers.hono.path) {
+    generators.push('hono-router');
+  }
+
+  return generators;
+}
+
+function applyGenerator(doc: OpenApiDocument, options: GenerationOptions, state: GenerationState, name: string): GenerationState {
   const generator = GENERATORS[name];
   if (!generator) {
     return {
@@ -71,7 +95,7 @@ function applyGenerator(doc: OpenApiDocument, state: GenerationState, name: stri
   }
 
   try {
-    const newResult = generator(doc, state.result);
+    const newResult = generator(doc, options, state.result);
     return { 
       ...state, 
       result: newResult

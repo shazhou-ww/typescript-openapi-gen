@@ -1,13 +1,15 @@
 /**
- * generateIr(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult
+ * generateIr(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult
  * - doc: OpenApiDocument
+ * - options: 生成选项
  * - result: 之前的生成结果
  * - 返回: 修饰后的生成结果
  */
 
-import type { OpenApiDocument, GeneratorResult, ShouldOverwriteFn } from '../types';
+import type { OpenApiDocument, GenerationOptions } from '../types';
+import type { GeneratorResult, ShouldOverwriteFn } from './types';
 
-export function generateIr(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult {
+export function generateIr(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult {
   const { volume } = result;
   const content = JSON.stringify(doc, null, 2);
 
