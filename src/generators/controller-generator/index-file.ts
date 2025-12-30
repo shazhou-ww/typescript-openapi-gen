@@ -5,9 +5,9 @@
  * - controllerDir: 控制器目录
  */
 
-import type { Volume } from '../types';
+import type { Volume } from '../../types';
 import type { RouteInfo } from './route-tree';
-import { capitalize, segmentToExportName } from './utils';
+import { capitalize, segmentToExportName } from '../utils';
 
 export function generateIndexFile(
   volume: Volume,

@@ -1,15 +1,20 @@
 /**
- * writeVolumeToDisk(volume: Volume, outputDir: string): Promise<void>
+ * writeVolumeToDisk(volume: Volume, outputDir: string, shouldOverwrite: ShouldOverwriteFn): Promise<void>
  * - volume: 内存文件系统
  * - outputDir: 输出目录
+ * - shouldOverwrite: 判断是否应该覆盖文件的函数
  * - 返回: Promise<void>
  */
 
-import type { Volume } from '../types';
+import type { Volume, ShouldOverwriteFn } from '../types';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-export async function writeVolumeToDisk(volume: Volume, outputDir: string): Promise<void> {
+export async function writeVolumeToDisk(
+  volume: Volume, 
+  outputDir: string, 
+  shouldOverwrite: ShouldOverwriteFn
+): Promise<void> {
   const files = getAllFiles(volume, '/');
 
   for (const filePath of files) {
@@ -18,8 +23,22 @@ export async function writeVolumeToDisk(volume: Volume, outputDir: string): Prom
 
     await fs.promises.mkdir(dir, { recursive: true });
 
-    const content = volume.readFileSync(filePath, 'utf-8') as string;
-    await fs.promises.writeFile(fullPath, content);
+    const fileExists = await checkFileExists(fullPath);
+    const shouldWrite = !fileExists || shouldOverwrite(filePath);
+    
+    if (shouldWrite) {
+      const content = volume.readFileSync(filePath, 'utf-8') as string;
+      await fs.promises.writeFile(fullPath, content);
+    }
+  }
+}
+
+async function checkFileExists(filePath: string): Promise<boolean> {
+  try {
+    await fs.promises.access(filePath);
+    return true;
+  } catch {
+    return false;
   }
 }
 

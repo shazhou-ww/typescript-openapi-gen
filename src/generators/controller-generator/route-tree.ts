@@ -4,8 +4,8 @@
  * - 返回: 路由树，键为路径段，值为 RouteInfo
  */
 
-import type { OpenApiDocument, PathItem, Operation, Method } from '../types';
-import { routePathToFsPath, segmentToFsName } from './utils';
+import type { OpenApiDocument, PathItem, Operation, Method } from '../../types';
+import { routePathToFsPath, segmentToFsName } from '../utils';
 
 export type RouteInfo = {
   path: string;

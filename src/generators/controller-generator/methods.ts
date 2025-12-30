@@ -5,9 +5,9 @@
  * - controllerDir: 控制器目录
  */
 
-import type { Volume } from '../types';
+import type { Volume } from '../../types';
 import type { RouteInfo } from './route-tree';
-import { capitalize } from './utils';
+import { capitalize } from '../utils';
 
 export function generateMethodsFile(
   volume: Volume,

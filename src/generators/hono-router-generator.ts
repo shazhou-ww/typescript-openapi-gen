@@ -1,15 +1,16 @@
 /**
- * generateHonoRouter(doc: OpenApiDocument, volume: Volume): Volume
+ * generateHonoRouter(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult
  * - doc: OpenApiDocument
- * - volume: 内存文件系统
- * - 返回: 更新后的 Volume
+ * - result: 之前的生成结果
+ * - 返回: 修饰后的生成结果
  */
 
-import type { OpenApiDocument, Volume } from '../types';
+import type { OpenApiDocument, GeneratorResult, ShouldOverwriteFn } from '../types';
 import { collectRoutes } from './route-collector';
 import { extractPathParams, segmentToExportName } from './utils';
 
-export function generateHonoRouter(doc: OpenApiDocument, volume: Volume): Volume {
+export function generateHonoRouter(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult {
+  const { volume } = result;
   const routes = collectRoutes(doc);
   const lines: string[] = [
     '// Auto-generated Hono routes from OpenAPI specification',
@@ -46,7 +47,14 @@ export function generateHonoRouter(doc: OpenApiDocument, volume: Volume): Volume
   volume.mkdirSync('/', { recursive: true });
   volume.writeFileSync('/hono-router.ts', lines.join('\n'));
 
-  return volume;
+  const routerShouldOverwrite: ShouldOverwriteFn = (path: string) => path === '/hono-router.ts';
+  const shouldOverwrite = combineShouldOverwrite(result.shouldOverwrite, routerShouldOverwrite);
+
+  return { volume, shouldOverwrite };
+}
+
+function combineShouldOverwrite(fn1: ShouldOverwriteFn, fn2: ShouldOverwriteFn): ShouldOverwriteFn {
+  return (path: string) => fn1(path) || fn2(path);
 }
 
 function getTopLevelModules(routes: ReturnType<typeof collectRoutes>): string[] {

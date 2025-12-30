@@ -6,8 +6,8 @@
  * - controllerDir: 控制器目录
  */
 
-import type { Volume, Operation, Method } from '../types';
-import { capitalize } from './utils';
+import type { Volume, Operation, Method } from '../../types';
+import { capitalize } from '../utils';
 
 export function generateMethodFile(
   volume: Volume,

@@ -1,21 +1,29 @@
 /**
- * generateOpenApi(doc: OpenApiDocument, volume: Volume): Volume
+ * generateOpenApi(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult
  * - doc: OpenApiDocument
- * - volume: 内存文件系统
- * - 返回: 更新后的 Volume
+ * - result: 之前的生成结果
+ * - 返回: 修饰后的生成结果
  */
 
-import type { OpenApiDocument, Volume } from '../types';
+import type { OpenApiDocument, GeneratorResult, ShouldOverwriteFn } from '../types';
 import * as yaml from 'js-yaml';
 
-export function generateOpenApi(doc: OpenApiDocument, volume: Volume): Volume {
+export function generateOpenApi(doc: OpenApiDocument, result: GeneratorResult): GeneratorResult {
+  const { volume } = result;
   const openApiDoc = toOpenApiFormat(doc);
   const content = yaml.dump(openApiDoc, { indent: 2, lineWidth: -1 });
 
   volume.mkdirSync('/', { recursive: true });
   volume.writeFileSync('/openapi.yaml', content);
 
-  return volume;
+  const openapiShouldOverwrite: ShouldOverwriteFn = (path: string) => path === '/openapi.yaml';
+  const shouldOverwrite = combineShouldOverwrite(result.shouldOverwrite, openapiShouldOverwrite);
+
+  return { volume, shouldOverwrite };
+}
+
+function combineShouldOverwrite(fn1: ShouldOverwriteFn, fn2: ShouldOverwriteFn): ShouldOverwriteFn {
+  return (path: string) => fn1(path) || fn2(path);
 }
 
 function toOpenApiFormat(doc: OpenApiDocument): Record<string, unknown> {

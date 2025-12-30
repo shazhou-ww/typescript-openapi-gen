@@ -6,11 +6,11 @@
  * - sharedTypesDir: 共享类型目录
  */
 
-import type { Volume, Operation } from '../types';
+import type { Volume, Operation } from '../../types';
 import type { RouteInfo } from './route-tree';
-import { capitalize, extractPathParams } from './utils';
-import { schemaToTypeScript } from './type-generator';
-import { schemaToZod } from './zod-schema-converter';
+import { capitalize, extractPathParams } from '../utils';
+import { schemaToTypeScript } from '../type-generator';
+import { schemaToZod } from '../zod-schema-converter';
 
 export function generateTypesFile(
   volume: Volume,

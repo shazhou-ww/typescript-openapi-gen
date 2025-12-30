@@ -6,7 +6,7 @@
  */
 
 import { Volume } from 'memfs';
-import type { OpenApiDocument, GenerationTask, GenerationResult, Diagnostic, Volume as VolumeType } from '../types';
+import type { OpenApiDocument, GenerationTask, GenerationResult, Diagnostic, Volume as VolumeType, GeneratorResult, ShouldOverwriteFn } from '../types';
 import { generateController } from './controller-generator';
 import { generateOpenApi } from './openapi-generator';
 import { generateIr } from './ir-generator';
@@ -16,7 +16,7 @@ import { generateFastifyRouter } from './fastify-router-generator';
 import { generateHonoRouter } from './hono-router-generator';
 import { writeVolumeToDisk } from './file-writer';
 
-type GeneratorFn = (doc: OpenApiDocument, volume: VolumeType) => VolumeType;
+type GeneratorFn = (doc: OpenApiDocument, result: GeneratorResult) => GeneratorResult;
 
 const GENERATORS: Record<string, GeneratorFn> = {
   'controller': generateController,
@@ -28,29 +28,37 @@ const GENERATORS: Record<string, GeneratorFn> = {
   'hono-router': generateHonoRouter,
 };
 
-type GenerationState = { volume: VolumeType; diagnostics: Diagnostic[] };
+type GenerationState = { result: GeneratorResult; diagnostics: Diagnostic[] };
 
 export async function runGeneration(
   doc: OpenApiDocument,
   task: GenerationTask
 ): Promise<GenerationResult> {
-  const initial: GenerationState = { volume: new Volume(), diagnostics: [] };
+  const initialResult: GeneratorResult = {
+    volume: new Volume(),
+    shouldOverwrite: () => false
+  };
 
-  const { volume, diagnostics } = task.generators.reduce(
+  const initial: GenerationState = { 
+    result: initialResult,
+    diagnostics: []
+  };
+
+  const { result, diagnostics } = task.generators.reduce(
     (state, name) => applyGenerator(doc, state, name),
     initial
   );
 
   if (task.outputDir) {
-    await writeVolumeToDisk(volume, task.outputDir).catch(error => {
+    await writeVolumeToDisk(result.volume, task.outputDir, result.shouldOverwrite).catch(error => {
       diagnostics.push(createDiagnostic('WRITE_ERROR', `Failed to write files: ${formatError(error)}`));
     });
   }
 
-  const files = getVolumeFiles(volume);
+  const files = getVolumeFiles(result.volume);
   const hasErrors = diagnostics.some(d => d.type === 'error');
 
-  return { success: !hasErrors, diagnostics, files, volume };
+  return { success: !hasErrors, diagnostics, files, volume: result.volume };
 }
 
 function applyGenerator(doc: OpenApiDocument, state: GenerationState, name: string): GenerationState {
@@ -63,7 +71,11 @@ function applyGenerator(doc: OpenApiDocument, state: GenerationState, name: stri
   }
 
   try {
-    return { ...state, volume: generator(doc, state.volume) };
+    const newResult = generator(doc, state.result);
+    return { 
+      ...state, 
+      result: newResult
+    };
   } catch (error) {
     return {
       ...state,
