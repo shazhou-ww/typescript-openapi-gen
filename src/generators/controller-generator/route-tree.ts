@@ -5,7 +5,7 @@
  */
 
 import type { OpenApiDocument, PathItem, Operation, Method } from '../../types';
-import { routePathToFsPath, segmentToFsName } from '../common/utils';
+import { PathUtil } from '../common/path-util';
 
 export type RouteInfo = {
   path: string;
@@ -34,7 +34,7 @@ function addRouteToTree(
 
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
-    const fsSegment = segmentToFsName(segment);
+    const fsSegment = PathUtil.segmentToFsName(segment);
     const partialPath = '/' + segments.slice(0, i + 1).join('/');
 
     if (!current.has(fsSegment)) {
@@ -54,7 +54,7 @@ function addRouteToTree(
 function createRouteInfo(partialPath: string): RouteInfo {
   return {
     path: partialPath,
-    fsPath: routePathToFsPath(partialPath),
+    fsPath: PathUtil.routePathToFsPath(partialPath),
     methods: new Map(),
     children: new Map(),
   };

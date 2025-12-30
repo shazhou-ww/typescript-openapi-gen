@@ -9,7 +9,7 @@
 import type { OpenApiDocument, GenerationOptions } from '../../types';
 import type { GeneratorResult, ShouldOverwriteFn } from '../types';
 import { collectRoutes } from '../common/route-collector';
-import { extractPathParams, segmentToExportName } from '../common/utils';
+import { PathUtil } from '../common/path-util';
 
 export function generateFastifyRouter(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult {
   const { volume } = result;
@@ -62,7 +62,7 @@ function getTopLevelModules(routes: ReturnType<typeof collectRoutes>): string[] 
   const modules = new Set<string>();
   for (const route of routes) {
     if (route.controllerImportPath.length > 0) {
-      modules.add(segmentToExportName(route.controllerImportPath[0]));
+      modules.add(PathUtil.segmentToExportName(route.controllerImportPath[0]));
     }
   }
   return Array.from(modules).sort();
@@ -97,7 +97,7 @@ function generateRoute(route: ReturnType<typeof collectRoutes>[0]): string {
 
 function buildControllerPath(importPath: string[]): string {
   if (importPath.length === 0) return '';
-  const validSegments = importPath.map(segment => segmentToExportName(segment));
+  const validSegments = importPath.map(segment => PathUtil.segmentToExportName(segment));
   return validSegments.join('.');
 }
 
@@ -107,7 +107,7 @@ function convertToFastifyPath(path: string): string {
 
 function buildInputParts(route: ReturnType<typeof collectRoutes>[0]): string[] {
   const parts: string[] = [];
-  const pathParams = extractPathParams(route.path);
+  const pathParams = PathUtil.extractPathParams(route.path);
   if (pathParams.length > 0) parts.push('params');
   if (Object.keys(route.operation.query).length > 0) parts.push('query');
   if (Object.keys(route.operation.headers).length > 0) parts.push('headers');

@@ -8,7 +8,8 @@
 
 import type { Volume, Operation } from '../../types';
 import type { RouteInfo } from './route-tree';
-import { capitalize, extractPathParams } from '../common/utils';
+import { capitalize } from '../common/string-util';
+import { PathUtil } from '../common/path-util';
 import { schemaToTypeScript } from '../common/type-generator';
 import { schemaToZod } from '../common/zod-schema-converter';
 
@@ -45,7 +46,7 @@ function addMethodTypes(
   sharedTypesDir: string
 ): void {
   const methodName = capitalize(method);
-  const pathParams = extractPathParams(routePath);
+  const pathParams = PathUtil.extractPathParams(routePath);
   const hasQuery = Object.keys(operation.query).length > 0;
   const hasHeaders = Object.keys(operation.headers).length > 0;
   const hasBody = operation.body !== null;

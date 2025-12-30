@@ -8,13 +8,17 @@ Generator 模块的公共工具函数集合。
 
 ## 导出函数
 
-### utils.ts
+### path-util.ts
+
+- `PathUtil` - 路径计算工具对象
+  - `segmentToFsName` - 将路径段转换为文件系统名称
+  - `routePathToFsPath` - 将路由路径转换为文件系统路径
+  - `extractPathParams` - 提取路径参数
+  - `segmentToExportName` - 将路径段转换为导出名称
+
+### string-util.ts
 
 - `capitalize` - 首字母大写
-- `segmentToFsName` - 将路径段转换为文件系统名称
-- `routePathToFsPath` - 将路由路径转换为文件系统路径
-- `extractPathParams` - 提取路径参数
-- `segmentToExportName` - 将路径段转换为导出名称
 
 ### route-collector.ts
 
@@ -28,7 +32,3 @@ Generator 模块的公共工具函数集合。
 ### zod-schema-converter.ts
 
 - `schemaToZod` - 将 JSON Schema 转换为 Zod schema 代码字符串
-
-### shared-types-generator.ts
-
-- `generateSharedTypes` - 生成共享类型文件

@@ -7,7 +7,8 @@
 
 import type { Volume } from '../../types';
 import type { RouteInfo } from './route-tree';
-import { capitalize, segmentToExportName } from '../common/utils';
+import { capitalize } from '../common/string-util';
+import { PathUtil } from '../common/path-util';
 
 export function generateIndexFile(
   volume: Volume,
@@ -54,7 +55,7 @@ export function generateIndexFile(
       lines.push('');
     }
     for (const [segment] of info.children) {
-      const exportName = segmentToExportName(segment);
+      const exportName = PathUtil.segmentToExportName(segment);
       lines.push(`export * as ${exportName} from './${segment}';`);
     }
   }

@@ -7,7 +7,7 @@
 
 import type { Volume } from '../../types';
 import type { RouteInfo } from './route-tree';
-import { capitalize } from '../common/utils';
+import { capitalize } from '../common/string-util';
 
 export function generateMethodsFile(
   volume: Volume,

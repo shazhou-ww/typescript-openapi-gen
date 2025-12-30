@@ -10,8 +10,8 @@ import type { OpenApiDocument, Volume, GenerationOptions } from '../../types';
 import type { GeneratorResult, ShouldOverwriteFn } from '../types';
 import { buildRouteTree } from './route-tree';
 import { generateControllersRecursive } from './recursive';
-import { generateSharedTypes } from '../common/shared-types-generator';
-import { segmentToExportName } from '../common/utils';
+import { generateSharedTypes } from './shared-types-generator';
+import { PathUtil } from '../common/path-util';
 
 const HANDLER_METHODS = ['post', 'get', 'put', 'delete', 'patch', 'head', 'options'];
 
@@ -69,7 +69,7 @@ function generateRootIndexFile(volume: Volume, tree: Map<string, import('./route
 
   const segments = Array.from(tree.keys()).sort();
   for (const segment of segments) {
-    const exportName = segmentToExportName(segment);
+    const exportName = PathUtil.segmentToExportName(segment);
     lines.push(`export * as ${exportName} from './${segment}';`);
   }
 

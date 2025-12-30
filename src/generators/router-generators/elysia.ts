@@ -9,7 +9,7 @@
 import type { OpenApiDocument, GenerationOptions } from '../../types';
 import type { GeneratorResult, ShouldOverwriteFn } from '../types';
 import { collectRoutes } from '../common/route-collector';
-import { extractPathParams, segmentToExportName } from '../common/utils';
+import { PathUtil } from '../common/path-util';
 
 export function generateElysiaRouter(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult {
   const { volume } = result;
@@ -63,7 +63,7 @@ function getTopLevelModules(routes: ReturnType<typeof collectRoutes>): string[] 
   const modules = new Set<string>();
   for (const route of routes) {
     if (route.controllerImportPath.length > 0) {
-      modules.add(segmentToExportName(route.controllerImportPath[0]));
+      modules.add(PathUtil.segmentToExportName(route.controllerImportPath[0]));
     }
   }
   return Array.from(modules).sort();
@@ -83,7 +83,7 @@ function generateRoute(route: ReturnType<typeof collectRoutes>[0]): string {
 function buildControllerPath(importPath: string[]): string {
   if (importPath.length === 0) return '';
   // Convert all segments to valid JavaScript identifiers using the same logic as exports
-  const validSegments = importPath.map(segment => segmentToExportName(segment));
+  const validSegments = importPath.map(segment => PathUtil.segmentToExportName(segment));
   return validSegments.join('.');
 }
 
@@ -95,7 +95,7 @@ function buildInputParts(route: ReturnType<typeof collectRoutes>[0]): string[] {
   const parts: string[] = [];
 
   // Check for path params
-  const pathParams = extractPathParams(route.path);
+  const pathParams = PathUtil.extractPathParams(route.path);
   if (pathParams.length > 0) {
     parts.push('params');
   }

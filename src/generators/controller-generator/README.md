@@ -17,6 +17,7 @@ Controller 生成器模块，负责从 OpenAPI 文档生成 TypeScript controlle
 
 - `index.ts` - 主入口，导出 `generateController` 函数
 - `route-tree.ts` - 构建路由树结构
+- `shared-types-generator.ts` - 生成共享类型文件
 - `recursive.ts` - 递归生成 controllers
 - `files.ts` - 生成 controller 文件集合
 - `index-file.ts` - 生成 index.ts 文件

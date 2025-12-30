@@ -5,7 +5,7 @@
  */
 
 import type { OpenApiDocument, PathItem, Operation, Method } from '../../types';
-import { capitalize } from './utils';
+import { capitalize } from './string-util';
 
 export type FlatRoute = {
   path: string;
