@@ -35,46 +35,65 @@ export const OpenApiFragmentGenerator = {
     }));
   },
 
-  generateRouteFragment(doc: OpenApiDocument, routePaths: string[]): Record<string, unknown> {
+  generateRouteFragment(doc: OpenApiDocument, routePaths: string[], schemaRefPath: string): Record<string, unknown> {
     const paths: Record<string, unknown> = {};
     for (const routePath of routePaths) {
       const pathItem = doc.paths[routePath];
       if (pathItem) {
-        paths[routePath] = OpenApiConverter.toPathItem(pathItem);
+        paths[routePath] = OpenApiConverter.toPathItem(pathItem, schemaRefPath);
       }
     }
     return { paths };
   },
 
+  generateSingleRouteFragment(doc: OpenApiDocument, routePath: string, schemaRefPath: string): Record<string, unknown> {
+    const pathItem = doc.paths[routePath];
+    if (!pathItem) {
+      return {};
+    }
+    return OpenApiConverter.toPathItem(pathItem, schemaRefPath);
+  },
+
+  routePathToFolderPath(routePath: string, controllerPath: string): string {
+    const segments = routePath.split('/').filter(Boolean);
+    if (segments.length === 0) {
+      return controllerPath;
+    }
+    
+    const firstSegment = PathUtil.segmentToFsName(segments[0]);
+    const basePath = `${controllerPath}/${firstSegment}`;
+    
+    if (segments.length === 1) {
+      return basePath;
+    }
+    
+    const remainingSegments = segments.slice(1).map(seg => PathUtil.segmentToFsName(seg));
+    return `${basePath}/${remainingSegments.join('/')}`;
+  },
+
   generateSchemaFragment(doc: OpenApiDocument): Record<string, unknown> {
     const fullDoc = OpenApiConverter.toOpenApiFormat(doc);
     const schemas = (fullDoc.components as Record<string, unknown>)?.schemas || {};
-    return {
-      components: {
-        schemas,
-      },
-    };
+    return schemas as Record<string, unknown>;
   },
 
   generateMainDocument(
-    controllerFolders: ControllerFolderInfo[],
+    doc: OpenApiDocument,
     controllerPath: string,
     sharedTypesPath: string,
     format: 'yaml' | 'json'
   ): Record<string, unknown> {
     const paths: Record<string, unknown> = {};
     
-    for (const folder of controllerFolders) {
-      const relativePath = getRelativePath(folder.folderPath, controllerPath);
+    for (const routePath of Object.keys(doc.paths)) {
+      const routeFolderPath = OpenApiFragmentGenerator.routePathToFolderPath(routePath, controllerPath);
       const fragmentPath = format === 'yaml' 
-        ? `${relativePath}/route.yaml`
-        : `${relativePath}/route.json`;
+        ? `${routeFolderPath}/route.yaml`
+        : `${routeFolderPath}/route.json`;
       
-      for (const routePath of folder.routePaths) {
-        paths[routePath] = {
-          $ref: fragmentPath + `#/paths/${routePath.replace(/\//g, '~1')}`,
-        };
-      }
+      paths[routePath] = {
+        $ref: fragmentPath,
+      };
     }
     
     const schemaRef = format === 'yaml' 
@@ -87,7 +106,7 @@ export const OpenApiFragmentGenerator = {
       paths,
       components: {
         schemas: {
-          $ref: schemaRef + '#/components/schemas',
+          $ref: schemaRef,
         },
       },
     };

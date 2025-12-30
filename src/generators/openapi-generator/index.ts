@@ -36,7 +36,7 @@ function generateFragmentedOpenApi(volume: Volume, doc: OpenApiDocument, options
   const { controller, sharedTypes, openApi } = options;
   const controllerFolders = OpenApiFragmentGenerator.collectControllerFolders(doc, controller.path);
   
-  generateControllerRouteFragments(volume, doc, controllerFolders, controller.path, openApi.format);
+  generateControllerRouteFragments(volume, doc, controllerFolders, controller.path, sharedTypes.path, openApi.format);
   generateSharedTypesSchema(volume, doc, sharedTypes.path, openApi.format);
   generateMainOpenApiDocument(volume, doc, controllerFolders, controller.path, sharedTypes.path, openApi.format);
 }
@@ -46,16 +46,43 @@ function generateControllerRouteFragments(
   doc: OpenApiDocument,
   controllerFolders: ReturnType<typeof OpenApiFragmentGenerator.collectControllerFolders>,
   controllerPath: string,
+  sharedTypesPath: string,
   format: 'yaml' | 'json'
 ): void {
   for (const folder of controllerFolders) {
-    const fragment = OpenApiFragmentGenerator.generateRouteFragment(doc, folder.routePaths);
-    const fileName = format === 'yaml' ? 'route.yaml' : 'route.json';
-    const filePath = `/${folder.folderPath}/${fileName}`;
-    
-    volume.mkdirSync(`/${folder.folderPath}`, { recursive: true });
-    writeOpenApiFile(volume, filePath, fragment, format);
+    for (const routePath of folder.routePaths) {
+      const routeFolderPath = OpenApiFragmentGenerator.routePathToFolderPath(routePath, controllerPath);
+      const relativeSchemaPath = getRelativeSchemaPath(routeFolderPath, controllerPath, sharedTypesPath);
+      const fragment = OpenApiFragmentGenerator.generateSingleRouteFragment(doc, routePath, relativeSchemaPath);
+      const fileName = format === 'yaml' ? 'route.yaml' : 'route.json';
+      const filePath = `/${routeFolderPath}/${fileName}`;
+      
+      volume.mkdirSync(`/${routeFolderPath}`, { recursive: true });
+      writeOpenApiFile(volume, filePath, fragment, format);
+    }
   }
+}
+
+function getRelativeSchemaPath(folderPath: string, controllerPath: string, sharedTypesPath: string): string {
+  const folderSegments = folderPath.split('/').filter(Boolean);
+  const controllerSegments = controllerPath.split('/').filter(Boolean);
+  const depth = folderSegments.length - controllerSegments.length;
+  const relativePath = depth > 0 ? '../'.repeat(depth) + sharedTypesPath : sharedTypesPath;
+  const fileName = 'schema.yaml';
+  return `${relativePath}/${fileName}`;
+}
+
+function generateMainOpenApiDocument(
+  volume: Volume,
+  doc: OpenApiDocument,
+  controllerFolders: ReturnType<typeof OpenApiFragmentGenerator.collectControllerFolders>,
+  controllerPath: string,
+  sharedTypesPath: string,
+  format: 'yaml' | 'json'
+): void {
+  const mainDoc = OpenApiFragmentGenerator.generateMainDocument(doc, controllerPath, sharedTypesPath, format);
+  const fileName = format === 'yaml' ? 'openapi.yaml' : 'openapi.json';
+  writeOpenApiFile(volume, `/${fileName}`, mainDoc, format);
 }
 
 function generateSharedTypesSchema(
@@ -72,32 +99,6 @@ function generateSharedTypesSchema(
   writeOpenApiFile(volume, filePath, fragment, format);
 }
 
-function generateMainOpenApiDocument(
-  volume: Volume,
-  doc: OpenApiDocument,
-  controllerFolders: ReturnType<typeof OpenApiFragmentGenerator.collectControllerFolders>,
-  controllerPath: string,
-  sharedTypesPath: string,
-  format: 'yaml' | 'json'
-): void {
-  const mainDoc = mergeFragmentsIntoMainDocument(doc, controllerFolders);
-  const fileName = format === 'yaml' ? 'openapi.yaml' : 'openapi.json';
-  writeOpenApiFile(volume, `/${fileName}`, mainDoc, format);
-}
-
-function mergeFragmentsIntoMainDocument(
-  doc: OpenApiDocument,
-  controllerFolders: ReturnType<typeof OpenApiFragmentGenerator.collectControllerFolders>
-): Record<string, unknown> {
-  const fullDoc = OpenApiConverter.toOpenApiFormat(doc);
-  return {
-    ...fullDoc,
-    'x-fragments': {
-      controllers: controllerFolders.map(f => f.folderPath),
-      note: 'This document is generated from fragments. See individual route.yaml/json files in controller folders.',
-    },
-  };
-}
 
 function generateAllInOneOpenApi(
   volume: Volume,

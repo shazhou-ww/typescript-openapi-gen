@@ -20,7 +20,7 @@ export const OpenApiConverter = {
     };
   },
 
-  toPathItem(pathItem: PathItem): Record<string, unknown> {
+  toPathItem(pathItem: PathItem, externalSchemaRef?: string): Record<string, unknown> {
     const result: Record<string, unknown> = {};
     
     if (pathItem.description) {
@@ -30,7 +30,7 @@ export const OpenApiConverter = {
       result.summary = pathItem.summary;
     }
 
-    const parameters = convertParameters(pathItem.parameters, 'path');
+    const parameters = convertParameters(pathItem.parameters, 'path', externalSchemaRef);
     if (parameters.length > 0) {
       result.parameters = parameters;
     }
@@ -38,7 +38,7 @@ export const OpenApiConverter = {
     const operations: Record<string, unknown> = {};
     for (const [method, operation] of Object.entries(pathItem.operations)) {
       if (operation) {
-        operations[method] = convertOperation(operation, pathItem.parameters);
+        operations[method] = convertOperation(operation, pathItem.parameters, externalSchemaRef);
       }
     }
     if (Object.keys(operations).length > 0) {
@@ -48,11 +48,14 @@ export const OpenApiConverter = {
     return result;
   },
 
-  toSchema(schema: JSONSchema | Ref): unknown {
+  toSchema(schema: JSONSchema | Ref, externalSchemaRef?: string): unknown {
     if ('$ref' in schema) {
+      if (externalSchemaRef) {
+        return { $ref: `${externalSchemaRef}#/components/schemas/${schema.$ref}` };
+      }
       return { $ref: `#/components/schemas/${schema.$ref}` };
     }
-    return convertJsonSchema(schema);
+    return convertJsonSchema(schema, externalSchemaRef);
   },
 };
 
@@ -72,7 +75,7 @@ function convertSchemas(schemas: Record<string, JSONSchema>): Record<string, unk
   return result;
 }
 
-function convertOperation(operation: Operation, pathParams: Record<string, JSONSchema | Ref>): Record<string, unknown> {
+function convertOperation(operation: Operation, pathParams: Record<string, JSONSchema | Ref>, externalSchemaRef?: string): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   
   if (operation.operationId) {
@@ -92,53 +95,53 @@ function convertOperation(operation: Operation, pathParams: Record<string, JSONS
   }
 
   const parameters = [
-    ...convertParameters(pathParams, 'path'),
-    ...convertParameters(operation.query, 'query'),
-    ...convertParameters(operation.headers, 'header'),
-    ...convertParameters(operation.cookie, 'cookie'),
+    ...convertParameters(pathParams, 'path', externalSchemaRef),
+    ...convertParameters(operation.query, 'query', externalSchemaRef),
+    ...convertParameters(operation.headers, 'header', externalSchemaRef),
+    ...convertParameters(operation.cookie, 'cookie', externalSchemaRef),
   ];
   if (parameters.length > 0) {
     result.parameters = parameters;
   }
 
   if (operation.body) {
-    result.requestBody = convertRequestBody(operation.body);
+    result.requestBody = convertRequestBody(operation.body, externalSchemaRef);
   }
 
   if (Object.keys(operation.responses).length > 0) {
-    result.responses = convertResponses(operation.responses);
+    result.responses = convertResponses(operation.responses, externalSchemaRef);
   }
 
   return result;
 }
 
-function convertParameters(params: Record<string, JSONSchema | Ref>, location: string): unknown[] {
+function convertParameters(params: Record<string, JSONSchema | Ref>, location: string, externalSchemaRef?: string): unknown[] {
   return Object.entries(params).map(([name, schema]) => ({
     name,
     in: location,
-    schema: OpenApiConverter.toSchema(schema),
+    schema: OpenApiConverter.toSchema(schema, externalSchemaRef),
   }));
 }
 
-function convertRequestBody(body: JSONSchema | Ref): Record<string, unknown> {
+function convertRequestBody(body: JSONSchema | Ref, externalSchemaRef?: string): Record<string, unknown> {
   return {
     content: {
       'application/json': {
-        schema: OpenApiConverter.toSchema(body),
+        schema: OpenApiConverter.toSchema(body, externalSchemaRef),
       },
     },
   };
 }
 
-function convertResponses(responses: Record<string, import('../../types').ResponseItem>): Record<string, unknown> {
+function convertResponses(responses: Record<string, import('../../types').ResponseItem>, externalSchemaRef?: string): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   for (const [status, response] of Object.entries(responses)) {
-    result[status] = convertResponseItem(response);
+    result[status] = convertResponseItem(response, externalSchemaRef);
   }
   return result;
 }
 
-function convertResponseItem(response: import('../../types').ResponseItem): Record<string, unknown> {
+function convertResponseItem(response: import('../../types').ResponseItem, externalSchemaRef?: string): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   
   if (response.description) {
@@ -151,19 +154,19 @@ function convertResponseItem(response: import('../../types').ResponseItem): Reco
   if (response.content) {
     result.content = {
       'application/json': {
-        schema: OpenApiConverter.toSchema(response.content),
+        schema: OpenApiConverter.toSchema(response.content, externalSchemaRef),
       },
     };
   }
 
   if (Object.keys(response.headers).length > 0) {
-    result.headers = convertParameters(response.headers, 'header');
+    result.headers = convertParameters(response.headers, 'header', externalSchemaRef);
   }
 
   return result;
 }
 
-function convertJsonSchema(schema: JSONSchema): Record<string, unknown> {
+function convertJsonSchema(schema: JSONSchema, externalSchemaRef?: string): Record<string, unknown> {
   const result: Record<string, unknown> = {};
   
   if (schema.type !== null) {
@@ -227,7 +230,7 @@ function convertJsonSchema(schema: JSONSchema): Record<string, unknown> {
 
   // array constraints
   if (schema.items) {
-    result.items = OpenApiConverter.toSchema(schema.items);
+    result.items = OpenApiConverter.toSchema(schema.items, externalSchemaRef);
   }
   if (schema.minItems !== null) {
     result.minItems = schema.minItems;
@@ -243,7 +246,7 @@ function convertJsonSchema(schema: JSONSchema): Record<string, unknown> {
   if (Object.keys(schema.properties).length > 0) {
     const props: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(schema.properties)) {
-      props[key] = OpenApiConverter.toSchema(value);
+      props[key] = OpenApiConverter.toSchema(value, externalSchemaRef);
     }
     result.properties = props;
   }
@@ -254,22 +257,22 @@ function convertJsonSchema(schema: JSONSchema): Record<string, unknown> {
     if (typeof schema.additionalProperties === 'boolean') {
       result.additionalProperties = schema.additionalProperties;
     } else {
-      result.additionalProperties = OpenApiConverter.toSchema(schema.additionalProperties);
+      result.additionalProperties = OpenApiConverter.toSchema(schema.additionalProperties, externalSchemaRef);
     }
   }
 
   // composition
   if (schema.allOf) {
-    result.allOf = schema.allOf.map(s => OpenApiConverter.toSchema(s));
+    result.allOf = schema.allOf.map(s => OpenApiConverter.toSchema(s, externalSchemaRef));
   }
   if (schema.anyOf) {
-    result.anyOf = schema.anyOf.map(s => OpenApiConverter.toSchema(s));
+    result.anyOf = schema.anyOf.map(s => OpenApiConverter.toSchema(s, externalSchemaRef));
   }
   if (schema.oneOf) {
-    result.oneOf = schema.oneOf.map(s => OpenApiConverter.toSchema(s));
+    result.oneOf = schema.oneOf.map(s => OpenApiConverter.toSchema(s, externalSchemaRef));
   }
   if (schema.not) {
-    result.not = OpenApiConverter.toSchema(schema.not);
+    result.not = OpenApiConverter.toSchema(schema.not, externalSchemaRef);
   }
 
   return result;
