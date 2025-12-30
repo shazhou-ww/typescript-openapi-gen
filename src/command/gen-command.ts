@@ -8,7 +8,7 @@ import { Command } from 'commander';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import type { ProgramDeps } from './deps';
-import type { GenerationTask } from '../types';
+import type { GenerationTask, GenerationOptions } from '../types';
 
 const GENERATOR_MAP: Record<string, string[]> = {
   controller: ['controller'],
@@ -82,11 +82,11 @@ async function executeGeneration(
   try {
     const doc = await deps.load(inputFile);
 
+    const options = buildGenerationOptions(generators);
     const task: GenerationTask = {
       type: 'generation',
-      generators,
       outputDir: resolvedOutputDir,
-      format: false,
+      options,
     };
 
     const result = await deps.runGeneration(doc, task);
@@ -101,6 +101,36 @@ async function executeGeneration(
     console.error(`Failed: ${error instanceof Error ? error.message : String(error)}`);
     process.exit(1);
   }
+}
+
+function buildGenerationOptions(generators: string[]): GenerationOptions {
+  const hasController = generators.includes('controller');
+  const hasOpenApi = generators.includes('openapi');
+  const routerType = generators.find(g => g.endsWith('-router'))?.replace('-router', '') as 'express' | 'fastify' | 'hono' | 'elysia' | undefined;
+
+  return {
+    controller: {
+      path: hasController ? 'controller' : '',
+    },
+    sharedTypes: {
+      path: 'shared-types',
+    },
+    routers: {
+      express: { path: routerType === 'express' ? 'express-router.ts' : '' },
+      fastify: { path: routerType === 'fastify' ? 'fastify-router.ts' : '' },
+      hono: { path: routerType === 'hono' ? 'hono-router.ts' : '' },
+      elysia: { path: routerType === 'elysia' ? 'elysia-router.ts' : '' },
+    },
+    prettier: {
+      enabled: false,
+      path: '',
+    },
+    openApi: {
+      allInOnePath: hasOpenApi ? 'openapi' : null,
+      inController: hasController && hasOpenApi,
+      format: 'yaml',
+    },
+  };
 }
 
 function printDiagnostics(diagnostics: Array<{ type: string; message: string }>): void {

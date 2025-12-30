@@ -82,6 +82,10 @@ function determineGenerators(options: GenerationOptions): string[] {
     generators.push('hono-router');
   }
 
+  if (options.openApi && (options.openApi.inController || options.openApi.allInOnePath)) {
+    generators.push('openapi');
+  }
+
   return generators;
 }
 

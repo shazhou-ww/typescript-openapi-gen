@@ -28,7 +28,14 @@ export type SharedTypeOptions = {
 };
 
 export type PrettierOptions = {
+  enabled: boolean; // Whether to enable prettier
   path: string; // Path to the prettier config file
+};
+
+export type OpenApiOptions = {
+  allInOnePath: string | null; // Relative path to the output directory for all-in-one generation
+  inController: boolean; // Whether to generate OpenAPI documents in the controller folders
+  format: 'json' | 'yaml';
 };
 
 export type GenerationOptions = {
@@ -36,6 +43,7 @@ export type GenerationOptions = {
   controller: ControllerOptions;
   sharedTypes: SharedTypeOptions;
   prettier: PrettierOptions;
+  openApi: OpenApiOptions;
 };
 
 export type GenerationTask = {
