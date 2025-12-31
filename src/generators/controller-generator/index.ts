@@ -13,8 +13,6 @@ import { generateControllersRecursive } from './recursive';
 import { generateSharedTypes } from './shared-types-generator';
 import { PathUtil } from '../common/path-util';
 
-const HANDLER_METHODS = ['post', 'get', 'put', 'delete', 'patch', 'head', 'options'];
-
 export function generateController(doc: OpenApiDocument, options: GenerationOptions, result: GeneratorResult): GeneratorResult {
   const { volume } = result;
   const controllerFolder = options.controller.path;
@@ -48,7 +46,8 @@ function createControllerShouldOverwrite(controllerFolder: string, sharedTypesFo
     const fileName = path.split('/').pop() || '';
     const baseName = fileName.replace(/\.ts$/, '');
 
-    if (HANDLER_METHODS.includes(baseName)) {
+    // operations.ts is user-editable, don't overwrite
+    if (baseName === 'operations') {
       return false;
     }
 

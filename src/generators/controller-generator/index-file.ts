@@ -21,12 +21,14 @@ export function generateIndexFile(
     '',
   ];
 
-  // Export types
+  // Export types and schemas
   const typeExports: string[] = [];
+  const schemaExports: string[] = [];
   for (const [method, operation] of info.methods) {
     const methodName = capitalize(method);
     typeExports.push(`${methodName}Input`);
     typeExports.push(`${methodName}Output`);
+    schemaExports.push(`${methodName}RouteSchema`);
   }
 
   if (typeExports.length > 0) {
@@ -40,11 +42,31 @@ export function generateIndexFile(
     lines.push('');
   }
 
-  // Export methods
+  if (schemaExports.length > 0) {
+    if (schemaExports.length === 1) {
+      lines.push(`export { ${schemaExports[0]} } from './types';`);
+    } else {
+      lines.push('export {');
+      schemaExports.forEach(s => lines.push(`  ${s},`));
+      lines.push("} from './types';");
+    }
+    lines.push('');
+  }
+
+  // Export operations
   if (info.methods.size > 0) {
+    const operationExports: string[] = [];
     for (const method of info.methods.keys()) {
       const methodName = capitalize(method);
-      lines.push(`export { handle${methodName} } from './methods';`);
+      operationExports.push(`handle${methodName}`);
+    }
+    
+    if (operationExports.length === 1) {
+      lines.push(`export { ${operationExports[0]} } from './operations';`);
+    } else {
+      lines.push('export {');
+      operationExports.forEach(op => lines.push(`  ${op},`));
+      lines.push("} from './operations';");
     }
   }
 

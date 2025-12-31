@@ -6,13 +6,11 @@
  * - sharedTypesDir: 共享类型目录
  */
 
-import type { Volume, Operation, Method } from '../../types';
+import type { Volume } from '../../types';
 import type { RouteInfo } from './route-tree';
-import { capitalize } from '../common/string-util';
 import { generateTypesFile } from './types';
-import { generateMethodFile } from './method';
+import { generateOperationsFile } from './operations';
 import { generateIndexFile } from './index-file';
-import { generateMethodsFile } from './methods';
 
 export function generateControllerFiles(
   volume: Volume,
@@ -21,12 +19,7 @@ export function generateControllerFiles(
   sharedTypesDir: string
 ): void {
   generateTypesFile(volume, info, controllerDir, sharedTypesDir);
-
-  for (const [method, operation] of info.methods) {
-    generateMethodFile(volume, method as Method, operation, controllerDir);
-  }
-
-  generateMethodsFile(volume, info, controllerDir, sharedTypesDir);
+  generateOperationsFile(volume, info, controllerDir);
   generateIndexFile(volume, info, controllerDir);
 }
 

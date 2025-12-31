@@ -11,7 +11,7 @@ import type { RouteInfo } from './route-tree';
 import { capitalize } from '../common/string-util';
 import { PathUtil } from '../common/path-util';
 import { schemaToTypeScript } from '../common/type-generator';
-import { schemaToZod } from '../common/zod-schema-converter';
+import { schemaToElysia } from '../common/elysia-schema-converter';
 
 export function generateTypesFile(
   volume: Volume,
@@ -23,7 +23,8 @@ export function generateTypesFile(
     '// Auto-generated types file',
     '// DO NOT EDIT - This file is regenerated on each run',
     '',
-    "import { z } from 'zod';",
+    "import { t } from 'elysia';",
+    "import type { Static } from '@sinclair/typebox';",
     '',
   ];
 
@@ -56,7 +57,7 @@ function addMethodTypes(
   if (pathParams.length > 0) {
     const paramsSchema = generateParamsSchema(pathParams);
     lines.push(`export const ${methodName}ParamsSchema = ${paramsSchema};`);
-    lines.push(`export type ${methodName}Params = z.infer<typeof ${methodName}ParamsSchema>;`);
+    lines.push(`export type ${methodName}Params = Static<typeof ${methodName}ParamsSchema>;`);
     lines.push('');
     inputParts.push('params');
   }
@@ -65,7 +66,7 @@ function addMethodTypes(
   if (hasQuery) {
     const querySchema = generateParametersSchema(operation.query, 'query', referencedTypes, sharedTypesDir);
     lines.push(`export const ${methodName}QuerySchema = ${querySchema};`);
-    lines.push(`export type ${methodName}Query = z.infer<typeof ${methodName}QuerySchema>;`);
+    lines.push(`export type ${methodName}Query = Static<typeof ${methodName}QuerySchema>;`);
     lines.push('');
     inputParts.push('query');
   }
@@ -74,7 +75,7 @@ function addMethodTypes(
   if (hasHeaders) {
     const headersSchema = generateParametersSchema(operation.headers, 'headers', referencedTypes, sharedTypesDir);
     lines.push(`export const ${methodName}HeadersSchema = ${headersSchema};`);
-    lines.push(`export type ${methodName}Headers = z.infer<typeof ${methodName}HeadersSchema>;`);
+    lines.push(`export type ${methodName}Headers = Static<typeof ${methodName}HeadersSchema>;`);
     lines.push('');
     inputParts.push('headers');
   }
@@ -83,12 +84,12 @@ function addMethodTypes(
   if (hasBody) {
     if ('$ref' in operation.body!) {
       lines.push(`export const ${methodName}BodySchema = ${operation.body.$ref}Schema;`);
-      lines.push(`export type ${methodName}Body = z.infer<typeof ${methodName}BodySchema>;`);
+      lines.push(`export type ${methodName}Body = Static<typeof ${methodName}BodySchema>;`);
       referencedTypes.add(operation.body.$ref);
     } else {
-      const bodySchema = schemaToZod(operation.body, sharedTypesDir);
+      const bodySchema = schemaToElysia(operation.body, sharedTypesDir);
       lines.push(`export const ${methodName}BodySchema = ${bodySchema};`);
-      lines.push(`export type ${methodName}Body = z.infer<typeof ${methodName}BodySchema>;`);
+      lines.push(`export type ${methodName}Body = Static<typeof ${methodName}BodySchema>;`);
     }
     lines.push('');
     inputParts.push('body');
@@ -105,22 +106,32 @@ function addMethodTypes(
     lines.push('};');
     lines.push('');
 
-    // Generate InputSchema for validation
-    // Body schema is validated separately, so use z.unknown() in InputSchema
-    const schemaProps = inputParts.map(part => {
-      if (part === 'body') {
-        return `  ${part}: z.unknown()`;
-      }
-      const schemaName = `${methodName}${capitalize(part)}Schema`;
-      return `  ${part}: ${schemaName}`;
-    }).join(',\n');
-    lines.push(`export const ${methodName}InputSchema = z.object({`);
-    lines.push(schemaProps);
-    lines.push('});');
+    // Generate ElysiaRouteSchema for router validation
+    const routeSchemaParts: string[] = [];
+    if (pathParams.length > 0) {
+      routeSchemaParts.push(`  params: ${methodName}ParamsSchema`);
+    }
+    if (hasQuery) {
+      routeSchemaParts.push(`  query: ${methodName}QuerySchema`);
+    }
+    if (hasHeaders) {
+      routeSchemaParts.push(`  headers: ${methodName}HeadersSchema`);
+    }
+    if (hasBody) {
+      routeSchemaParts.push(`  body: ${methodName}BodySchema`);
+    }
+    
+    if (routeSchemaParts.length > 0) {
+      lines.push(`export const ${methodName}RouteSchema = {`);
+      lines.push(routeSchemaParts.join(',\n'));
+      lines.push('};');
+    } else {
+      lines.push(`export const ${methodName}RouteSchema = {};`);
+    }
     lines.push('');
   } else {
     lines.push(`export type ${methodName}Input = {};`);
-    lines.push(`export const ${methodName}InputSchema = z.object({});`);
+    lines.push(`export const ${methodName}RouteSchema = {};`);
     lines.push('');
   }
 
@@ -139,9 +150,9 @@ function addMethodTypes(
 }
 
 function generateParamsSchema(pathParams: string[]): string {
-  if (pathParams.length === 0) return 'z.object({})';
-  const props = pathParams.map(p => `  ${p}: z.string()`).join(',\n');
-  return `z.object({\n${props}\n})`;
+  if (pathParams.length === 0) return 't.Object({})';
+  const props = pathParams.map(p => `  ${p}: t.String()`).join(',\n');
+  return `t.Object({\n${props}\n})`;
 }
 
 function generateParametersSchema(
@@ -150,7 +161,7 @@ function generateParametersSchema(
   referencedTypes: Set<string>,
   sharedTypesDir: string
 ): string {
-  if (Object.keys(parameters).length === 0) return 'z.object({})';
+  if (Object.keys(parameters).length === 0) return 't.Object({})';
 
   const props: string[] = [];
   for (const [key, schema] of Object.entries(parameters)) {
@@ -158,15 +169,15 @@ function generateParametersSchema(
       props.push(`  ${key}: ${schema.$ref}Schema`);
       referencedTypes.add(schema.$ref);
     } else {
-      const zodSchema = schemaToZod(schema, sharedTypesDir);
+      const elysiaSchema = schemaToElysia(schema, sharedTypesDir);
       const required = schema.required?.includes(key);
-      const propZod = required ? zodSchema : `${zodSchema}.optional()`;
-      props.push(`  ${key}: ${propZod}`);
+      const propElysia = required ? elysiaSchema : `t.Optional(${elysiaSchema})`;
+      props.push(`  ${key}: ${propElysia}`);
     }
   }
 
-  if (props.length === 0) return 'z.object({})';
-  return `z.object({\n${props.join(',\n')}\n})`;
+  if (props.length === 0) return 't.Object({})';
+  return `t.Object({\n${props.join(',\n')}\n})`;
 }
 
 function addImports(
@@ -180,8 +191,8 @@ function addImports(
   const relativePath = getRelativePath(controllerDir, sharedTypesDir);
   const typeList = Array.from(referencedTypes).sort().join(', ');
 
-  lines.splice(3, 0, `import type { ${typeList} } from '${relativePath}';`);
-  lines.splice(4, 0, `import { ${Array.from(referencedTypes).map(t => `${t}Schema`).join(', ')} } from '${relativePath}';`);
+  lines.splice(4, 0, `import type { ${typeList} } from '${relativePath}';`);
+  lines.splice(5, 0, `import { ${Array.from(referencedTypes).map(t => `${t}Schema`).join(', ')} } from '${relativePath}';`);
 }
 
 function getRelativePath(from: string, to: string): string {

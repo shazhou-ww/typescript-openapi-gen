@@ -5,7 +5,7 @@ Controller 生成器模块，负责从 OpenAPI 文档生成 TypeScript controlle
 ## 职责
 
 - 生成 controller 骨架代码
-- 生成类型定义和 Zod schema
+- 生成类型定义和 Elysia schema
 - 生成 handler 方法文件
 - 生成 index 文件用于导出
 
@@ -21,11 +21,17 @@ Controller 生成器模块，负责从 OpenAPI 文档生成 TypeScript controlle
 - `recursive.ts` - 递归生成 controllers
 - `files.ts` - 生成 controller 文件集合
 - `index-file.ts` - 生成 index.ts 文件
-- `method.ts` - 生成单个 HTTP 方法的 handler 文件
-- `methods.ts` - 生成 methods.ts 文件（包含验证逻辑）
-- `types.ts` - 生成类型定义和 Zod schema
+- `operations.ts` - 生成 operations.ts 文件（包含所有 operation handlers）
+- `types.ts` - 生成类型定义和 Elysia schema
+
+## 生成的文件结构
+
+每个 controller path 下包含：
+- `types.ts` - 输入/输出类型和 Elysia schema（RouteSchema）
+- `operations.ts` - 所有 operation handlers 的实现
+- `index.ts` - 导出 types、schemas 和 operations
 
 ## 文件覆盖策略
 
-- Handler 文件（post.ts, get.ts, put.ts, delete.ts, patch.ts, head.ts, options.ts）：保留现有文件
-- 其他文件（index.ts, types.ts, methods.ts）：覆盖
+- `operations.ts`：不覆盖（用户实现）
+- 其他文件（index.ts, types.ts）：覆盖

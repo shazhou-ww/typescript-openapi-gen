@@ -22,6 +22,7 @@ export function generateElysiaRouter(doc: OpenApiDocument, options: GenerationOp
   ];
 
   // Get top-level modules
+  // Schema is imported from the same controller modules as handlers
   const topLevelModules = getTopLevelModules(routes);
   if (topLevelModules.length > 0) {
     lines.push(`import { ${topLevelModules.join(', ')} } from './controller';`);
@@ -69,15 +70,43 @@ function getTopLevelModules(routes: ReturnType<typeof collectRoutes>): string[] 
   return Array.from(modules).sort();
 }
 
+function buildSchemaPath(importPath: string[], method: string): string {
+  if (importPath.length === 0) {
+    return getRouteSchemaName(method);
+  }
+  const validSegments = importPath.map(segment => PathUtil.segmentToExportName(segment));
+  const schemaPath = validSegments.join('.');
+  return `${schemaPath}.${getRouteSchemaName(method)}`;
+}
+
+function getRouteSchemaName(method: string): string {
+  return method.charAt(0).toUpperCase() + method.slice(1);
+}
+
+function hasAnySchema(route: ReturnType<typeof collectRoutes>[0]): boolean {
+  const pathParams = PathUtil.extractPathParams(route.path);
+  const hasQuery = Object.keys(route.operation.query).length > 0;
+  const hasHeaders = Object.keys(route.operation.headers).length > 0;
+  const hasBody = route.operation.body !== null;
+  return pathParams.length > 0 || hasQuery || hasHeaders || hasBody;
+}
+
 function generateRoute(route: ReturnType<typeof collectRoutes>[0]): string {
   const controllerPath = buildControllerPath(route.controllerImportPath);
   const handlerCall = `${controllerPath}.${route.handlerName}`;
+  const schemaPath = buildSchemaPath(route.controllerImportPath, route.method);
   const elysiaPath = convertToElysiaPath(route.path);
   const inputParts = buildInputParts(route);
   const destructure = inputParts.length > 0 ? `{ ${inputParts.join(', ')} }` : '';
   const inputObject = buildInputObject(inputParts);
+  const routeSchema = `${schemaPath}RouteSchema`;
 
-  return `  .${route.method}('${elysiaPath}', (${destructure}) => ${handlerCall}(${inputObject}))`;
+  const hasSchema = hasAnySchema(route);
+  if (hasSchema) {
+    return `  .${route.method}('${elysiaPath}', (${destructure}) => ${handlerCall}(${inputObject}), ${routeSchema})`;
+  } else {
+    return `  .${route.method}('${elysiaPath}', (${destructure}) => ${handlerCall}(${inputObject}))`;
+  }
 }
 
 function buildControllerPath(importPath: string[]): string {
